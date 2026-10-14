@@ -1,28 +1,29 @@
 persona:
   name: "Mangal Soren"
   company: "TrackKaro AI"
-  role: "Growth & Automation Systems"
+  role: "Founder & GTM Automation Systems"
   email: "mangal@trackkaroai.com"
   linkedin: "https://www.linkedin.com/in/mangal-soren-1312ba31/"
-  tone: "direct, pragmatic, consultative, metrics-driven"
+  tone: "consultative, data-backed, high-conviction, professional"
 
 product:
   name: "TrackKaro 3-Second Lead Automation Engine"
-  description: "High-ticket lead nurturing platform for Real Estate Developers, Luxury Brokers, and B2B Agencies. Delivers instant VIP WhatsApp PDF brochures in <1.4s, Telegram sound alerts to sales reps in <2.4s, and syncs directly to Google Sheets & CRM."
-  pricing: "Starting at ₹25,000 / $499 setup"
+  description: "High-ticket speed-to-lead acceleration platform for Luxury Real Estate Developers, Commercial Brokers, and B2B SaaS. Automatically converts Meta & Google ad leads via instant WhatsApp VIP brochures and Telegram sales alerts in < 3 seconds."
+  pricing: "$997 Done-For-You Setup + $299/mo Maintenance & Server Hosting"
   key_benefits:
-    - "Cuts lead response time from 45 minutes to under 3 seconds"
-    - "Automatic WhatsApp VIP PDF brochure delivery directly into lead's chat"
-    - "Telegram instant audio notification with 1-click 'Call Now' button for sales reps"
-    - "Zero lead leakage with real-time Google Sheets & Trello CRM sync"
-    - "Interactive live simulator available: https://demo.gtm.trackkaroai.com"
+    - "Cuts lead response time from 47 minutes to under 3 seconds"
+    - "Protects $80+ Meta/Google CPL from going cold"
+    - "Automatic WhatsApp VIP PDF brochure delivery directly into lead's mobile chat in < 1.4s"
+    - "Telegram instant audio notification with 1-click 'Call Now' direct dial for sales reps in < 2.4s"
+    - "Zero lead leakage with real-time Google Sheets & CRM auto-sync"
+    - "Live interactive simulator to test: https://demo.gtm.trackkaroai.com"
   objection_responses:
-    "too expensive": "Losing a single real estate or luxury lead costs 10x our setup fee. When you respond in 3 seconds, conversion jumps 391%."
-    "already have a CRM": "TrackKaro is not replacing your CRM — it sits between your Meta Ads and your CRM to ensure zero second delay before sales outreach."
-    "sales team already calls fast": "Industry average response time is 47 minutes. Test your own number right now on our live simulator: https://demo.gtm.trackkaroai.com"
+    "too expensive": "At an $80 CPL in Miami or Dubai, saving just 10 qualified leads pays for the entire $997 system 10x over. Responding in 3 seconds increases qualification by 391%."
+    "already have HubSpot/Salesforce": "TrackKaro doesn't replace your CRM — it sits between your Meta Ads webhook and your CRM to ensure zero second latency before instant WhatsApp & sales rep alerts."
+    "sales team already calls fast": "Industry average response time in US real estate is 47 minutes. Test your own team's phone on our live simulator: https://demo.gtm.trackkaroai.com"
   offer:
-    primary: "Full Done-For-You 3-Second Lead Engine Setup"
-    entry: "Test our live interactive simulator with your own phone number: https://demo.gtm.trackkaroai.com"
+    primary: "$997 Complete 3-Second Lead Engine DFY Deployment"
+    entry: "Test our 30-second live simulator with your own phone number: https://demo.gtm.trackkaroai.com"
     goal: "book_call"
     booking_method: "calendar_link"
     booking_url: "https://calendly.com/trackkaroai/15min"
@@ -31,29 +32,31 @@ product:
 
 icp:
   industries:
-    - "Real Estate"
-    - "Real Estate Agency"
-    - "Property Management"
     - "Luxury Real Estate"
-    - "Marketing Agency"
+    - "Real Estate Agency"
+    - "Commercial Real Estate"
+    - "Property Management"
     - "B2B SaaS"
+    - "Performance Marketing Agency"
   company_size: "5-100 employees"
   titles:
-    - "Founder"
-    - "Managing Director"
-    - "Director of Sales"
-    - "Head of Marketing"
+    - "Managing Partner"
     - "Principal Broker"
-    - "Partner"
+    - "Founder & CEO"
+    - "Director of Sales"
+    - "Head of Growth"
+    - "VP Marketing"
   geography:
-    - "Gurgaon, India"
-    - "Bangalore, India"
-    - "Mumbai, India"
     - "Dubai, UAE"
+    - "Miami, FL"
+    - "Austin, TX"
+    - "Dallas, TX"
+    - "London, UK"
+    - "Scottsdale, AZ"
   hiring_signals:
-    - "Head of Sales"
+    - "Sales Director"
     - "Performance Marketer"
-    - "Growth Lead"
+    - "Growth Manager"
 
 channels:
   email:
@@ -73,5 +76,5 @@ usage:
   heartbeat_interval_minutes: 15
   quiet_hours:
     start: "22:00"
-    end: "08:00"
-    timezone: "Asia/Kolkata"
+    end: "07:00"
+    timezone: "America/New_York"
