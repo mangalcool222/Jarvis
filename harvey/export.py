@@ -17,8 +17,8 @@ logger = logging.getLogger("harvey.export")
 # Column order chosen so the file imports cleanly into cold-email tools
 # without remapping; extra columns are simply available as custom variables.
 CSV_COLUMNS = [
-    "email", "first_name", "last_name", "company_name", "title",
-    "website", "linkedin_url", "industry", "personalization",
+    "first_name", "last_name", "title", "company_name", "phone", "whatsapp_link",
+    "email", "linkedin_url", "website", "industry", "personalization",
     "email_status", "score", "seniority", "source", "status", "created_at",
 ]
 
@@ -67,14 +67,19 @@ async def collect_prospects(
 
     out = []
     for r in rows:
+        phone = r.get("phone", "") or ""
+        clean_phone = "".join(c for c in phone if c.isdigit())
+        whatsapp_link = f"https://wa.me/{clean_phone}" if clean_phone else ""
         out.append({
-            "email": r.get("email", ""),
             "first_name": r.get("first_name", ""),
             "last_name": r.get("last_name", ""),
-            "company_name": r.get("company", ""),
             "title": r.get("title", ""),
-            "website": r.get("source_url", ""),
+            "company_name": r.get("company", ""),
+            "phone": phone,
+            "whatsapp_link": whatsapp_link,
+            "email": r.get("email", ""),
             "linkedin_url": r.get("linkedin_url", ""),
+            "website": r.get("source_url", "") or r.get("website", ""),
             "industry": r.get("industry", ""),
             "personalization": r.get("personalization_notes", ""),
             "email_status": r.get("email_status", ""),
