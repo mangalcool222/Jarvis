@@ -1,60 +1,71 @@
 persona:
-  name: "Harvey"
-  company: "Your Company"
-  role: "Business Development"
-  email: "harvey@yourcompany.com"
-  linkedin: "linkedin.com/in/harvey-yourcompany"
-  tone: "professional, consultative, confident"
+  name: "Mangal Soren"
+  company: "TrackKaro AI"
+  role: "Growth & Automation Systems"
+  email: "mangal@trackkaroai.com"
+  linkedin: "https://www.linkedin.com/in/mangal-soren-1312ba31/"
+  tone: "direct, pragmatic, consultative, metrics-driven"
 
 product:
-  name: "Your Product"
-  description: "Describe what your product does and who it's for"
-  pricing: "Starting at $X/mo"
+  name: "TrackKaro 3-Second Lead Automation Engine"
+  description: "High-ticket lead nurturing platform for Real Estate Developers, Luxury Brokers, and B2B Agencies. Delivers instant VIP WhatsApp PDF brochures in <1.4s, Telegram sound alerts to sales reps in <2.4s, and syncs directly to Google Sheets & CRM."
+  pricing: "Starting at ₹25,000 / $499 setup"
   key_benefits:
-    - "Benefit 1"
-    - "Benefit 2"
-    - "Benefit 3"
+    - "Cuts lead response time from 45 minutes to under 3 seconds"
+    - "Automatic WhatsApp VIP PDF brochure delivery directly into lead's chat"
+    - "Telegram instant audio notification with 1-click 'Call Now' button for sales reps"
+    - "Zero lead leakage with real-time Google Sheets & Trello CRM sync"
+    - "Interactive live simulator available: https://demo.gtm.trackkaroai.com"
   objection_responses:
-    "too expensive": "I understand budget is important. Most of our clients see ROI within 30 days..."
-    "already have a solution": "That makes sense. Curious — what's the one thing you wish it did better?"
-    "not interested": "No worries at all. Mind if I ask what your current approach looks like?"
+    "too expensive": "Losing a single real estate or luxury lead costs 10x our setup fee. When you respond in 3 seconds, conversion jumps 391%."
+    "already have a CRM": "TrackKaro is not replacing your CRM — it sits between your Meta Ads and your CRM to ensure zero second delay before sales outreach."
+    "sales team already calls fast": "Industry average response time is 47 minutes. Test your own number right now on our live simulator: https://demo.gtm.trackkaroai.com"
   offer:
-    primary: ""                    # Main offer (e.g., "Monthly subscription starting at $99/mo")
-    entry: ""                      # Low-commitment entry (e.g., "14-day free trial", "Free audit")
-    goal: "book_call"              # Goal of outreach: book_call, start_trial, get_reply
-    booking_method: "calendar_link" # calendar_link, suggest_times, ask_preference
-    booking_url: ""                # Calendar link URL (if using calendar_link method)
-    meeting_duration: "15 minutes" # How long the call is
-    meeting_owner: ""              # Who takes the meeting (name or role)
+    primary: "Full Done-For-You 3-Second Lead Engine Setup"
+    entry: "Test our live interactive simulator with your own phone number: https://demo.gtm.trackkaroai.com"
+    goal: "book_call"
+    booking_method: "calendar_link"
+    booking_url: "https://calendly.com/trackkaroai/15min"
+    meeting_duration: "15 minutes"
+    meeting_owner: "Mangal Soren"
 
 icp:
   industries:
-    - "SaaS"
+    - "Real Estate"
+    - "Real Estate Agency"
+    - "Property Management"
+    - "Luxury Real Estate"
     - "Marketing Agency"
-  company_size: "10-200 employees"
+    - "B2B SaaS"
+  company_size: "5-100 employees"
   titles:
-    - "VP Marketing"
-    - "Head of Growth"
-    - "CMO"
-    - "Director of Marketing"
+    - "Founder"
+    - "Managing Director"
+    - "Director of Sales"
+    - "Head of Marketing"
+    - "Principal Broker"
+    - "Partner"
   geography:
-    - "United States"
-  # Roles that signal a company is in-market RIGHT NOW (a company hiring a
-  # "Head of Growth" is shopping for growth tooling). Used for careers-page
-  # scanning and job-board discovery. Empty = fall back to titles above.
-  hiring_signals: []
+    - "Gurgaon, India"
+    - "Bangalore, India"
+    - "Mumbai, India"
+    - "Dubai, UAE"
+  hiring_signals:
+    - "Head of Sales"
+    - "Performance Marketer"
+    - "Growth Lead"
 
 channels:
   email:
     enabled: true
     provider: "gmail"          # gmail (recommended) | smtp | instantly
-    max_daily_sends: 50
-    require_approval: true      # native providers: emails wait in the Outbox
-    send_to_risky: false        # also send to catch-all domains (off = safest)
-    max_bounce_rate: 0.05       # pause all sending if bounces exceed this
+    max_daily_sends: 25
+    require_approval: true      # Every email waits in your dashboard for 1-click approval
+    send_to_risky: false
+    max_bounce_rate: 0.03
   linkedin:
-    enabled: true
-    max_daily_connections: 20
+    enabled: false
+    max_daily_connections: 15
     max_daily_messages: 10
 
 usage:
@@ -62,5 +73,5 @@ usage:
   heartbeat_interval_minutes: 15
   quiet_hours:
     start: "22:00"
-    end: "07:00"
-    timezone: "America/New_York"
+    end: "08:00"
+    timezone: "Asia/Kolkata"
