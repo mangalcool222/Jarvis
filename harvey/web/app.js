@@ -1194,20 +1194,20 @@ async function loadOutbox() {
   const safeCount = pending.filter(it => it.email_status === 'verified').length;
 
   const sheetControls = (_workspaceInfo && _workspaceInfo.has_sheet && _workspaceInfo.sheet_url)
-    ? '<a href="' + _workspaceInfo.sheet_url + '" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:6px;border-color:rgba(34,197,94,0.4);color:#22c55e;background:rgba(34,197,94,0.08);text-decoration:none;font-weight:600;"><span style="font-size:13px;">📊</span> Google Sheet CRM ↗</a>' +
-      '<button id="sync-sheets-btn" class="btn btn-secondary btn-sm" onclick="syncCrmSheets()" title="Trigger live Google Sheet sync">🔄 Sync to Google Sheet</button>'
+    ? '<a href="' + _workspaceInfo.sheet_url + '" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:6px;border-color:rgba(34,197,94,0.4);color:#22c55e;background:rgba(34,197,94,0.08);text-decoration:none;font-weight:600;">Google Sheets ↗</a>' +
+      '<button id="sync-sheets-btn" class="btn btn-secondary btn-sm" onclick="syncCrmSheets()" title="Trigger live Google Sheet sync">Sync Google Sheets</button>'
     : '';
 
   actions.innerHTML =
     sheetControls +
     (catchAllCount > 0
-      ? '<button id="archive-catchalls-btn" class="btn btn-secondary btn-sm" onclick="archiveCatchAlls()" style="color:#f59e0b;border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.08);font-weight:600;" title="Archive all risky catch-all drafts to LinkedIn Backlog">📦 Archive Catch-Alls (' + catchAllCount + ')</button>' : '') +
+      ? '<button id="archive-catchalls-btn" class="btn btn-secondary btn-sm" onclick="archiveCatchAlls()" style="color:#f59e0b;border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.08);font-weight:600;" title="Archive all risky catch-all drafts to LinkedIn Backlog">Archive Catch-Alls (' + catchAllCount + ')</button>' : '') +
     (archived.length
       ? '<button class="btn btn-secondary btn-sm" onclick="document.getElementById(\'archived-catchalls-card\')?.scrollIntoView({behavior:\'smooth\'})" style="color:#f59e0b;border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.08);font-weight:600;">' +
-        '📦 Archived (' + archived.length + ')</button>' : '') +
+        'Archived (' + archived.length + ')</button>' : '') +
     (approved.length
       ? '<button class="btn btn-secondary btn-sm" onclick="document.getElementById(\'outbox-list\').scrollIntoView({behavior:\'smooth\'})">' +
-        '📅 Scheduled (' + approved.length + ')</button>' : '') +
+        'Scheduled (' + approved.length + ')</button>' : '') +
     (pending.length && !data.paused
       ? '<button class="btn btn-primary btn-sm" onclick="outboxApproveAll()">' +
         (safeCount > 0 && catchAllCount > 0 ? 'Approve Safe (' + safeCount + ')' : 'Approve all ' + pending.length) +
@@ -1459,7 +1459,7 @@ async function loadOutbox() {
       const comp = r.company || (r.to_email ? r.to_email.split('@')[1] : 'Target Account');
       const title = r.title || 'Executive';
       const li = r.linkedin_url ? '<a href="' + escHtml(r.linkedin_url) + '" target="_blank" class="btn btn-secondary btn-sm" style="font-size:11px;padding:3px 8px;display:inline-flex;align-items:center;gap:4px;">LinkedIn ↗</a>' : '';
-      const web = r.website ? '<a href="' + escHtml(r.website) + '" target="_blank" class="btn btn-secondary btn-sm" style="font-size:11px;padding:3px 8px;display:inline-flex;align-items:center;gap:4px;">Website 🌐</a>' : '';
+      const web = r.website ? '<a href="' + escHtml(r.website) + '" target="_blank" class="btn btn-secondary btn-sm" style="font-size:11px;padding:3px 8px;display:inline-flex;align-items:center;gap:4px;">Website ↗</a>' : '';
 
       h += '<tr>' +
         '<td>' +
@@ -1468,17 +1468,17 @@ async function loadOutbox() {
         '</td>' +
         '<td>' +
           '<code>' + escHtml(r.to_email) + '</code>' +
-          '<div style="font-size:10px;color:#eab308;font-weight:600;margin-top:2px;">⚠️ Catch-All Mailbox</div>' +
+          '<div style="margin-top:4px;"><span class="crm-table-badge crm-status-amber" style="font-size:10px;padding:2px 6px;"><span class="status-indicator-dot dot-amber"></span>Catch-All Mailbox</span></div>' +
         '</td>' +
         '<td>' +
           '<span style="font-size:11px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;padding:3px 8px;border-radius:4px;font-weight:600;">' +
-            '💼 LinkedIn InMail / Form' +
+            'LinkedIn InMail / Form' +
           '</span>' +
         '</td>' +
         '<td><div style="display:flex;gap:6px;align-items:center;">' + (li || '<span class="muted" style="font-size:11px;">No LinkedIn</span>') + (web || '') + '</div></td>' +
         '<td style="text-align:right">' +
           '<button class="btn btn-secondary btn-sm" onclick="restoreArchivedDraft(\'' + r.id + '\')" style="font-size:11px;" title="Restore back to Outbox review desk">' +
-            '↩️ Restore' +
+            'Restore' +
           '</button>' +
         '</td>' +
       '</tr>';
@@ -1528,11 +1528,11 @@ function renderDesk(items, i) {
     const activeClass = n === i ? 'active' : '';
     let badgeHtml = '';
     if (it.email_status === 'verified') {
-      badgeHtml = '<span style="font-size:10px;padding:2px 6px;border-radius:10px;background:rgba(34,197,94,0.15);color:#22c55e;font-weight:700;">✅ Safe</span>';
+      badgeHtml = '<span class="crm-table-badge crm-status-green" style="font-size:10px;padding:2px 6px;"><span class="status-indicator-dot dot-green"></span>Safe</span>';
     } else if (it.email_status === 'risky') {
-      badgeHtml = '<span style="font-size:10px;padding:2px 6px;border-radius:10px;background:rgba(234,179,8,0.15);color:#eab308;font-weight:600;">⚠️ Catch-All</span>';
+      badgeHtml = '<span class="crm-table-badge crm-status-amber" style="font-size:10px;padding:2px 6px;"><span class="status-indicator-dot dot-amber"></span>Catch-All</span>';
     } else if (it.email_status === 'invalid') {
-      badgeHtml = '<span style="font-size:10px;padding:2px 6px;border-radius:10px;background:rgba(239,68,68,0.15);color:#ef4444;font-weight:600;">❌ Invalid</span>';
+      badgeHtml = '<span class="crm-table-badge crm-status-red" style="font-size:10px;padding:2px 6px;"><span class="status-indicator-dot dot-red"></span>Invalid</span>';
     }
     return '<div class="desk-item ' + activeClass + '" onclick="deskGo(' + n + ')">' +
       '<div class="to" style="display:flex;justify-content:space-between;align-items:center;gap:6px;">' +
@@ -1540,7 +1540,7 @@ function renderDesk(items, i) {
         badgeHtml +
       '</div>' +
       '<div style="font-size:12px;color:var(--accent);margin-top:2px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' +
-        '🏢 ' + escHtml(compName) +
+        escHtml(compName) +
       '</div>' +
       '<div class="sub" style="margin-top:2px;">' + escHtml(it.subject || '(no subject)') + '</div>' +
     '</div>';
@@ -1565,28 +1565,25 @@ function renderDesk(items, i) {
 
   let curBadge = '';
   if (cur.email_status === 'verified') {
-    curBadge = '<span style="font-size:11px;padding:3px 8px;border-radius:12px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);color:#22c55e;font-weight:700;">✅ 100% Verified (Reoon Safe)</span>';
+    curBadge = '<span class="crm-table-badge crm-status-green"><span class="status-indicator-dot dot-green"></span>Verified Safe</span>';
   } else if (cur.email_status === 'risky') {
-    curBadge = '<span style="font-size:11px;padding:3px 8px;border-radius:12px;background:rgba(234,179,8,0.15);border:1px solid rgba(234,179,8,0.3);color:#eab308;font-weight:600;">⚠️ Catch-All Domain (Risky)</span>';
+    curBadge = '<span class="crm-table-badge crm-status-amber"><span class="status-indicator-dot dot-amber"></span>Catch-All Domain</span>';
   } else if (cur.email_status === 'invalid') {
-    curBadge = '<span style="font-size:11px;padding:3px 8px;border-radius:12px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#ef4444;font-weight:600;">❌ Invalid Mailbox</span>';
+    curBadge = '<span class="crm-table-badge crm-status-red"><span class="status-indicator-dot dot-red"></span>Invalid Mailbox</span>';
   }
 
   // Company banner header with direct clickable website link
   const companyBanner = 
     '<div style="background:linear-gradient(90deg, rgba(59,130,246,0.08), rgba(99,102,241,0.04)); border:1px solid rgba(59,130,246,0.25); border-radius:8px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">' +
-      '<div style="display:flex; align-items:center; gap:10px;">' +
-        '<span style="font-size:18px;">🏢</span>' +
-        '<div>' +
-          '<div style="font-weight:700; font-size:14px; color:var(--text);">' + escHtml(compTitle) + '</div>' +
-          (cur.industry ? '<div style="font-size:11px; color:var(--text-2); margin-top:1px;">' + escHtml(cur.industry) + '</div>' : '') +
-        '</div>' +
+      '<div>' +
+        '<div style="font-weight:700; font-size:14px; color:var(--text);">' + escHtml(compTitle) + '</div>' +
+        (cur.industry ? '<div style="font-size:11px; color:var(--text-2); margin-top:1px;">' + escHtml(cur.industry) + '</div>' : '') +
       '</div>' +
       '<div style="display:flex; align-items:center; gap:10px;">' +
         curBadge +
         (targetUrl ? 
           '<a href="' + escHtml(targetUrl) + '" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="display:inline-flex; align-items:center; gap:6px; font-weight:600; color:#38bdf8; border-color:rgba(56,189,248,0.4); background:rgba(56,189,248,0.08); padding:6px 14px; border-radius:6px; text-decoration:none;">' +
-            '🌐 Open Website (' + escHtml(displayDomain || 'site') + ') <span style="font-size:12px;">↗</span>' +
+            'Open Website (' + escHtml(displayDomain || 'site') + ') <span style="font-size:12px;">↗</span>' +
           '</a>' : '') +
       '</div>' +
     '</div>';
@@ -1606,10 +1603,10 @@ function renderDesk(items, i) {
         '<button class="btn btn-secondary" onclick="outboxAct(\'' + cur.id + '\',\'reject\')">' +
           'Reject <kbd>R</kbd></button>' +
         '<button id="desk-edit-btn" class="btn btn-secondary" onclick="toggleEdit(\'' + cur.id + '\')">' +
-          '✏️ Edit Mail</button>' +
+          'Edit Mail</button>' +
         (targetUrl ? 
           '<a href="' + escHtml(targetUrl) + '" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">' +
-            '🌐 Open Website ↗</a>' : '') +
+            'Open Website ↗</a>' : '') +
         '<span class="muted" style="font-size:12px;margin-left:auto">' +
           (i + 1) + ' of ' + items.length + '</span>' +
       '</div>' +
@@ -2067,29 +2064,44 @@ function renderCrmFilterPills(rows) {
   const el = document.getElementById('crm-filter-pills');
   if (!el) return;
 
+  const getStatusKey = (s) => {
+    const str = (s || '').toLowerCase();
+    if (str.includes('contacted') || str.includes('delivered')) return 'contacted';
+    if (str.includes('verified')) return 'verified';
+    if (str.includes('catch-all') || str.includes('catchall')) return 'catchall';
+    if (str.includes('replied')) return 'replied';
+    if (str.includes('bounced') || str.includes('invalid')) return 'bounced';
+    return 'other';
+  };
+
   const counts = {
     all: rows.length,
-    contacted: rows.filter(r => (r.status || '').includes('Contacted') || (r.status || '').includes('🚀')).length,
-    verified: rows.filter(r => (r.status || '').includes('Verified') || (r.status || '').includes('✅')).length,
-    catchall: rows.filter(r => (r.status || '').includes('Catch-All') || (r.status || '').includes('⚠️')).length,
-    replied: rows.filter(r => (r.status || '').includes('Replied') || (r.status || '').includes('🔥')).length,
-    bounced: rows.filter(r => (r.status || '').includes('Bounced') || (r.status || '').includes('❌')).length
+    contacted: rows.filter(r => getStatusKey(r.status) === 'contacted').length,
+    verified: rows.filter(r => getStatusKey(r.status) === 'verified').length,
+    catchall: rows.filter(r => getStatusKey(r.status) === 'catchall').length,
+    replied: rows.filter(r => getStatusKey(r.status) === 'replied').length,
+    bounced: rows.filter(r => getStatusKey(r.status) === 'bounced').length
   };
 
   const pills = [
-    { id: 'all', label: 'All Leads (' + counts.all + ')', color: 'var(--text-1)' },
-    { id: 'contacted', label: '🚀 Contacted (' + counts.contacted + ')', color: '#0284c7' },
-    { id: 'verified', label: '✅ Verified Safe (' + counts.verified + ')', color: '#16a34a' },
-    { id: 'catchall', label: '⚠️ Catch-All (' + counts.catchall + ')', color: '#d97706' },
-    { id: 'replied', label: '🔥 Replied (' + counts.replied + ')', color: '#15803d' },
-    { id: 'bounced', label: '❌ Bounced (' + counts.bounced + ')', color: '#dc2626' }
+    { id: 'all', label: 'All Leads', count: counts.all, dot: 'dot-gray', color: 'var(--text-1)' },
+    { id: 'contacted', label: 'Contacted', count: counts.contacted, dot: 'dot-blue', color: '#38bdf8' },
+    { id: 'verified', label: 'Verified Safe', count: counts.verified, dot: 'dot-green', color: '#34d399' },
+    { id: 'catchall', label: 'Catch-All', count: counts.catchall, dot: 'dot-amber', color: '#fbbf24' },
+    { id: 'replied', label: 'Replied', count: counts.replied, dot: 'dot-purple', color: '#c084fc' },
+    { id: 'bounced', label: 'Bounced', count: counts.bounced, dot: 'dot-red', color: '#f87171' }
   ];
 
   el.innerHTML = pills.map(p => {
-    const active = _crmCurrentFilter === p.id 
-      ? 'style="font-weight:700;border-color:' + p.color + ';background:rgba(255,255,255,0.08);color:' + p.color + ';"' 
-      : 'style="color:var(--text-2);"';
-    return '<button class="btn btn-secondary btn-sm" onclick="setCrmFilter(\'' + p.id + '\')" ' + active + '>' + p.label + '</button>';
+    const isActive = _crmCurrentFilter === p.id;
+    const activeStyle = isActive 
+      ? 'border-color:' + p.color + ';background:rgba(255,255,255,0.08);color:' + p.color + ';font-weight:600;' 
+      : 'color:var(--text-2);';
+    return '<button class="btn btn-secondary btn-sm crm-filter-btn" onclick="setCrmFilter(\'' + p.id + '\')" style="' + activeStyle + '">' +
+      '<span class="status-indicator-dot ' + p.dot + '"></span>' +
+      '<span>' + p.label + '</span>' +
+      '<span class="pill-count">(' + p.count + ')</span>' +
+      '</button>';
   }).join('');
 }
 
@@ -2103,11 +2115,19 @@ function filterCrmTable() {
   const q = (document.getElementById('crm-search-input')?.value || '').toLowerCase().trim();
   let filtered = _crmRows;
 
-  if (_crmCurrentFilter === 'contacted') filtered = filtered.filter(r => (r.status || '').includes('Contacted') || (r.status || '').includes('🚀'));
-  else if (_crmCurrentFilter === 'verified') filtered = filtered.filter(r => (r.status || '').includes('Verified') || (r.status || '').includes('✅'));
-  else if (_crmCurrentFilter === 'catchall') filtered = filtered.filter(r => (r.status || '').includes('Catch-All') || (r.status || '').includes('⚠️'));
-  else if (_crmCurrentFilter === 'replied') filtered = filtered.filter(r => (r.status || '').includes('Replied') || (r.status || '').includes('🔥'));
-  else if (_crmCurrentFilter === 'bounced') filtered = filtered.filter(r => (r.status || '').includes('Bounced') || (r.status || '').includes('❌'));
+  const getStatusKey = (s) => {
+    const str = (s || '').toLowerCase();
+    if (str.includes('contacted') || str.includes('delivered')) return 'contacted';
+    if (str.includes('verified')) return 'verified';
+    if (str.includes('catch-all') || str.includes('catchall')) return 'catchall';
+    if (str.includes('replied')) return 'replied';
+    if (str.includes('bounced') || str.includes('invalid')) return 'bounced';
+    return 'other';
+  };
+
+  if (_crmCurrentFilter !== 'all') {
+    filtered = filtered.filter(r => getStatusKey(r.status) === _crmCurrentFilter);
+  }
 
   if (q) {
     filtered = filtered.filter(r => 
@@ -2143,28 +2163,48 @@ function renderCrmTable(rows) {
     '<th style="padding:10px 12px;text-align:left;">Strategy Notes</th>' +
     '</tr></thead><tbody>';
 
-  rows.forEach((r, idx) => {
-    let statusStyle = 'background:rgba(255,255,255,0.06);color:var(--text);';
-    if ((r.status || '').includes('Replied') || (r.status || '').includes('🔥')) {
-      statusStyle = 'background:#bbf7d0;color:#166534;font-weight:700;';
-    } else if ((r.status || '').includes('Contacted') || (r.status || '').includes('🚀')) {
-      statusStyle = 'background:#e0f2fe;color:#0369a1;font-weight:700;';
-    } else if ((r.status || '').includes('Catch-All') || (r.status || '').includes('⚠️')) {
-      statusStyle = 'background:#fef3c7;color:#92400e;font-weight:700;';
-    } else if ((r.status || '').includes('Verified') || (r.status || '').includes('✅')) {
-      statusStyle = 'background:#dcfce7;color:#15803d;font-weight:700;';
-    } else if ((r.status || '').includes('Bounced') || (r.status || '').includes('❌')) {
-      statusStyle = 'background:#fee2e2;color:#991b1b;font-weight:700;';
+  rows.forEach((r) => {
+    let cleanStatus = (r.status || 'Queued')
+      .replace(/[🚀❌⚠️✅🔥⏳]/g, '')
+      .replace(/\(.*?\)/g, '')
+      .replace(/\/.*?$/g, '')
+      .trim();
+    if (!cleanStatus) cleanStatus = 'Queued';
+
+    const sLower = cleanStatus.toLowerCase();
+    let badgeClass = 'crm-status-default';
+    let dotClass = 'dot-gray';
+
+    if (sLower.includes('replied')) {
+      badgeClass = 'crm-status-purple';
+      dotClass = 'dot-purple';
+      cleanStatus = 'Replied';
+    } else if (sLower.includes('contacted') || sLower.includes('delivered')) {
+      badgeClass = 'crm-status-blue';
+      dotClass = 'dot-blue';
+      cleanStatus = 'Contacted';
+    } else if (sLower.includes('catch-all') || sLower.includes('catchall')) {
+      badgeClass = 'crm-status-amber';
+      dotClass = 'dot-amber';
+      cleanStatus = 'Catch-All';
+    } else if (sLower.includes('verified')) {
+      badgeClass = 'crm-status-green';
+      dotClass = 'dot-green';
+      cleanStatus = 'Verified Safe';
+    } else if (sLower.includes('bounced') || sLower.includes('invalid')) {
+      badgeClass = 'crm-status-red';
+      dotClass = 'dot-red';
+      cleanStatus = 'Bounced';
     }
 
-    const webLink = r.website ? '<a href="' + escHtml(r.website) + '" target="_blank" class="btn btn-secondary btn-sm" style="font-size:10px;padding:2px 6px;">Web 🌐</a>' : '';
-    const liLink = r.linkedin ? '<a href="' + escHtml(r.linkedin) + '" target="_blank" class="btn btn-secondary btn-sm" style="font-size:10px;padding:2px 6px;">LinkedIn ↗</a>' : '';
+    const webLink = r.website ? '<a href="' + escHtml(r.website) + '" target="_blank" class="btn btn-secondary btn-sm" style="font-size:10px;padding:2px 7px;">Website ↗</a>' : '';
+    const liLink = r.linkedin ? '<a href="' + escHtml(r.linkedin) + '" target="_blank" class="btn btn-secondary btn-sm" style="font-size:10px;padding:2px 7px;">LinkedIn ↗</a>' : '';
 
     html += '<tr style="border-bottom:1px solid var(--border);">' +
       '<td style="padding:10px 12px;"><div style="font-weight:600;font-size:13px;">' + escHtml(r.company) + '</div><div style="font-size:11px;color:var(--text-3);margin-top:2px;">' + escHtml(r.niche) + '</div></td>' +
       '<td style="padding:10px 12px;"><div style="font-weight:500;">' + escHtml(r.decision_maker) + '</div></td>' +
       '<td style="padding:10px 12px;"><code>' + escHtml(r.contact) + '</code></td>' +
-      '<td style="padding:10px 12px;"><span style="display:inline-block;padding:3px 8px;border-radius:4px;font-size:11px;' + statusStyle + '">' + escHtml(r.status) + '</span></td>' +
+      '<td style="padding:10px 12px;"><span class="crm-table-badge ' + badgeClass + '"><span class="status-indicator-dot ' + dotClass + '"></span>' + escHtml(cleanStatus) + '</span></td>' +
       '<td style="padding:10px 12px;"><span style="font-size:11px;">' + escHtml(r.region) + '</span></td>' +
       '<td style="padding:10px 12px;"><b style="color:var(--accent);">' + escHtml(r.deal_size) + '</b></td>' +
       '<td style="padding:10px 12px;"><div style="display:flex;gap:4px;">' + webLink + liLink + '</div></td>' +
@@ -2175,3 +2215,4 @@ function renderCrmTable(rows) {
   html += '</tbody></table></div></div>';
   container.innerHTML = html;
 }
+

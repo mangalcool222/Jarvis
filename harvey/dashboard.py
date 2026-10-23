@@ -1135,6 +1135,20 @@ async def get_crm_table():
                                     return parts[0] if len(parts) > 0 else val
                                 return val
 
+                            def _clean_status(val):
+                                v = val.replace("🚀", "").replace("❌", "").replace("⚠️", "").replace("✅", "").replace("🔥", "").replace("⏳", "").strip()
+                                if "Contacted" in v or "Delivered" in v:
+                                    return "Contacted"
+                                if "Bounced" in v or "Invalid" in v:
+                                    return "Bounced"
+                                if "Catch-All" in v or "Catchall" in v:
+                                    return "Catch-All"
+                                if "Verified" in v:
+                                    return "Verified Safe"
+                                if "Replied" in v:
+                                    return "Replied"
+                                return v or "Queued"
+
                             items.append({
                                 "company": r[0] if len(r) > 0 else "",
                                 "region": r[1] if len(r) > 1 else "",
@@ -1143,7 +1157,7 @@ async def get_crm_table():
                                 "decision_maker": r[4] if len(r) > 4 else "",
                                 "contact": r[5] if len(r) > 5 else "",
                                 "score": r[6] if len(r) > 6 else "95",
-                                "status": r[7] if len(r) > 7 else "Queued",
+                                "status": _clean_status(r[7] if len(r) > 7 else "Queued"),
                                 "deal_size": r[8] if len(r) > 8 else "$3,000 – $6,000",
                                 "website": _clean_formula(r[9]) if len(r) > 9 else "",
                                 "linkedin": _clean_formula(r[10]) if len(r) > 10 else "",
@@ -1165,15 +1179,15 @@ async def get_crm_table():
                 email_status = p.get("email_status", "")
                 
                 if status_raw == "contacted":
-                    status_badge = "🚀 Contacted (Email Delivered)"
+                    status_badge = "Contacted"
                 elif email_status == "verified" or p.get("email_verified"):
-                    status_badge = "✅ Verified Safe"
+                    status_badge = "Verified Safe"
                 elif email_status == "catch_all":
-                    status_badge = "⚠️ Catch-All"
+                    status_badge = "Catch-All"
                 elif email_status in ("invalid", "bounced"):
-                    status_badge = "❌ Bounced / Invalid Email"
+                    status_badge = "Bounced"
                 else:
-                    status_badge = "⏳ Queued"
+                    status_badge = "Queued"
 
                 items.append({
                     "company": p.get("company_name") or p.get("company") or "Unknown",
