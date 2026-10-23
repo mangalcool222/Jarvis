@@ -81,197 +81,145 @@
 <!-- Today: what needs a human -->
 <div id="today" class="section active">
   
-  <!-- HeyReach-Style Happening Hero Banner -->
-  <div class="hey-hero-banner">
-    <div class="hey-hero-left">
-      <div class="hey-pill-row">
-        <span class="hey-pill coral"><span class="pulse-dot coral"></span> 🔥 48 High-Intent Leads</span>
-        <span class="hey-pill purple">📡 23 Buying Signals</span>
+  <!-- HeyReach-Style Unified Visual Stage Hero -->
+  <div class="heyreach-unified-hero">
+    <!-- Left Column: Value Prop & CTA -->
+    <div class="hero-content">
+      <div class="hero-pill-strip">
+        <span class="hey-pill coral"><span class="pulse-dot coral"></span> 🔥 Autonomous Outbound SDR</span>
+        <span class="hey-pill purple">📡 23 Buying Intent Signals</span>
         <span class="hey-pill green">🛡️ &lt; 3% Bounce SLA</span>
-        <span class="hey-pill cyan">✍️ 1-to-1 AI Copy</span>
       </div>
-      <h2 class="hey-hero-title">
-        Autonomous AI SDR &amp; Outbound Prospecting Engine for <span class="hl-coral">B2B Founders</span>, <span class="hl-purple">Agencies</span> &amp; <span class="hl-green">GTM Teams</span>.
-      </h2>
-      <p class="hey-hero-sub">
-        Discovers high-conviction accounts, scans 23 real-time buying signals, verifies decision-maker mailboxes across multi-tier protocols, and drafts signal-citing 1-to-1 cold outreach to automate calendar bookings.
+      <h1 class="hero-main-title">
+        Discovers intent. Verifies deliverability. Books meetings.
+        <span style="display:block;font-size:22px;color:#94A3B8;font-weight:600;margin-top:8px;">
+          for <span class="hl-coral">B2B Founders</span>, <span class="hl-purple">Agencies</span> &amp; <span class="hl-green">GTM Teams</span>.
+        </span>
+      </h1>
+      <p class="hero-main-sub">
+        Jarvis autonomously scans 23 buying signals across the web, shields your domain with multi-tier MX verification, and executes bespoke 1-to-1 cold outreach to automate discovery demo calls.
       </p>
+      <div class="hero-cta-group">
+        <button class="btn-hero-primary" onclick="showTab('campaigns')">Launch SDR Campaign 🚀</button>
+        <button class="btn-hero-secondary" onclick="showTab('signals')">Explore 23 Signals 📡</button>
+      </div>
+      <div class="hero-trust-bar">
+        <span><strong>✓</strong> Zero Generic Spam</span>
+        <span><strong>✓</strong> &lt; 3% Bounce SLA</span>
+        <span><strong>✓</strong> Automated Calendar Drop</span>
+      </div>
     </div>
-    <div class="hey-hero-right">
-      <div class="hey-senders-card">
-        <div class="hey-senders-top">
-          <div class="avatar-stack">
-            <div class="avatar av-1" title="Jane Doe • PropTech Group">JD</div>
-            <div class="avatar av-2" title="Marcus Lee • Solaria Energy">ML</div>
-            <div class="avatar av-3" title="Helene Engels • Aura MedSpa">HE</div>
-            <div class="avatar av-4" title="Raj Patel • Nexa Growth">RP</div>
-            <div class="avatar av-more">+32</div>
+
+    <!-- Right Column: 3D Layered Product Stage -->
+    <div class="hero-stage">
+      <!-- Background Card: Sequence Tree -->
+      <div class="stage-workflow-card">
+        <div class="workflow-top-bar">
+          <div class="senders-bubble-strip">
+            <div class="avatar-stack-mini">
+              <div class="avatar-mini av-1">JD</div>
+              <div class="avatar-mini av-2">ML</div>
+              <div class="avatar-mini av-3">HE</div>
+              <div class="avatar-mini av-more">+32</div>
+            </div>
+            <span style="font-size:11px;font-weight:700;color:#F8FAFC;">32 Verified Accounts</span>
           </div>
-          <span class="hey-badge-glow">● Loop Active</span>
+          <span class="workflow-pill">● Autonomous Loop</span>
         </div>
-        <div class="hey-senders-stat">
-          <div class="stat-col">
-            <span class="val coral">48</span>
-            <span class="lbl">🔥 Warm Leads</span>
+        <div class="workflow-tree-grid">
+          <div class="wf-step-node" onclick="showTab('signals')">
+            <div class="wf-step-left">
+              <div class="wf-icon-box">📡</div>
+              <div class="wf-text">
+                <strong>01. Intent Radar</strong>
+                <span>23 Real-Time Buying Signals</span>
+              </div>
+            </div>
+            <span class="wf-badge coral">Detected</span>
           </div>
-          <div class="stat-divider"></div>
-          <div class="stat-col">
-            <span class="val green">99.4%</span>
-            <span class="lbl">🛡️ Valid Mail</span>
+          <div class="wf-connector-line"></div>
+          <div class="wf-step-node" onclick="showTab('discover')">
+            <div class="wf-step-left">
+              <div class="wf-icon-box">🛡️</div>
+              <div class="wf-text">
+                <strong>02. Deliverability Shield</strong>
+                <span>MX DNS &amp; Catch-All Gate</span>
+              </div>
+            </div>
+            <span class="wf-badge green">99.4% Valid</span>
           </div>
-          <div class="stat-divider"></div>
-          <div class="stat-col">
-            <span class="val cyan">23</span>
-            <span class="lbl">📡 Signals On</span>
+          <div class="wf-connector-line"></div>
+          <div class="wf-step-node" onclick="showTab('campaigns')">
+            <div class="wf-step-left">
+              <div class="wf-icon-box">✍️</div>
+              <div class="wf-text">
+                <strong>03. 1-to-1 AI Copy</strong>
+                <span>Signal-Citing Bespoke Outreach</span>
+              </div>
+            </div>
+            <span class="wf-badge purple">Contextual</span>
+          </div>
+          <div class="wf-connector-line"></div>
+          <div class="wf-step-node" onclick="showTab('outbox')">
+            <div class="wf-step-left">
+              <div class="wf-icon-box">📅</div>
+              <div class="wf-text">
+                <strong>04. Calendar Drop</strong>
+                <span>Automated Discovery Call</span>
+              </div>
+            </div>
+            <span class="wf-badge cyan">Booked</span>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- HeyReach-Style Interactive Visual Sequence Tree -->
-  <div class="hey-sequence-canvas">
-    <div class="sequence-header">
-      <div class="seq-tag"><span class="chip-icon">⚡</span> JARVIS AUTONOMOUS REVENUE CYCLE • MULTI-STAGE SDR CADENCE</div>
-      <div class="seq-status-pill"><span class="pulse-dot green"></span> ENGINE IN SYNC</div>
-    </div>
-    
-    <div class="sequence-tree">
-      <!-- Node 1: Intent Inbound -->
-      <div class="seq-node" onclick="showTab('signals')">
-        <div class="node-chip coral">TRIGGER 01</div>
-        <div class="node-title-row">
-          <span class="node-icon">📡</span>
-          <strong>Intent Radar</strong>
+      <!-- Foreground Card: Floating Real Chat Inbox -->
+      <div class="stage-inbox-card">
+        <div class="inbox-top-filter">
+          <div class="inbox-tab-strip">
+            <span class="inbox-pill-tab active">All</span>
+            <span class="inbox-pill-tab">Hot (7)</span>
+            <span class="inbox-pill-tab">Booked</span>
+          </div>
+          <span style="font-size:12px;opacity:0.6;">⚙️</span>
         </div>
-        <div class="node-sub">23 Real-Time Signals (SERP Search, Hiring Spikes, Web Gaps)</div>
-        <div class="node-badge hot">● Prospect Found</div>
-      </div>
-
-      <!-- Connector 1 -->
-      <div class="seq-connector">
-        <div class="wire-pulse"></div>
-        <span class="wire-label">ENRICHED</span>
-      </div>
-
-      <!-- Node 2: Zero-Bounce Shield -->
-      <div class="seq-node" onclick="showTab('discover')">
-        <div class="node-chip blue">GATE 02</div>
-        <div class="node-title-row">
-          <span class="node-icon">🛡️</span>
-          <strong>Deliverability Shield</strong>
+        <div class="inbox-search-bar">
+          <span>🔍</span> Search 32 verified prospects…
         </div>
-        <div class="node-sub">Syntax Gate • MX DNS • Catch-All Quarantine</div>
-        <div class="node-badge verified">✅ 99.4% Validated</div>
-      </div>
-
-      <!-- Connector 2 -->
-      <div class="seq-connector">
-        <div class="wire-pulse"></div>
-        <span class="wire-label">AI DRAFTED</span>
-      </div>
-
-      <!-- Branch A: 1-to-1 Contextual AI Copy -->
-      <div class="seq-node highlight-coral" onclick="showTab('campaigns')">
-        <div class="node-chip purple">AI ENGINE 03</div>
-        <div class="node-title-row">
-          <span class="node-icon">✍️</span>
-          <strong>Signal-Citing Copy</strong>
-        </div>
-        <div class="node-sub">LLM drafts bespoke outreach citing exact pain points &amp; tech signals</div>
-        <div class="node-badge live">⚡ Zero Generic Spam</div>
-      </div>
-
-      <!-- Connector 3 -->
-      <div class="seq-connector">
-        <div class="wire-pulse"></div>
-        <span class="wire-label">DISPATCHED</span>
-      </div>
-
-      <!-- Node 4: Calendar Booking Drop -->
-      <div class="seq-node highlight-green" onclick="showTab('outbox')">
-        <div class="node-chip green">GOAL 04</div>
-        <div class="node-title-row">
-          <span class="node-icon">📅</span>
-          <strong>Calendar Bookings</strong>
-        </div>
-        <div class="node-sub">Multi-touch cold cadence + automated discovery demo call drop</div>
-        <div class="node-badge booked">🎯 Meeting Dropped</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- HeyReach-Style Live Warm Deals & Reply Ticker -->
-  <div class="hey-ticker-strip">
-    <div class="ticker-head">
-      <div class="ticker-title">
-        <span>🔥</span> UNIFIED REPLIES &amp; REAL-TIME OUTBOUND TELEMETRY
-      </div>
-      <div style="font-size:11px;color:#94A3B8;font-family:var(--mono);">
-        Live Stream • Instant Sync
-      </div>
-    </div>
-    <div class="ticker-grid">
-      <!-- Lead 1: PropTech -->
-      <div class="ticker-card" onclick="showTab('crm-sheet')">
-        <div class="ticker-top">
-          <div class="ticker-user">
-            <div class="user-avatar red">JD</div>
-            <div class="user-meta">
-              <strong>Jane Doe</strong>
-              <span>VP Growth • PropTech Partners</span>
+        <div class="inbox-chat-list">
+          <div class="inbox-chat-item" onclick="showTab('crm-sheet')">
+            <div class="chat-avatar red">JD</div>
+            <div class="chat-body">
+              <div class="chat-header">
+                <span class="chat-name">Jane Doe • PropTech</span>
+                <span class="chat-time">12m</span>
+              </div>
+              <div class="chat-preview">“Loved your email citing our 3 sales hires. Let's do a call Tuesday!”</div>
+              <span class="chat-tag hot">🔥 Interested</span>
             </div>
           </div>
-          <span class="badge-tag hot">🔥 High Intent</span>
-        </div>
-        <div class="ticker-msg">
-          &ldquo;Loved how your email cited our recent sales hiring and tech stack gap. Let's do a 15-min discovery call Tuesday.&rdquo;
-        </div>
-        <div class="ticker-telemetry">
-          <span>Email delivered</span>
-          <span class="speed">Reply received • Demo booked</span>
-        </div>
-      </div>
-
-      <!-- Lead 2: Solar Co -->
-      <div class="ticker-card" onclick="showTab('outbox')">
-        <div class="ticker-top">
-          <div class="ticker-user">
-            <div class="user-avatar blue">ML</div>
-            <div class="user-meta">
-              <strong>Marcus Lee</strong>
-              <span>Managing Director • Solaria Energy</span>
+          <div class="inbox-chat-item" onclick="showTab('outbox')">
+            <div class="chat-avatar blue">ML</div>
+            <div class="chat-body">
+              <div class="chat-header">
+                <span class="chat-name">Marcus Lee • Solaria</span>
+                <span class="chat-time">45m</span>
+              </div>
+              <div class="chat-preview">“Slot confirmed for Thursday 3:00 PM via automated calendar link.”</div>
+              <span class="chat-tag booked">📅 Demo Booked</span>
             </div>
           </div>
-          <span class="badge-tag contacted">🚀 Outbound Sent</span>
-        </div>
-        <div class="ticker-msg">
-          &ldquo;Ad spend surge ($25k/mo) detected on Meta/Google. Personalized hook citing lead response decay delivered.&rdquo;
-        </div>
-        <div class="ticker-telemetry">
-          <span>Verified Mailbox</span>
-          <span class="speed">1-to-1 Sequence Dispatched</span>
-        </div>
-      </div>
-
-      <!-- Lead 3: MedSpa -->
-      <div class="ticker-card" onclick="showTab('campaigns')">
-        <div class="ticker-top">
-          <div class="ticker-user">
-            <div class="user-avatar green">HE</div>
-            <div class="user-meta">
-              <strong>Helene Engels</strong>
-              <span>Founder • Aura MedSpa Group</span>
+          <div class="inbox-chat-item" onclick="showTab('campaigns')">
+            <div class="chat-avatar green">HE</div>
+            <div class="chat-body">
+              <div class="chat-header">
+                <span class="chat-name">Helene Engels • MedSpa</span>
+                <span class="chat-time">2h</span>
+              </div>
+              <div class="chat-preview">“Signal cited: Meta ad spend ($25k/mo) + schema gap.”</div>
+              <span class="chat-tag sent">⚡ 1-to-1 Sent</span>
             </div>
           </div>
-          <span class="badge-tag booked">📅 Demo Booked</span>
-        </div>
-        <div class="ticker-msg">
-          &ldquo;Discovery call slot selected for Thursday 3:30 PM. Impressive how your AI SDR verified our direct contact.&rdquo;
-        </div>
-        <div class="ticker-telemetry">
-          <span>Intent score: 95/100</span>
-          <span class="speed">Calendar Link Confirmed</span>
         </div>
       </div>
     </div>
