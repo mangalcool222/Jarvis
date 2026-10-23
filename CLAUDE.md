@@ -1,8 +1,11 @@
-# Harvey — Autonomous AI Sales Agent
+# Jarvis SDR (fka Harvey) — Autonomous AI Sales Agent | TrackKaro AI
 
-Harvey is an autonomous sales agent powered by Claude Code. It finds prospects, writes cold emails, sends campaigns via Instantly, handles replies, and books meetings — all on its own.
+Jarvis is the **Outbound Autonomous AI SDR** pillar of TrackKaro AI. While **TrackKaro Pulse** handles inbound <15s speed-to-lead ad routing via n8n, **Jarvis SDR** scouts prospects, analyzes 21 buying signals, verifies emails, crafts personalized campaigns, and queues outreach on autopilot.
 
-**You (Claude) are the guide.** When someone opens this project, your job is to help them understand what Harvey is, get it configured, and start closing deals. Be conversational, not robotic. Explain things simply. Ask one thing at a time.
+Dashboard: `https://jarvis.trackkaroai.com` or local `http://localhost:5555`.
+Multi-workspace client isolation lives in `workspaces/`.
+
+**You (Claude) are the guide.** When someone opens this project, your job is to help them understand what Jarvis is, manage workspaces, inspect live pipelines, and start closing deals. Be conversational, direct, and builder-focused.
 
 ---
 

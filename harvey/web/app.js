@@ -12,6 +12,36 @@ async function loadWorkspaceInfo() {
       _workspaceInfo = info;
       const headerLink = document.getElementById('header-sheet-link');
       const crmLink = document.getElementById('crm-sheet-link');
+      const wsBadge = document.getElementById('workspace-badge');
+      const wsTagline = document.getElementById('workspace-tagline');
+      
+      const isColdEmail = (info.workspace === 'cold_email_outreach');
+      const wsName = isColdEmail ? 'Cold Email Agency (Port 5556)' : 'TrackKaro Speed-to-Lead (Port 5555)';
+      
+      if (wsBadge) {
+        if (isColdEmail) {
+          wsBadge.innerHTML = '✉️ Workspace: B2B Cold Email Agency';
+          wsBadge.style.background = 'rgba(168, 85, 247, 0.18)';
+          wsBadge.style.color = '#c084fc';
+          wsBadge.style.borderColor = 'rgba(168, 85, 247, 0.4)';
+        } else {
+          wsBadge.innerHTML = '⚡ Workspace: TrackKaro Speed-to-Lead';
+          wsBadge.style.background = 'rgba(59, 130, 246, 0.18)';
+          wsBadge.style.color = '#60a5fa';
+          wsBadge.style.borderColor = 'rgba(59, 130, 246, 0.4)';
+        }
+      }
+
+      if (wsTagline) {
+        wsTagline.textContent = isColdEmail
+          ? 'Autonomous B2B Outbound Engine ($1,500-$2,500/mo Retainer) • ICP: B2B SaaS, Dev Agencies & High-Ticket'
+          : 'Done-For-You Speed-to-Lead Pipeline ($500-$997 Setup) • ICP: Dubai Luxury Real Estate, Clinics & Agencies';
+      }
+
+      document.title = isColdEmail
+        ? '[Cold Outreach :5556] Jarvis AI SDR'
+        : '[TrackKaro :5555] Jarvis AI SDR';
+
       if (info.has_sheet && info.sheet_url) {
         if (headerLink) {
           headerLink.href = info.sheet_url;

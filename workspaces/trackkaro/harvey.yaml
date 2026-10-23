@@ -33,7 +33,8 @@ product:
 icp:
   industries:
     - "Luxury Real Estate"
-    - "Real Estate Agency"
+    - "Real Estate Agency & Brokerage"
+    - "Luxury Property Developers"
     - "Commercial Real Estate"
     - "Property Management"
     - "B2B SaaS"
@@ -48,11 +49,12 @@ icp:
     - "VP Marketing"
   geography:
     - "Dubai, UAE"
+    - "Gurgaon, Haryana"
+    - "Mumbai, Maharashtra"
+    - "Bangalore, Karnataka"
+    - "Delhi NCR, India"
     - "Miami, FL"
-    - "Austin, TX"
-    - "Dallas, TX"
     - "London, UK"
-    - "Scottsdale, AZ"
   hiring_signals:
     - "Sales Director"
     - "Performance Marketer"

@@ -32,9 +32,10 @@ product:
 
 icp:
   industries:
-    - "Performance Marketing & Lead-Gen Agencies"
-    - "Dubai Luxury Real Estate"
     - "Luxury Real Estate"
+    - "Real Estate Agency & Brokerage"
+    - "Luxury Property Developers"
+    - "Performance Marketing & Lead-Gen Agencies"
     - "High-Ticket B2B SaaS"
     - "Solar & Roofing Contractors"
     - "Aesthetic Clinics & MedSpas"
@@ -46,18 +47,16 @@ icp:
     - "Principal Broker"
     - "Head of Growth"
     - "Director of Sales"
-    - "Founder & CEO"
-    - "Director of Sales"
-    - "Clinic Director"
-    - "Head of Growth"
-    - "VP Marketing"
+    - "Partner"
+    - "Head of Marketing"
   geography:
     - "Dubai, UAE"
+    - "Gurgaon, Haryana"
+    - "Mumbai, Maharashtra"
+    - "Bangalore, Karnataka"
+    - "Delhi NCR, India"
     - "Miami, FL"
-    - "Austin, TX"
-    - "Dallas, TX"
     - "London, UK"
-    - "Scottsdale, AZ"
   hiring_signals:
     - "Sales Director"
     - "Performance Marketer"
