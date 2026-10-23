@@ -21,35 +21,27 @@
       <div class="radar-blip blip-2"></div>
       <span class="radar-center-mark">⚡</span>
     </div>
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <h1 id="brand-title">Jarvis — Autonomous AI SDR</h1>
-        <span class="apple-status-pill"><span class="pulse-dot green"></span> Engine Active</span>
-        <span id="workspace-badge" style="padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.35); text-transform: uppercase;">Campaign: Active</span>
+    <div class="brand-text">
+      <div class="brand-title-wrap">
+        <h1 id="brand-title">Jarvis <span class="brand-highlight">AI SDR</span></h1>
+        <span class="status-badge" id="header-status-badge">
+          <span class="status-dot running" id="header-dot"></span>
+          <span id="header-status-text">Engine Ready</span>
+        </span>
       </div>
-      <div class="tagline" id="workspace-tagline">Autonomous AI SDR Engine • 23 Live Buying Signals, Waterfall Enrichment & Zero-Token Cost Architecture</div>
+      <div class="tagline" id="workspace-tagline">Autonomous Outbound Intelligence • TrackKaro AI</div>
     </div>
   </div>
+
   <div class="header-controls">
-    <div class="telemetry-pill-strip">
-      <div class="telemetry-chip" title="21-23 Live Buying Signals configured">
-        <span class="chip-icon">📡</span> Radar: <strong>23 Signals</strong>
-      </div>
-      <div class="telemetry-chip" title="Zero-Bounce Mailbox Deliverability SLA">
-        <span class="chip-icon">🛡️</span> Bounce SLA: <strong>&lt; 3%</strong>
-      </div>
-    </div>
     <a href="#" 
        target="_blank" rel="noopener noreferrer" 
        id="header-sheet-link"
        class="btn-sheets" 
        style="display:none;"
        title="Open Google Sheets Master CRM">
-      <span style="font-size:14px;">📊</span> Google Sheet CRM <span style="font-size:11px;opacity:0.8;">↗</span>
+      <span style="font-size:13px;">📊</span> Google Sheet CRM <span style="font-size:11px;opacity:0.8;">↗</span>
     </a>
-    <div class="harvey-status" id="header-status">
-      <span class="status-dot stopped" id="header-dot"></span>
-      <span id="header-status-text">Checking…</span>
-    </div>
     <button class="icon-btn" id="theme-btn" onclick="cycleTheme()"
             title="Appearance: follows your system until you pick one">auto</button>
     <button class="refresh-btn" onclick="loadCurrentTab()">Refresh</button>

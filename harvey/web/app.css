@@ -142,14 +142,31 @@ header {
   font-family: var(--sans); font-size: 16px; font-weight: 700; line-height: 1;
   box-shadow: 0 0 16px rgba(16, 185, 129, 0.45);
 }
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-text { display: flex; flex-direction: column; justify-content: center; }
+.brand-title-wrap { display: flex; align-items: center; gap: 10px; }
 .brand h1 {
-  font-family: var(--sans); font-size: 17px; font-weight: 700;
-  letter-spacing: -0.02em; line-height: 1.15;
+  font-family: var(--sans); font-size: 16px; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.2; color: #FFFFFF;
+  margin: 0;
+}
+.brand-highlight {
+  color: #10b981; font-weight: 700; font-size: 14px;
 }
 .brand .tagline {
-  font-family: var(--sans); font-style: normal; font-size: 11.5px;
-  color: var(--text-3); line-height: 1.25; margin-top: 2px;
-  letter-spacing: 0.01em;
+  font-family: var(--sans); font-style: normal; font-size: 11px;
+  color: var(--text-3); line-height: 1.2; margin-top: 3px;
+  letter-spacing: 0.02em;
+}
+.status-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  color: #34d399;
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.3px;
 }
 .header-controls { display: flex; align-items: center; gap: 8px; }
 .harvey-status {

@@ -12,30 +12,13 @@ async function loadWorkspaceInfo() {
       _workspaceInfo = info;
       const headerLink = document.getElementById('header-sheet-link');
       const crmLink = document.getElementById('crm-sheet-link');
-      const wsBadge = document.getElementById('workspace-badge');
       const wsTagline = document.getElementById('workspace-tagline');
-      
       const isColdEmail = (info.workspace === 'cold_email_outreach');
-      const wsName = isColdEmail ? 'Cold Email Agency (Port 5556)' : 'TrackKaro Speed-to-Lead (Port 5555)';
-      
-      if (wsBadge) {
-        if (isColdEmail) {
-          wsBadge.innerHTML = '✉️ Campaign: B2B SaaS & Dev Agencies';
-          wsBadge.style.background = 'rgba(168, 85, 247, 0.18)';
-          wsBadge.style.color = '#c084fc';
-          wsBadge.style.borderColor = 'rgba(168, 85, 247, 0.4)';
-        } else {
-          wsBadge.innerHTML = '🎯 Campaign: High-Ticket Real Estate & Clinics';
-          wsBadge.style.background = 'rgba(59, 130, 246, 0.18)';
-          wsBadge.style.color = '#60a5fa';
-          wsBadge.style.borderColor = 'rgba(59, 130, 246, 0.4)';
-        }
-      }
 
       if (wsTagline) {
         wsTagline.textContent = isColdEmail
-          ? 'Autonomous B2B Outbound SDR • 23 Live Buying Signals, Contact Waterfall & Hyper-Personalized Sequences'
-          : 'Autonomous AI SDR Engine • 23 Live Buying Signals, Waterfall Enrichment & Zero-Token Cost Architecture';
+          ? 'Autonomous Outbound SDR • B2B SaaS & Dev Agencies'
+          : 'Autonomous Outbound Intelligence • TrackKaro AI';
       }
 
       const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -915,8 +898,8 @@ async function loadHarveyStatus() {
   }
   const running = !!data.running;
 
-  headerDot.className = 'status-dot ' + (running ? 'running' : 'stopped');
-  headerText.textContent = running ? 'Jarvis is running' : 'Jarvis is stopped';
+  if (headerDot) headerDot.className = 'status-dot ' + (running ? 'running' : 'stopped');
+  if (headerText) headerText.textContent = running ? 'Autonomous Loop' : 'Engine Ready';
   document.getElementById('control-dot').className = 'dot ' + (running ? 'running' : 'stopped');
   const label = document.getElementById('control-label');
   label.className = 'label ' + (running ? 'running' : 'stopped');
