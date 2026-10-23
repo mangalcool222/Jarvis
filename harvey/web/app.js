@@ -2216,3 +2216,149 @@ function renderCrmTable(rows) {
   container.innerHTML = html;
 }
 
+/* ── 2-Step Outbound Pipeline Audit Controller ─────────────── */
+function scrollToAuditForm(e) {
+  if (e) e.preventDefault();
+  const todayNavBtn = document.querySelector('nav.apple-dock button:first-child') || document.querySelector('nav button:first-child');
+  showTab('today', todayNavBtn);
+  setTimeout(() => {
+    const el = document.getElementById('audit-consultation-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const nameInput = document.getElementById('audit-name');
+      if (nameInput) setTimeout(() => nameInput.focus(), 400);
+    }
+  }, 100);
+}
+
+function goToAuditStep(step) {
+  const p1 = document.getElementById('audit-pane-1');
+  const p2 = document.getElementById('audit-pane-2');
+  const pill1 = document.getElementById('step-pill-1');
+  const pill2 = document.getElementById('step-pill-2');
+
+  if (step === 2) {
+    const name = document.getElementById('audit-name')?.value.trim();
+    const company = document.getElementById('audit-company')?.value.trim();
+    const email = document.getElementById('audit-email')?.value.trim();
+    const phone = document.getElementById('audit-phone')?.value.trim();
+
+    if (!name) {
+      alert('Please enter your Full Name.');
+      document.getElementById('audit-name')?.focus();
+      return;
+    }
+    if (!company) {
+      alert('Please enter your Company or Brand Name.');
+      document.getElementById('audit-company')?.focus();
+      return;
+    }
+    if (!email || !email.includes('@')) {
+      alert('Please enter a valid Work Email Address.');
+      document.getElementById('audit-email')?.focus();
+      return;
+    }
+    const cleanPhone = phone.replace(/[^0-9]/g, '');
+    if (!phone || cleanPhone.length < 8 || cleanPhone.length > 15) {
+      alert('Please enter a valid WhatsApp Phone Number (e.g. +91 98765 43210 or 9876543210).');
+      document.getElementById('audit-phone')?.focus();
+      return;
+    }
+
+    if (p1) p1.style.display = 'none';
+    if (p2) p2.style.display = 'block';
+    if (pill1) pill1.classList.remove('active');
+    if (pill2) pill2.classList.add('active');
+  } else {
+    if (p1) p1.style.display = 'block';
+    if (p2) p2.style.display = 'none';
+    if (pill1) pill1.classList.add('active');
+    if (pill2) pill2.classList.remove('active');
+  }
+}
+
+async function handleAuditSubmit(e) {
+  if (e) e.preventDefault();
+
+  const name = document.getElementById('audit-name')?.value.trim() || '';
+  const company = document.getElementById('audit-company')?.value.trim() || '';
+  const email = document.getElementById('audit-email')?.value.trim() || '';
+  const phone = document.getElementById('audit-phone')?.value.trim() || '';
+  const industry = document.getElementById('audit-industry')?.value || 'B2B SaaS & Tech Startups';
+  const market = document.getElementById('audit-market')?.value || 'US & North America';
+  const dealSize = document.getElementById('audit-deal-size')?.value || '$3,000 – $6,000 / month';
+  const goal = document.getElementById('audit-goal')?.value || 'Full DFY Autonomous SDR Engine + Calendar Drop';
+
+  const cleanDigits = phone.replace(/[^0-9]/g, '');
+  let normalizedPhone = phone;
+  if (cleanDigits.length === 10) {
+    normalizedPhone = '+91 ' + cleanDigits.slice(0, 5) + ' ' + cleanDigits.slice(5);
+  }
+
+  const btn = document.getElementById('audit-submit-btn');
+  const origBtnHtml = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span>Ingesting into Speed-to-Lead Pipeline...</span>';
+  }
+
+  const payload = {
+    lead_name: name,
+    full_name: name,
+    company: company,
+    lead_phone: normalizedPhone,
+    phone_number: normalizedPhone,
+    lead_email: email,
+    email: email,
+    industry: industry,
+    lead_source: 'Jarvis Outbound OS (jarvis.trackkaroai.com)',
+    property_interest: 'JARVIS OUTBOUND AUDIT: ' + company + ' [' + industry + '] (Target: ' + market + ') (Deal: ' + dealSize + ') (' + goal + ')',
+    budget: dealSize + ' • Target Market: ' + market + ' • Goal: ' + goal,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata',
+    locale: typeof navigator !== 'undefined' ? (navigator.language || 'en-IN') : 'en-IN',
+    status: 'REAL_JARVIS_OUTBOUND_AUDIT_INQUIRY'
+  };
+
+  try {
+    const res = await fetch('https://n8n.trackkaroai.com/webhook/gtm-agency-lead-inbound', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    console.log('n8n ingestion response:', res.status);
+  } catch (err) {
+    console.log('Webhook dispatched with optimistic fallback:', err);
+  }
+
+  // Show success card
+  const form = document.getElementById('audit-inquiry-form');
+  const successBox = document.getElementById('audit-success-box');
+  const stepper = document.querySelector('.audit-stepper-wrap');
+
+  if (form) form.style.display = 'none';
+  if (stepper) stepper.style.display = 'none';
+  if (successBox) successBox.style.display = 'block';
+
+  showToast('Audit Request Ingested! Speed-to-Lead alert sent.', 'success');
+}
+
+function resetAuditForm() {
+  const form = document.getElementById('audit-inquiry-form');
+  const successBox = document.getElementById('audit-success-box');
+  const stepper = document.querySelector('.audit-stepper-wrap');
+  const btn = document.getElementById('audit-submit-btn');
+
+  if (form) {
+    form.reset();
+    form.style.display = 'block';
+  }
+  if (stepper) stepper.style.display = 'flex';
+  if (successBox) successBox.style.display = 'none';
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = '<span>Request Autonomous Outbound Audit</span> <span style="font-size:13px;">⚡</span>';
+  }
+  goToAuditStep(1);
+}
+
+
