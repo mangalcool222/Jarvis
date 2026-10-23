@@ -1639,3 +1639,108 @@ details[open] summary::before { content: '– '; }
   border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
+/* ── High-Ticket Audit CTA & Floating Architect Widget ─────── */
+.btn-cta-audit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #00E599 0%, #059669 100%);
+  color: #041F16 !important;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  text-decoration: none !important;
+  border: 1px solid rgba(0, 229, 153, 0.4);
+  box-shadow: 0 0 14px rgba(0, 229, 153, 0.25);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+.btn-cta-audit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px rgba(0, 229, 153, 0.4);
+  color: #041F16 !important;
+}
+
+.floating-architect-pill {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 7px 12px 7px 14px;
+  border-radius: 999px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition: all 0.25s ease;
+}
+.floating-architect-pill:hover {
+  border-color: rgba(0, 229, 153, 0.4);
+  box-shadow: 0 16px 42px rgba(0, 229, 153, 0.22), 0 0 0 1px rgba(0, 229, 153, 0.2);
+  transform: translateY(-2px);
+}
+.fap-left {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.fap-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00E599;
+  box-shadow: 0 0 10px #00E599;
+  animation: pulseGreen 2s infinite;
+  flex: none;
+}
+@keyframes pulseGreen {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 229, 153, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(0, 229, 153, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 229, 153, 0); }
+}
+.fap-text strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.25;
+}
+.fap-text span {
+  display: block;
+  font-size: 9.5px;
+  color: #94A3B8;
+  line-height: 1.2;
+}
+.fap-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #25D366;
+  color: #032511 !important;
+  font-weight: 750;
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.fap-btn:hover {
+  background: #2ee672;
+  box-shadow: 0 0 14px rgba(37, 211, 102, 0.6);
+  color: #032511 !important;
+}
+@media (max-width: 768px) {
+  .floating-architect-pill {
+    bottom: 16px;
+    right: 14px;
+    left: 14px;
+    justify-content: space-between;
+  }
+}
+
