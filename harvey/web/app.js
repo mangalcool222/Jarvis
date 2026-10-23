@@ -20,12 +20,12 @@ async function loadWorkspaceInfo() {
       
       if (wsBadge) {
         if (isColdEmail) {
-          wsBadge.innerHTML = '✉️ Workspace: B2B Cold Email Agency';
+          wsBadge.innerHTML = '✉️ Campaign: B2B SaaS & Dev Agencies';
           wsBadge.style.background = 'rgba(168, 85, 247, 0.18)';
           wsBadge.style.color = '#c084fc';
           wsBadge.style.borderColor = 'rgba(168, 85, 247, 0.4)';
         } else {
-          wsBadge.innerHTML = '⚡ Workspace: TrackKaro Speed-to-Lead';
+          wsBadge.innerHTML = '🎯 Campaign: High-Ticket Real Estate & Clinics';
           wsBadge.style.background = 'rgba(59, 130, 246, 0.18)';
           wsBadge.style.color = '#60a5fa';
           wsBadge.style.borderColor = 'rgba(59, 130, 246, 0.4)';
@@ -34,13 +34,14 @@ async function loadWorkspaceInfo() {
 
       if (wsTagline) {
         wsTagline.textContent = isColdEmail
-          ? 'Autonomous B2B Outbound Engine ($1,500-$2,500/mo Retainer) • ICP: B2B SaaS, Dev Agencies & High-Ticket'
-          : 'Done-For-You Speed-to-Lead Pipeline ($500-$997 Setup) • ICP: Dubai Luxury Real Estate, Clinics & Agencies';
+          ? 'Autonomous B2B Outbound SDR • 23 Live Buying Signals, Contact Waterfall & Hyper-Personalized Sequences'
+          : 'Autonomous AI SDR Engine • 23 Live Buying Signals, Waterfall Enrichment & Zero-Token Cost Architecture';
       }
 
-      document.title = isColdEmail
-        ? '[Cold Outreach :5556] Jarvis AI SDR'
-        : '[TrackKaro :5555] Jarvis AI SDR';
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      document.title = isLocal
+        ? (isColdEmail ? '[Cold Outreach :5556] Jarvis AI SDR' : '[TrackKaro :5555] Jarvis AI SDR')
+        : 'Jarvis AI SDR — Autonomous B2B Prospecting Engine | TrackKaro AI';
 
       if (info.has_sheet && info.sheet_url) {
         if (headerLink) {
