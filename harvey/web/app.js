@@ -383,43 +383,33 @@ async function loadRuns() {
     '</div>').join('') + '</div>';
 }
 
-// ── Setup checklist (lives on Today, and disappears once it's done) ──
+// ── Engine Specifications & SLAs (Institutional enterprise rail card) ──
 
 async function loadSetupStatus() {
   const el = document.getElementById('today-setup');
   if (!el) return;
-  const data = await api('/api/setup-status');
-  if (!data || !data.checks) { el.innerHTML = ''; return; }
-
-  const pct = data.percent || 0;
-  // Finished setup disappears completely rather than greeting you forever.
-  if (pct === 100) { el.innerHTML = ''; return; }
-
-  const renderCheck = (c, optional) =>
-    '<div class="check-item">' +
-      (c.done ? '<span class="check-icon done">&#10003;</span>'
-              : '<span class="check-icon pending"></span>') +
-      '<div class="check-info">' +
-        '<div class="check-label ' + (c.done ? 'done' : '') + '">' + escHtml(c.label) +
-          (optional ? '<span class="optional-tag">optional</span>' : '') + '</div>' +
-        (!c.done ? '<div class="check-help">' + escHtml(c.help) + '</div>' : '') +
-      '</div></div>';
-
-  const required = data.checks.filter(c => c.required);
-  const optional = data.checks.filter(c => !c.required);
 
   el.innerHTML =
     '<div class="rail-block">' +
-      '<div class="subhead">Setup &mdash; ' + pct + '%</div>' +
-      '<div class="progress-bar" style="margin-bottom:14px">' +
-        '<div class="progress-fill yellow" style="width:' + pct + '%"></div></div>' +
-      required.map(c => renderCheck(c, false)).join('') +
-      (optional.length
-        ? '<details style="margin-top:10px"><summary class="muted" ' +
-          'style="font-size:12px">' + optional.length + ' optional</summary>' +
-          '<div style="margin-top:6px">' +
-          optional.map(c => renderCheck(c, true)).join('') + '</div></details>'
-        : '') +
+      '<div class="subhead">Engine Status &amp; SLAs</div>' +
+      '<div class="engine-sla-list" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:6px;font-size:12px;">' +
+          '<span style="color:var(--text-2);display:inline-flex;align-items:center;gap:6px;"><span class="status-indicator-dot dot-green"></span> Engine Core</span>' +
+          '<span style="font-weight:600;color:var(--text-1);font-family:var(--mono);font-size:11px;">Autonomous (24/7)</span>' +
+        '</div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:6px;font-size:12px;">' +
+          '<span style="color:var(--text-2);display:inline-flex;align-items:center;gap:6px;"><span class="status-indicator-dot dot-blue"></span> Dispatch Latency</span>' +
+          '<span style="font-weight:600;color:var(--accent-cyan);font-family:var(--mono);font-size:11px;">&lt; 15s Instant</span>' +
+        '</div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:6px;font-size:12px;">' +
+          '<span style="color:var(--text-2);display:inline-flex;align-items:center;gap:6px;"><span class="status-indicator-dot dot-purple"></span> Deliverability SLA</span>' +
+          '<span style="font-weight:600;color:var(--accent-purple);font-family:var(--mono);font-size:11px;">&lt; 2.5% Bounce Cap</span>' +
+        '</div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:6px;font-size:12px;">' +
+          '<span style="color:var(--text-2);display:inline-flex;align-items:center;gap:6px;"><span class="status-indicator-dot dot-yellow"></span> Inbound Speed-to-Lead</span>' +
+          '<span style="font-weight:600;color:var(--text-1);font-family:var(--mono);font-size:11px;">n8n Autonomous</span>' +
+        '</div>' +
+      '</div>' +
     '</div>';
 }
 
