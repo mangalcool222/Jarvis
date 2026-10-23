@@ -1242,7 +1242,7 @@ async def get_workspace_info():
     sheet_url = ""
     webhook_url = ""
     if is_root:
-        sheet_url = "https://docs.google.com/spreadsheets/d/1b9xhW3LQLFCXSapKBBuGESZuUzBwdVWd6kXLqIqtMkQ/edit"
+        sheet_url = os.getenv("GOOGLE_SHEET_URL", "")
         webhook_url = os.getenv("GOOGLE_SHEET_WEBHOOK_URL", "")
     else:
         ws_env = ws / ".env"
