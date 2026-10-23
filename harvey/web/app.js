@@ -229,11 +229,11 @@ function showTab(id, btn) {
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   const sec = document.getElementById(id);
   if (sec) sec.classList.add('active');
-  if (!btn) btn = document.querySelector('nav button[onclick*="\'' + id + '\'"]');
+  if (!btn) btn = document.querySelector('.apple-dock button[onclick*="\'' + id + '\'"], nav button[onclick*="\'' + id + '\'"]');
   if (btn) btn.classList.add('active');
   updateDockSlider(btn);
   try { history.replaceState(null, '', '#' + id); } catch(e) {}
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo(0, 0);
   loadCurrentTab();
 }
 
@@ -244,6 +244,8 @@ window.addEventListener('DOMContentLoaded', () => {
   } else {
     setTimeout(updateDockSlider, 60);
   }
+  setTimeout(() => window.scrollTo(0, 0), 10);
+  setTimeout(() => window.scrollTo(0, 0), 80);
   initBentoSpotlight();
 });
 
