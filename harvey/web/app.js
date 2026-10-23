@@ -17,14 +17,14 @@ async function loadWorkspaceInfo() {
 
       if (wsTagline) {
         wsTagline.textContent = isColdEmail
-          ? 'Autonomous Outbound SDR • B2B SaaS & Dev Agencies • Architected by Mangal Soren'
-          : 'Autonomous Outbound Intelligence • Architected by Mangal Soren';
+          ? 'Autonomous Outbound SDR • B2B SaaS & Dev Agencies • TrackKaro AI • Architected by Mangal Soren'
+          : 'Autonomous Outbound Intelligence • TrackKaro AI • Architected by Mangal Soren';
       }
 
       const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       document.title = isLocal
-        ? (isColdEmail ? '[Cold Outreach :5556] TrackKaro Outbound OS' : '[TrackKaro :5555] TrackKaro Outbound OS')
-        : 'TrackKaro Outbound OS — Autonomous SDR Revenue Engine | Mangal Soren';
+        ? (isColdEmail ? '[Cold Outreach :5556] Jarvis AI SDR • TrackKaro' : '[TrackKaro :5555] Jarvis AI SDR • Outbound OS')
+        : 'Jarvis AI SDR — Autonomous Outbound Engine | TrackKaro AI • Mangal Soren';
 
       if (info.has_sheet && info.sheet_url) {
         if (headerLink) {
