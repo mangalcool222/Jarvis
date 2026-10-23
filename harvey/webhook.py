@@ -10,10 +10,7 @@ import asyncio
 
 logger = logging.getLogger("harvey.webhook")
 
-DEFAULT_WEBHOOK_URL = os.environ.get(
-    "HARVEY_WEBHOOK_URL",
-    "https://n8n.trackkaroai.com/webhook/harvey-event"
-)
+DEFAULT_WEBHOOK_URL = os.environ.get("HARVEY_WEBHOOK_URL", "")
 
 def _send_sync(url: str, payload: dict):
     try:
@@ -31,7 +28,11 @@ def _send_sync(url: str, payload: dict):
 
 def dispatch_event(event_name: str, data: dict, webhook_url: str | None = None):
     """Fire-and-forget webhook dispatcher."""
-    url = webhook_url or DEFAULT_WEBHOOK_URL
+    # Safety gate: NEVER fire real webhooks during automated tests or CI runners
+    if any(k in os.environ for k in ("PYTEST_CURRENT_TEST", "CI", "GITHUB_ACTIONS")):
+        return
+
+    url = webhook_url or os.environ.get("HARVEY_WEBHOOK_URL", DEFAULT_WEBHOOK_URL)
     if not url:
         return
         

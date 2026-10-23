@@ -18,10 +18,7 @@ logger = logging.getLogger("harvey.sheets_sync")
 
 DEFAULT_TSV_PATH = "/Users/mangal777/Mangal/01_TrackKaro_AI/TrackKaro_Leads/google_sheet_import_ready.tsv"
 DEFAULT_CSV_PATH = "/Users/mangal777/Mangal/01_TrackKaro_AI/TrackKaro_Leads/trackkaro_leads.csv"
-DEFAULT_WEBHOOK_URL = os.getenv(
-    "GOOGLE_SHEET_WEBHOOK_URL",
-    "https://script.google.com/macros/s/AKfycbwujgsnYh-8yGoSg4-Az9PGg8QcJVQEEIsS6UcqksLFWmcGLo2jko5Oz3-uetiTlvFw/exec"
-)
+DEFAULT_WEBHOOK_URL = os.getenv("GOOGLE_SHEET_WEBHOOK_URL", "")
 
 
 def _clean_domain(url: str) -> str:
@@ -160,6 +157,8 @@ async def push_to_google_sheet(
     webhook_url: Optional[str] = None
 ) -> bool:
     """Send an async webhook event to Google Apps Script / n8n to update Google Sheet CRM."""
+    if any(k in os.environ for k in ("PYTEST_CURRENT_TEST", "CI", "GITHUB_ACTIONS")):
+        return False
     from harvey.paths import PROJECT_ROOT, get_workspace_dir
     ws = get_workspace_dir()
     is_root = (ws.resolve() == PROJECT_ROOT.resolve() or ws.name in ("trackkaro", ""))
