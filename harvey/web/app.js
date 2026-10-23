@@ -194,7 +194,7 @@ function updateDockSlider(activeBtn) {
 }
 
 function initBentoSpotlight() {
-  const cards = document.querySelectorAll('.bento-card');
+  const cards = document.querySelectorAll('.bento-card, .seq-node, .ticker-card, .hey-senders-card');
   cards.forEach(card => {
     card.addEventListener('mousemove', e => {
       const rect = card.getBoundingClientRect();
