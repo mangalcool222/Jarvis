@@ -51,6 +51,7 @@
     <button class="icon-btn" id="theme-btn" onclick="cycleTheme()"
             title="Appearance: follows your system until you pick one">auto</button>
     <button class="refresh-btn" onclick="loadCurrentTab()">Refresh</button>
+    <button class="icon-btn" onclick="showTab('controls')" title="Internal Engine Controls &amp; Settings" style="font-size:12px;opacity:0.65;">⚙️ Ops</button>
   </div>
 </header>
 
@@ -67,10 +68,7 @@
     <button onclick="showTab('crm-sheet', this)">CRM Vault</button>
     <button onclick="showTab('conversations', this)">Conversations</button>
     <button onclick="showTab('activity', this)">Activity</button>
-    <button onclick="showTab('usage', this)">Usage</button>
-    <button onclick="showTab('settings', this)">Settings</button>
-    <button onclick="showTab('controls', this)">Controls</button>
-    <button onclick="showTab('help', this)">Help</button>
+    <button onclick="showTab('help', this)">Architecture</button>
   </nav>
 </div>
 
@@ -650,7 +648,18 @@
 
 <!-- Settings -->
 <div id="settings" class="section">
-  <div class="section-head"><h2>Settings</h2><p>Credentials are stored locally in <span style="font-family:var(--mono);font-size:12px">.env</span> — never sent anywhere except the services themselves.</p></div>
+  <div class="section-head"><h2>Settings</h2><p>Managed environment configuration and API integrations.</p></div>
+
+  <div class="card" style="border-left: 3px solid var(--accent-cyan); background: rgba(0, 240, 255, 0.03); margin-bottom: 20px; padding: 12px 16px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="status-indicator-dot dot-yellow"></span>
+      <div>
+        <strong style="color:var(--text-1);font-size:13px;">Managed System Configuration:</strong>
+        <span style="color:var(--text-2);font-size:12px;margin-left:6px;">Infrastructure parameters and API tokens are pre-provisioned and managed by TrackKaro AI.</span>
+      </div>
+    </div>
+  </div>
+
   <div class="card">
     <h2>Email Provider</h2>
     <p class="lede">How Jarvis sends and reads replies. Active provider: <b id="active-provider">…</b> — change it by setting <span style="font-family:var(--mono);font-size:12px">channels.email.provider</span> in <span style="font-family:var(--mono);font-size:12px">harvey.yaml</span> to <span style="font-family:var(--mono);font-size:12px">gmail</span>, <span style="font-family:var(--mono);font-size:12px">smtp</span>, or <span style="font-family:var(--mono);font-size:12px">instantly</span>.</p>
@@ -742,7 +751,18 @@
 
 <!-- Controls -->
 <div id="controls" class="section">
-  <div class="section-head"><h2>Controls</h2><p>Start and stop Jarvis's heartbeat loop, and watch what it's doing.</p></div>
+  <div class="section-head"><h2>Controls</h2><p>Process supervisor telemetry, active daemon state, and event execution logs.</p></div>
+
+  <div class="card" style="border-left: 3px solid var(--accent-cyan); background: rgba(0, 240, 255, 0.03); margin-bottom: 20px; padding: 12px 16px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="status-indicator-dot dot-green"></span>
+      <div>
+        <strong style="color:var(--text-1);font-size:13px;">Daemon Lifecycle:</strong>
+        <span style="color:var(--text-2);font-size:12px;margin-left:6px;">Process supervision runs 24/7 with automated health-checks. Manual controls are reserved for operators.</span>
+      </div>
+    </div>
+  </div>
+
   <div class="control-panel">
     <div class="card">
       <h2>Agent</h2>
@@ -766,102 +786,89 @@
   </div>
 </div>
 
-<!-- Help -->
+<!-- Architecture & Methodology -->
 <div id="help" class="section">
-  <div class="section-head"><h2>Help</h2><p>What Jarvis is, how it works, and how to fix the usual problems.</p></div>
-
-  <div class="help-section">
-    <h2>What is Jarvis?</h2>
-    <p>Jarvis is an autonomous AI SDR (Sales Development Representative) developed by TrackKaro AI. Once set up, Jarvis runs on its own: finds people who match your ideal customer, writes personalized cold emails, sends them through your email platform, reads every reply, handles objections, and works toward booking a meeting. You review everything through this dashboard.</p>
-    <p>Jarvis runs on your Claude Max subscription (or, if you opt in, your ChatGPT plan through Codex), so there are no extra AI costs. Everything stays on your machine in one folder.</p>
+  <div class="section-head">
+    <h2>Architecture &amp; Methodology</h2>
+    <p>How TrackKaro Outbound OS turns multi-channel intent signals into predictable enterprise pipeline.</p>
   </div>
 
   <div class="help-section">
-    <h2>Getting Started</h2>
-    <p>There are three things to do:</p>
-    <pre>1. Go to the Settings tab and enter your Instantly API key
-2. Train Jarvis on your product (through Claude or the command line)
-3. Go to the Controls tab and click Start</pre>
-    <p>The Setup tab shows you exactly what's done and what still needs to happen.</p>
-  </div>
+    <h2>Autonomous Pipeline Pillars</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:16px;">
+      
+      <div class="card" style="margin-bottom:0;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <span class="status-indicator-dot dot-cyan"></span>
+          <strong style="color:var(--text-1);font-size:13px;letter-spacing:0.02em;">01. BUYING INTENT RADAR</strong>
+        </div>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.5;">
+          Continuously scans 23 intent indicators—such as rapid hiring spikes, tech stack migrations, and funding rounds—to identify accounts actively seeking solutions before competitors reach out.
+        </p>
+      </div>
 
-  <div class="help-section">
-    <h2>Where Everything Lives</h2>
-    <p>Everything Jarvis needs is inside this one project folder. Nothing is stored elsewhere.</p>
-    <div class="table-card" style="padding:6px 4px">
-    <table class="file-table">
-      <tr><td>.env</td><td>Your API keys and credentials (never shared or committed)</td></tr>
-      <tr><td>harvey.yaml</td><td>Your product info, target customers, and behavior settings</td></tr>
-      <tr><td>skills/</td><td>Sales knowledge files. Edit these to change how Jarvis writes and sells.</td></tr>
-      <tr><td>skills/product_knowledge.md</td><td>Everything Jarvis knows about your product (auto-generated from training)</td></tr>
-      <tr><td>prompts/</td><td>Prompt templates for each agent. Advanced customization.</td></tr>
-      <tr><td>data/harvey.db</td><td>Database with all prospects, campaigns, and conversations</td></tr>
-      <tr><td>data/harvey.log</td><td>Log file showing what Jarvis is doing</td></tr>
-    </table>
+      <div class="card" style="margin-bottom:0;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <span class="status-indicator-dot dot-green"></span>
+          <strong style="color:var(--text-1);font-size:13px;letter-spacing:0.02em;">02. DOMAIN SHIELD &amp; SLA</strong>
+        </div>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.5;">
+          Enforces triple-tier deliverability gatekeeping (Syntax check &rarr; DNS MX validation &rarr; SMTP handshake) guaranteeing a strict &lt; 2.5% bounce cap to protect primary sender reputation.
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom:0;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <span class="status-indicator-dot dot-purple"></span>
+          <strong style="color:var(--text-1);font-size:13px;letter-spacing:0.02em;">03. BESPOKE 1-TO-1 COPYWRITING</strong>
+        </div>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.5;">
+          Zero mass templates. Every outbound draft dynamically quotes verified prospect data, company milestones, and specific pain-point triggers to maximize executive reply rates.
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom:0;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <span class="status-indicator-dot dot-yellow"></span>
+          <strong style="color:var(--text-1);font-size:13px;letter-spacing:0.02em;">04. 15-SEC SPEED-TO-LEAD DISPATCH</strong>
+        </div>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.5;">
+          Powered by TrackKaro n8n webhook pipelines, hot prospect replies and form submissions trigger instant Telegram audio sirens and 1-click WhatsApp dialers within 15 seconds.
+        </p>
+      </div>
+
     </div>
   </div>
 
-  <div class="help-section">
-    <h2>Getting Your API Keys</h2>
+  <div class="help-section" style="margin-top:28px;">
+    <h2>Frequently Asked Questions</h2>
 
     <details>
-      <summary>Instantly API Key (required)</summary>
+      <summary>Is this a self-serve software tool or a Done-For-You (DFY) service?</summary>
       <div class="faq-body">
-        <p>Instantly is the email platform Jarvis uses to send campaigns.</p>
-        <p>1. Sign up at <a href="https://instantly.ai" target="_blank" rel="noopener">instantly.ai</a> (you need the Growth plan for API access)</p>
-        <p>2. Go to Settings &gt; Integrations</p>
-        <p>3. Copy your API key</p>
-        <p>4. Paste it in the Settings tab here</p>
+        TrackKaro Outbound OS is delivered as an autonomous, fully managed system. We handle secondary domain infrastructure, mailbox warmup, intent scraping, AI prompt tuning, and CRM delivery. Your team simply attends qualified sales meetings booked on your calendar.
       </div>
     </details>
 
     <details>
-      <summary>LinkedIn Credentials (optional)</summary>
+      <summary>How is our primary domain protected from spam flags?</summary>
       <div class="faq-body">
-        <p>If you want Jarvis to find prospects on LinkedIn, enter your LinkedIn email and password. Jarvis uses a real browser to search LinkedIn like a human would, with random delays and rate limits to avoid detection.</p>
-        <p>If you skip this, Jarvis will find prospects through Google searches and company website scraping instead.</p>
+        We never send cold outbound from your primary corporate root domain. We configure dedicated secondary mirror domains with full SPF, DKIM, and DMARC alignment, pre-warmed for 21 days before any outbound volume is released.
       </div>
     </details>
 
     <details>
-      <summary>Cloudflare Browser Rendering (optional)</summary>
+      <summary>What deal sizes and industries are best suited?</summary>
       <div class="faq-body">
-        <p>This is only used during product training (when Jarvis crawls your website to learn about your product). It handles JavaScript-heavy websites that a basic crawler can't read.</p>
-        <p>1. Sign up at <a href="https://dash.cloudflare.com" target="_blank" rel="noopener">Cloudflare</a> (paid Workers plan, ~$5/month)</p>
-        <p>2. Go to Workers &amp; Pages &gt; Browser Rendering</p>
-        <p>3. Create an API token with Browser Rendering Edit permissions</p>
-        <p>4. Enter your Account ID and API Token in the Settings tab</p>
-        <p>Without this, Jarvis uses a built-in crawler that works fine for most websites but can't render JavaScript.</p>
+        High-ticket B2B service agencies, SaaS platforms, high-end commercial clinics, and luxury real estate with client lifetime values between $2,000 and $50,000+.
       </div>
     </details>
-  </div>
-
-  <div class="help-section">
-    <h2>Common Issues</h2>
 
     <details>
-      <summary>"command not found: harvey" or "command not found: jarvis"</summary>
-      <div class="faq-body">You need to activate the virtual environment first: <code>source .venv/bin/activate</code></div>
-    </details>
-
-    <details>
-      <summary>Instantly API returns 401</summary>
-      <div class="faq-body">Your API key is wrong, or you need the Growth plan (the free plan doesn't include API access). Double-check the key in Settings &gt; Integrations in your Instantly dashboard.</div>
-    </details>
-
-    <details>
-      <summary>Claude headless mode fails</summary>
-      <div class="faq-body">Make sure you've run <code>claude login</code> in your terminal and have an active Claude Max subscription. Jarvis uses your existing subscription, not a separate API key.</div>
-    </details>
-
-    <details>
-      <summary>Codex calls fail</summary>
-      <div class="faq-body">With <code>brain.provider: codex</code>, set <code>brain.model: gpt-5.5</code> (the verified text-only model; a blank model fails on current ChatGPT accounts and code-mode models are refused), run <code>codex login</code> and choose "Sign in with ChatGPT" (API-key logins are refused). Jarvis never renews your Codex login: if the log says it has expired or is due for renewal, use Codex once or run <code>codex login</code>. Jarvis needs Codex CLI 0.159.3 on macOS or Linux (Codex isn't supported on Windows; use Claude there) and refuses other versions. While Codex can't be used, Jarvis pauses (the Actions card shows "Codex paused" and why), leaves replies and queued emails untouched, and resumes once it's fixed; <code>harvey status --check</code> checks on demand. If the log says isolation could not be verified, a Codex config layer is forcing a tool, hook, MCP server or custom endpoint back on — Jarvis refuses to send prompts until it is removed. Jarvis never falls back to Claude on its own.</div>
-    </details>
-
-    <details>
-      <summary>Jarvis isn't finding prospects</summary>
-      <div class="faq-body">Check that your ICP (ideal customer profile) in harvey.yaml has realistic titles, industries, and geography. If LinkedIn is set up, check that the credentials are correct. Check the Activity tab to see what Jarvis has been trying to do.</div>
+      <summary>How quickly can our outbound pipeline go live?</summary>
+      <div class="faq-body">
+        Once your target ICP and intent signals are calibrated during our consultation, initial sample verified accounts are delivered within 48 hours, and automated outreach begins immediately following mailbox warmup verification.
+      </div>
     </details>
   </div>
 </div>
@@ -881,6 +888,6 @@
   </a>
 </div>
 
-<script src="/static/app.js?v=jarvis_trackkaro_v9"></script>
+<script src="/static/app.js?v=jarvis_trackkaro_v10"></script>
 </body>
 </html>
