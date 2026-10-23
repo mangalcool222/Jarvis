@@ -7,6 +7,7 @@ so a human can eyeball what they're getting.
 """
 
 import csv
+from datetime import datetime
 import io
 import logging
 
@@ -45,20 +46,24 @@ async def collect_prospects(
         wanted = email_statuses if email_statuses is not None else DEFAULT_EMAIL_STATUSES
         if wanted:
             placeholders = ",".join("?" for _ in wanted)
-            where.append(f"email != '' AND email_status IN ({placeholders})")
+            where.append(f"p.email != '' AND p.email_status IN ({placeholders})")
             params.extend(wanted)
         if min_score > 0:
-            where.append("score >= ?")
+            where.append("p.score >= ?")
             params.append(min_score)
         if statuses:
             placeholders = ",".join("?" for _ in statuses)
-            where.append(f"status IN ({placeholders})")
+            where.append(f"p.status IN ({placeholders})")
             params.extend(statuses)
 
-    sql = "SELECT * FROM prospects"
+    sql = """
+        SELECT p.*, c.website AS company_website, c.domain AS company_domain
+        FROM prospects p
+        LEFT JOIN companies c ON p.company_id = c.id
+    """
     if where:
         sql += " WHERE " + " AND ".join(where)
-    sql += " ORDER BY score DESC, created_at DESC"
+    sql += " ORDER BY p.score DESC, p.created_at DESC"
 
     async with aiosqlite.connect(state.db_path) as db:
         db.row_factory = aiosqlite.Row
@@ -70,6 +75,18 @@ async def collect_prospects(
         phone = r.get("phone", "") or ""
         clean_phone = "".join(c for c in phone if c.isdigit())
         whatsapp_link = f"https://wa.me/{clean_phone}" if clean_phone else ""
+        raw_dt = r.get("created_at", "")
+        formatted_created_at = raw_dt
+        if raw_dt:
+            try:
+                clean_dt = str(raw_dt).replace("T", " ")
+                if "." in clean_dt:
+                    clean_dt = clean_dt.split(".")[0]
+                dt = datetime.fromisoformat(clean_dt)
+                formatted_created_at = dt.strftime("%d %b %Y, %I:%M %p")
+            except Exception:
+                formatted_created_at = raw_dt
+
         out.append({
             "first_name": r.get("first_name", ""),
             "last_name": r.get("last_name", ""),
@@ -79,7 +96,7 @@ async def collect_prospects(
             "whatsapp_link": whatsapp_link,
             "email": r.get("email", ""),
             "linkedin_url": r.get("linkedin_url", ""),
-            "website": r.get("source_url", "") or r.get("website", ""),
+            "website": r.get("company_website") or (f"https://{r.get('company_domain')}" if r.get("company_domain") else "") or r.get("source_url", "") or "",
             "industry": r.get("industry", ""),
             "personalization": r.get("personalization_notes", ""),
             "email_status": r.get("email_status", ""),
@@ -87,7 +104,7 @@ async def collect_prospects(
             "seniority": r.get("seniority", ""),
             "source": r.get("source", ""),
             "status": r.get("status", ""),
-            "created_at": r.get("created_at", ""),
+            "created_at": formatted_created_at,
         })
     return out
 

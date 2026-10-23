@@ -23,8 +23,9 @@ from email.message import EmailMessage
 from email.utils import parseaddr
 
 import httpx
+from pathlib import Path
 
-from harvey.paths import PROJECT_ROOT
+from harvey.paths import PROJECT_ROOT, get_data_dir
 from harvey.integrations.mail_provider import (
     InboundMessage,
     MailProvider,
@@ -34,7 +35,6 @@ from harvey.integrations.mail_provider import (
 
 logger = logging.getLogger("harvey.gmail")
 
-TOKEN_FILE = PROJECT_ROOT / "data" / "gmail_token.json"
 API_BASE = "https://gmail.googleapis.com/gmail/v1/users/me"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
@@ -44,10 +44,15 @@ LOOPBACK_PORT = 8765
 TIMEOUT = httpx.Timeout(connect=10.0, read=30.0, write=30.0, pool=10.0)
 
 
+def _get_token_file() -> Path:
+    return get_data_dir() / "gmail_token.json"
+
+
 def _load_token() -> dict | None:
+    token_file = _get_token_file()
     try:
-        if TOKEN_FILE.is_file():
-            data = json.loads(TOKEN_FILE.read_text())
+        if token_file.is_file():
+            data = json.loads(token_file.read_text())
             if isinstance(data, dict) and data.get("refresh_token"):
                 return data
     except (OSError, json.JSONDecodeError) as e:
@@ -56,10 +61,11 @@ def _load_token() -> dict | None:
 
 
 def _save_token(data: dict):
-    TOKEN_FILE.parent.mkdir(parents=True, exist_ok=True)
-    TOKEN_FILE.write_text(json.dumps(data, indent=2))
+    token_file = _get_token_file()
+    token_file.parent.mkdir(parents=True, exist_ok=True)
+    token_file.write_text(json.dumps(data, indent=2))
     try:
-        TOKEN_FILE.chmod(0o600)
+        token_file.chmod(0o600)
     except OSError:
         pass
 
@@ -333,5 +339,5 @@ def run_auth_flow(client_id: str, client_secret: str) -> bool:
         "scope": data.get("scope", SCOPE),
         "obtained_at": int(time.time()),
     })
-    print(f"  ✓ Gmail authorized. Token stored at {TOKEN_FILE}")
+    print(f"  ✓ Gmail authorized. Token stored at {_get_token_file()}")
     return True

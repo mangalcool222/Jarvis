@@ -633,6 +633,163 @@ def cmd_sending(args):
     asyncio.run(_run())
 
 
+def cmd_workspace(args):
+    """Manage client/product workspaces."""
+    import shutil
+    import yaml
+    from harvey.paths import PROJECT_ROOT, get_workspace_dir, set_workspace_dir
+
+    action = args.workspace_action
+    workspaces_dir = PROJECT_ROOT / "workspaces"
+    workspaces_dir.mkdir(exist_ok=True)
+
+    if action == "list":
+        print("\n  Harvey Workspaces")
+        print("  " + "=" * 58)
+        current_ws = get_workspace_dir().resolve()
+
+        # Check root workspace
+        root_cfg = PROJECT_ROOT / "harvey.yaml"
+        if root_cfg.exists():
+            try:
+                with open(root_cfg) as f:
+                    data = yaml.safe_load(f) or {}
+                p_name = (data.get("product") or {}).get("name", "Default Product")
+                company = (data.get("persona") or {}).get("company", "")
+            except Exception:
+                p_name, company = "Unknown", ""
+            is_active = (current_ws == PROJECT_ROOT.resolve())
+            mark = "● (active)" if is_active else "○"
+            print(f"  {mark:<11} [root]           {company:<20} {p_name}")
+
+        found = 0
+        for entry in sorted(workspaces_dir.iterdir()):
+            if entry.is_dir() and not entry.name.startswith((".", "_")):
+                found += 1
+                cfg_file = entry / "harvey.yaml"
+                p_name = "Not configured"
+                company = ""
+                if cfg_file.exists():
+                    try:
+                        with open(cfg_file) as f:
+                            data = yaml.safe_load(f) or {}
+                        p_name = (data.get("product") or {}).get("name", "Unnamed")
+                        company = (data.get("persona") or {}).get("company", "")
+                    except Exception:
+                        pass
+                is_active = (current_ws == entry.resolve())
+                mark = "● (active)" if is_active else "○"
+                print(f"  {mark:<11} {entry.name:<16} {company:<20} {p_name}")
+
+        if not found:
+            print("\n  No custom workspaces yet. Run: harvey workspace new <name>")
+        print()
+
+    elif action == "new":
+        name = args.name.strip()
+        if not name:
+            print("  Please provide a workspace name: harvey workspace new <name>")
+            sys.exit(2)
+        target = workspaces_dir / name
+        if target.exists():
+            print(f"  Workspace '{name}' already exists at {target}")
+            sys.exit(1)
+
+        target.mkdir(parents=True, exist_ok=True)
+        (target / "data").mkdir(exist_ok=True)
+        (target / "skills").mkdir(exist_ok=True)
+
+        template_dir = workspaces_dir / "_template"
+        if template_dir.exists():
+            for item in template_dir.iterdir():
+                if item.name != "data":
+                    if item.is_dir():
+                        shutil.copytree(item, target / item.name, dirs_exist_ok=True)
+                    else:
+                        shutil.copy2(item, target / item.name)
+        else:
+            sample_yaml = f"""persona:
+  name: "Operator Name"
+  company: "{name.title()}"
+  role: "Growth & Outbound"
+  email: "growth@{name.lower()}.com"
+  linkedin: ""
+  tone: "consultative, data-backed, high-conviction, professional"
+
+product:
+  name: "{name.title()} Solution"
+  description: "B2B solution description"
+  pricing: "$997 Setup + $299/mo"
+  key_benefits:
+    - "Primary benefit 1"
+    - "Primary benefit 2"
+  objection_responses:
+    "too expensive": "ROI response here"
+  offer:
+    primary: "Full DFY deployment"
+    entry: "Free test/demo link"
+    goal: "book_call"
+    booking_method: "calendar_link"
+    booking_url: "https://calendly.com/{name.lower()}/15min"
+    meeting_duration: "15 minutes"
+
+icp:
+  industries:
+    - "B2B SaaS"
+  company_size: "10-100 employees"
+  titles:
+    - "Founder & CEO"
+    - "VP Sales"
+  geography:
+    - "United States"
+
+channels:
+  email:
+    enabled: true
+    provider: "gmail"
+    max_daily_sends: 25
+    require_approval: true
+"""
+            (target / "harvey.yaml").write_text(sample_yaml)
+            (target / "skills" / "product_knowledge.md").write_text(
+                f"# Product Knowledge: {name.title()}\n\nAdd product details here."
+            )
+            (target / ".env.example").write_text(
+                "# Workspace-specific credentials\n# GMAIL_CLIENT_ID=\n# GMAIL_CLIENT_SECRET=\n"
+            )
+
+        print(f"\n  ✓ Workspace '{name}' created at: {target}")
+
+        if args.url:
+            print(f"\n  Training Harvey on {args.url} inside workspace '{name}'...")
+            set_workspace_dir(target)
+            from harvey.trainer import Trainer
+            from harvey.config import BrainConfig, load_brain_config
+            brain_config = load_brain_config()
+            trainer = Trainer(brain_config=brain_config)
+            asyncio.run(trainer.train(args.url, max_pages=args.max_pages or 50))
+        else:
+            print(f"\n  To run Harvey for this workspace:")
+            print(f"    harvey run -w {name}")
+            print(f"    harvey dashboard -w {name} --port 5556")
+            print(f"    cd workspaces/{name} && harvey run\n")
+
+    elif action == "info":
+        ws = get_workspace_dir(args.name if args.name else None)
+        print(f"\n  Workspace: {ws.name}")
+        print(f"  Path:      {ws}")
+        cfg = ws / "harvey.yaml"
+        if cfg.exists():
+            with open(cfg) as f:
+                data = yaml.safe_load(f) or {}
+            print(f"  Company:   {(data.get('persona') or {}).get('company', 'N/A')}")
+            print(f"  Product:   {(data.get('product') or {}).get('name', 'N/A')}")
+            print(f"  Email:     {(data.get('persona') or {}).get('email', 'N/A')}")
+            print(f"  Offer:     {(data.get('product') or {}).get('offer', {}).get('entry', 'N/A')}")
+        db_file = ws / "data" / "harvey.db"
+        print(f"  Database:  {db_file} {'(exists)' if db_file.exists() else '(empty)'}\n")
+
+
 def main():
     from harvey.paths import PROJECT_ROOT
     project_root = str(PROJECT_ROOT)
@@ -640,6 +797,12 @@ def main():
     parser = argparse.ArgumentParser(
         prog="harvey",
         description="Harvey — Autonomous AI Sales Agent. Always Be Closing.",
+    )
+    parser.add_argument(
+        "-w", "--workspace",
+        metavar="WORKSPACE",
+        default=None,
+        help="Target workspace name in workspaces/ or directory path",
     )
     subparsers = parser.add_subparsers(dest="command")
 
@@ -765,8 +928,21 @@ def main():
     sub.add_argument("--days", type=int, default=30, help="Breakdown window (default: 30)")
     sub.set_defaults(func=cmd_usage)
 
+    # harvey workspace list|new|info
+    sub = subparsers.add_parser("workspace", help="Manage client/product workspaces")
+    sub.add_argument("workspace_action", choices=["list", "new", "info"],
+                     help="list: view workspaces; new: create workspace; info: inspect workspace")
+    sub.add_argument("name", nargs="?", default="", help="Workspace name")
+    sub.add_argument("--url", default="", help="Website URL to train from (for 'new')")
+    sub.add_argument("--max-pages", type=int, default=50, help="Max pages to crawl when training")
+    sub.set_defaults(func=cmd_workspace)
+
     args = parser.parse_args()
     args._project_root = project_root
+
+    from harvey.paths import set_workspace_dir
+    if args.workspace:
+        set_workspace_dir(args.workspace)
 
     if args.command is None:
         parser.print_help()

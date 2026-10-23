@@ -19,7 +19,7 @@ from harvey.state import StateManager
 
 logger = logging.getLogger("harvey.brain")
 
-from harvey.paths import PROJECT_ROOT
+from harvey.paths import PROJECT_ROOT, get_workspace_dir
 
 PROMPTS_DIR = PROJECT_ROOT / "prompts"
 SKILLS_DIR = PROJECT_ROOT / "skills"
@@ -631,8 +631,11 @@ class Brain:
         return calls < max_daily_calls
 
     def load_prompt(self, prompt_name: str, **kwargs) -> str:
-        """Load a prompt template from the prompts/ directory and fill in variables."""
-        prompt_file = PROMPTS_DIR / f"{prompt_name}.md"
+        """Load a prompt template from prompts/ directory and fill in variables.
+        Checks active workspace/prompts/ first, then falls back to project shared prompts/.
+        """
+        ws_file = get_workspace_dir() / "prompts" / f"{prompt_name}.md"
+        prompt_file = ws_file if ws_file.is_file() else (PROMPTS_DIR / f"{prompt_name}.md")
         try:
             template = prompt_file.read_text()
         except FileNotFoundError:
@@ -652,8 +655,11 @@ class Brain:
         return template
 
     def load_skill(self, skill_name: str) -> str:
-        """Load a skill knowledge file from the skills/ directory."""
-        skill_file = SKILLS_DIR / f"{skill_name}.md"
+        """Load a skill knowledge file from skills/ directory.
+        Checks active workspace/skills/ first, then falls back to project shared skills/.
+        """
+        ws_file = get_workspace_dir() / "skills" / f"{skill_name}.md"
+        skill_file = ws_file if ws_file.is_file() else (SKILLS_DIR / f"{skill_name}.md")
         try:
             return skill_file.read_text()
         except FileNotFoundError:

@@ -22,7 +22,7 @@ from harvey.state import StateManager
 
 logger = logging.getLogger("harvey.trainer")
 
-from harvey.paths import PROJECT_ROOT
+from harvey.paths import PROJECT_ROOT, get_workspace_dir
 
 
 def _normalize_start_url(url: str) -> str:
@@ -413,7 +413,8 @@ class Trainer:
         # so training works no matter what directory it's launched from)
         config_path = Path(output_path)
         if not config_path.is_absolute():
-            config_path = PROJECT_ROOT / config_path
+            config_path = get_workspace_dir() / config_path
+        config_path.parent.mkdir(parents=True, exist_ok=True)
         with open(config_path, "w") as f:
             yaml.dump(config, f, default_flow_style=False, sort_keys=False)
 
@@ -667,9 +668,10 @@ Do NOT pursue prospects who:
 {product_info.get('tone', 'professional, consultative, confident')}
 """
 
-        skills_path = PROJECT_ROOT / "skills" / "product_knowledge.md"
+        skills_path = get_workspace_dir() / "skills" / "product_knowledge.md"
+        skills_path.parent.mkdir(parents=True, exist_ok=True)
         skills_path.write_text(knowledge)
-        print(f"      Generated: skills/product_knowledge.md")
+        print(f"      Generated: {skills_path.relative_to(get_workspace_dir()) if skills_path.is_relative_to(get_workspace_dir()) else skills_path}")
 
     async def _generate_battle_cards(self, product_info: dict, competitive_intel: dict):
         """Generate competitive battle cards as a skill file."""
@@ -715,9 +717,10 @@ What prospects do instead of buying a solution like ours:
 ---
 """
 
-        skills_path = PROJECT_ROOT / "skills" / "competitive_intel.md"
+        skills_path = get_workspace_dir() / "skills" / "competitive_intel.md"
+        skills_path.parent.mkdir(parents=True, exist_ok=True)
         skills_path.write_text(cards)
-        print(f"      Generated: skills/competitive_intel.md")
+        print(f"      Generated: {skills_path.relative_to(get_workspace_dir()) if skills_path.is_relative_to(get_workspace_dir()) else skills_path}")
 
     def _build_config(
         self,

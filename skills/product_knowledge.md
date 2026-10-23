@@ -1,63 +1,59 @@
 # Product Knowledge: TrackKaro AI
 
-> **Global Speed-to-Lead Acceleration & 3-Second Inbound Lead Engine**  
-> Built for Luxury Real Estate Developers, High-Ticket Property Brokerages, and B2B SaaS.
+> **Global Speed-to-Lead Acceleration & Inbound Lead Dispatch Engine**  
+> Built for Performance Marketing Agencies, Dubai Luxury Real Estate Brokerages, and High-Ticket Services.
 
 ---
 
 ## 1. Product Identity & Core Positioning
 
-* **Product Name:** TrackKaro AI (3-Second Lead Automation Engine)
+* **Product Name:** TrackKaro AI (Inbound Lead Dispatch Engine)
 * **Company:** TrackKaro AI
 * **Primary URL:** `https://trackkaroai.com`
-* **Live Interactive Demo:** `https://demo.gtm.trackkaroai.com`
-* **Founder & GTM Systems Lead:** Mangal Soren
+* **Live Interactive Demo:** `https://trackkaroai.com`
+* **Systems Architect & Technical Lead:** Mangal Soren
+* **LinkedIn:** `https://www.linkedin.com/in/mangal-soren-1312ba31a/`
 * **One-Sentence Pitch:**  
-  *TrackKaro AI automatically converts high-ticket Meta & Google ad leads via instant WhatsApp VIP PDF brochures and Telegram sound alerts to sales reps in under 3 seconds.*
+  *TrackKaro routes every inbound Meta/Google ad and website lead into real-time Telegram sound alerts (with 1-click direct calls), Google Sheets CRM auto-sync, and automated WhatsApp brochures in seconds.*
 
 ---
 
-## 2. The Core Problem We Solve (The "Speed-to-Lead" Bleed)
+## 2. The Core Problems We Solve
 
-1. **The $80–$150 CPL Waste:**  
-   In luxury markets (Dubai, Miami, Austin, London), brokerages spend $10,000–$50,000/month on Meta & Google Ads. Their Cost-Per-Lead (CPL) is $80–$150+.
-2. **The 47-Minute Industry Delay:**  
-   The average real estate brokerage takes **47 minutes** to respond to an inbound form. On weekends or outside business hours, it takes **12–24 hours**.
+1. **For Performance Marketing & Lead-Gen Agencies:**  
+   Agencies generate high-converting leads for clients, but client internal sales teams take hours to follow up. When leads go cold, clients blame the agency for "poor lead quality" and cancel retainers. TrackKaro provides a whitelabel instant lead-to-call alert bridge.
+2. **For Dubai Luxury Real Estate Brokerages:**  
+   International investors inquiring on luxury off-plan or villa ads inquire across 3-4 competing brokers simultaneously. The broker whose team calls first and delivers an instant project brochure on WhatsApp wins the booking.
 3. **The Qualification Cliff:**  
-   * Leads contacted within **5 minutes** are **391% more likely to qualify and convert**.
-   * After **30 minutes**, lead conversion drops by **70%**.
-   * 78% of luxury property buyers purchase from the first broker who reaches them.
+   High-intent ad leads drop off sharply after the first 30 minutes. An immediate Telegram alert with a 1-click call button eliminates manual spreadsheet-checking delays.
 
 ---
 
-## 3. The 3-Second Technical Architecture
+## 3. The Technical Architecture
 
-TrackKaro does not require replacing existing CRMs (HubSpot, Salesforce, Follow Up Boss, Zoho). It sits directly between the advertising webhook and the sales rep to guarantee **sub-3-second execution**:
+TrackKaro does not require replacing existing CRMs (HubSpot, Salesforce, Follow Up Boss, Zoho). It sits directly between inbound lead webhooks/forms and the sales closers:
 
 ```
-[Buyer Fills Meta Ad / Website Form]
-                 │  (< 100ms)
-                 ▼
-     [TrackKaro n8n Webhook Engine]
-                 │
-      ┌──────────┴──────────┬────────────────────────┐
-      ▼ (< 1.4s)            ▼ (< 2.4s)               ▼ (< 2.9s)
-[WhatsApp VIP Delivery]  [Telegram Sound Alert]    [CRM Auto-Sync]
-Personalized PDF brochure Sales rep gets loud ping  Appends row to Google
-& digital floorplan sent  with 1-click [Call Now]  Sheet / CRM pipeline
-direct to buyer's phone   direct dial button       with 0 lead leakage
+[Inbound Lead from Meta Ads / Google / Web Form / Portal]
+                         │
+                         ▼
+           [TrackKaro Central Webhook Engine]
+                         │
+       ┌─────────────────┼────────────────────────┐
+       ▼                 ▼                        ▼
+[Instant WhatsApp Info]  [Telegram Sound Alert]  [Google Sheets CRM Sync]
+Personalized brochure   Sales reps get instant  Auto-appends lead row
+confirmation delivered  ping with 1-click call  with clean formatting
+to prospect's phone     direct dial button      & zero data leaks
 ```
 
 ---
 
 ## 4. Offer & Pricing Structure (Global First)
 
-* **Primary Offer:** **$997 USD** Complete Done-For-You (DFY) 3-Second Lead Engine Deployment
-  * Custom Webhook architecture connecting all Meta & Google Ad forms
-  * Official Meta WhatsApp Cloud API integration with dynamic VIP PDF brochures
-  * Dedicated Telegram Sales Sound-Alert Bot with 1-click `tel:` dialer
-  * Real-time Google Sheets Master CRM & Trello pipeline board synchronization
-  * Guaranteed < 3-second latency SLA
+* **Entry Pilot Offer:** **$350 - $500 USD** Single Pipeline Deployment (Webhook ➡️ Telegram Alert + Sheets Sync)
+* **Growth Engine Offer:** **$750 - $997 USD** Complete DFY Setup (Multi-source Webhooks + WhatsApp Concierge + CRM Sync)
+* **Live Proof Link:** `https://trackkaroai.com`
 * **Monthly Retainer:** **$299 USD / month**
   * High-availability server maintenance & uptime monitoring
   * Meta API version updates and template approvals

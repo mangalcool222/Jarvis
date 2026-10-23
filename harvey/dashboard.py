@@ -8,7 +8,7 @@ import signal
 import subprocess
 import sys
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import aiosqlite
@@ -21,12 +21,37 @@ from fastapi.responses import (
 
 logger = logging.getLogger("harvey.dashboard")
 
-from harvey.paths import PROJECT_ROOT  # noqa: E402
-DB_PATH = PROJECT_ROOT / "data" / "harvey.db"
-ENV_FILE = PROJECT_ROOT / ".env"
-CONFIG_FILE = PROJECT_ROOT / "harvey.yaml"
-PID_FILE = PROJECT_ROOT / "data" / "harvey.pid"
-LOG_FILE = PROJECT_ROOT / "data" / "harvey.log"
+from harvey.paths import PROJECT_ROOT, get_workspace_dir, get_db_path, get_data_dir  # noqa: E402
+
+
+class _DynamicWorkspacePath:
+    def __init__(self, resolver):
+        self._resolver = resolver
+
+    def _path(self) -> Path:
+        return self._resolver()
+
+    def __getattr__(self, name):
+        return getattr(self._path(), name)
+
+    def __str__(self):
+        return str(self._path())
+
+    def __repr__(self):
+        return repr(self._path())
+
+    def __fspath__(self):
+        return str(self._path())
+
+    def __truediv__(self, other):
+        return self._path() / other
+
+
+DB_PATH = _DynamicWorkspacePath(get_db_path)
+ENV_FILE = _DynamicWorkspacePath(lambda: (get_workspace_dir() / ".env") if (get_workspace_dir() / ".env").is_file() else (PROJECT_ROOT / ".env"))
+CONFIG_FILE = _DynamicWorkspacePath(lambda: (get_workspace_dir() / "harvey.yaml"))
+PID_FILE = _DynamicWorkspacePath(lambda: get_data_dir() / "harvey.pid")
+LOG_FILE = _DynamicWorkspacePath(lambda: get_data_dir() / "harvey.log")
 
 
 def _resolve_config_file() -> Path:
@@ -187,10 +212,10 @@ async def get_setup_status():
         except Exception:
             pass
     checks.append({
-        "id": "config", "label": f"Harvey configured ({config_path.name})",
+        "id": "config", "label": f"Jarvis configured ({config_path.name})",
         "done": config_valid,
         "required": True,
-        "help": "Train Harvey on your product. Use the trainer or set up manually through Claude.",
+        "help": "Train Jarvis on your product. Use the trainer or set up manually through Claude.",
     })
 
     # 6. Product trained
@@ -439,7 +464,7 @@ async def start_harvey():
     global _harvey_process, _harvey_started_at
 
     if _check_harvey_pid():
-        return {"success": False, "message": "Harvey is already running."}
+        return {"success": False, "message": "Jarvis is already running."}
 
     # Ensure data dir exists
     (PROJECT_ROOT / "data").mkdir(parents=True, exist_ok=True)
@@ -447,9 +472,11 @@ async def start_harvey():
     try:
         log_handle = open(LOG_FILE, "a")
         try:
+            env = {**os.environ, "HARVEY_WORKSPACE": str(get_workspace_dir())}
             _harvey_process = subprocess.Popen(
-                [sys.executable, "-m", "harvey"],
-                cwd=str(PROJECT_ROOT),
+                [sys.executable, "-m", "harvey", "run"],
+                cwd=str(get_workspace_dir()),
+                env=env,
                 stdout=log_handle,
                 stderr=log_handle,
                 start_new_session=True,
@@ -458,8 +485,8 @@ async def start_harvey():
             # Child holds its own copies of the fds; don't leak ours.
             log_handle.close()
     except Exception as e:
-        logger.warning("Failed to start Harvey: %s", e)
-        return {"success": False, "message": f"Failed to start Harvey: {e}"}
+        logger.warning("Failed to start Jarvis: %s", e)
+        return {"success": False, "message": f"Failed to start Jarvis: {e}"}
     _harvey_started_at = datetime.now()
 
     # Write PID file
@@ -478,7 +505,7 @@ async def stop_harvey():
 
     pid = _check_harvey_pid()
     if not pid:
-        return {"success": False, "message": "Harvey is not running."}
+        return {"success": False, "message": "Jarvis is not running."}
 
     try:
         os.kill(pid, signal.SIGTERM)
@@ -703,11 +730,59 @@ async def get_outbox_api():
                 "SELECT * FROM outbox WHERE status = 'sent' "
                 "ORDER BY sent_at DESC LIMIT 25")),
             "failed": (await query_db(
-                "SELECT * FROM outbox WHERE status IN ('failed','rejected','cancelled') "
+                "SELECT * FROM outbox WHERE status IN ('failed','rejected') "
                 "ORDER BY updated_at DESC LIMIT 25")),
+            "archived": (await query_db("""
+                SELECT o.id, o.prospect_id, o.to_email, o.subject, o.step, o.error, o.updated_at,
+                       p.first_name, p.last_name, p.company, p.title, p.linkedin_url, p.source_url as website, p.email_status
+                FROM outbox o
+                LEFT JOIN prospects p ON o.prospect_id = p.id
+                WHERE o.status = 'cancelled'
+                ORDER BY o.updated_at DESC
+            """)),
         }
     except Exception as e:
         return {"error": str(e)}
+
+
+_auto_dispatcher_task = None
+
+async def _drain_now():
+    """Trigger drain of due approved items respecting recipient timezones."""
+    try:
+        from harvey.agents.sender import Sender
+        from harvey.config import load_config, load_env
+        from harvey.brain import Brain
+        cfg = load_config()
+        env = load_env()
+        state = _state()
+        await state.init_db()
+        brain = Brain(state, cfg.brain)
+        sender = Sender(brain, state, cfg, env)
+        return await sender._drain_due()
+    except Exception as e:
+        logger.exception(f"Drain error: {e}")
+        return 0
+
+async def _auto_dispatcher_loop():
+    """Autonomous 60-second background loop that drains due outbox items."""
+    logger.info("Auto-Dispatcher loop started (checking every 60s).")
+    while True:
+        try:
+            state = _state()
+            await state.init_db()
+            paused = await state.get_setting("sending_paused")
+            if not paused:
+                await _drain_now()
+        except Exception as e:
+            logger.debug(f"Auto-dispatcher loop error: {e}")
+        await asyncio.sleep(60)
+
+@app.on_event("startup")
+async def start_auto_dispatcher():
+    global _auto_dispatcher_task
+    if _auto_dispatcher_task is None or _auto_dispatcher_task.done():
+        _auto_dispatcher_task = asyncio.create_task(_auto_dispatcher_loop())
 
 
 @app.post("/api/outbox/approve-all")
@@ -716,7 +791,95 @@ async def outbox_approve_all():
         state = _state()
         await state.init_db()
         n = await state.approve_outbox()
+        # Immediately trigger background dispatch for due items
+        asyncio.create_task(_drain_now())
         return {"success": True, "approved": n}
+    except Exception as e:
+        return JSONResponse({"success": False, "message": str(e)}, status_code=500)
+
+
+@app.post("/api/outbox/archive-catch-alls")
+async def outbox_archive_catch_alls():
+    """Archive/Cancel all pending outbox drafts that are on catch-all/risky domains."""
+    try:
+        state = _state()
+        await state.init_db()
+        async with aiosqlite.connect(state.db_path) as db:
+            cursor = await db.execute("""
+                SELECT o.id, o.prospect_id, o.to_email, p.company 
+                FROM outbox o 
+                JOIN prospects p ON o.prospect_id = p.id 
+                WHERE o.status = 'pending_review' AND p.email_status IN ('risky', 'unknown', 'invalid')
+            """)
+            items = await cursor.fetchall()
+            
+            count = len(items)
+            if count > 0:
+                item_ids = [it[0] for it in items]
+                placeholders = ",".join("?" for _ in item_ids)
+                await db.execute(f"""
+                    UPDATE outbox 
+                    SET status = 'cancelled', error = 'Archived: Reserved for LinkedIn/Multi-channel outreach' 
+                    WHERE id IN ({placeholders})
+                """, item_ids)
+                
+                prospect_ids = list(set(it[1] for it in items))
+                p_placeholders = ",".join("?" for _ in prospect_ids)
+                await db.execute(f"""
+                    UPDATE prospects 
+                    SET status = 'linkedin_backlog' 
+                    WHERE id IN ({p_placeholders})
+                """, prospect_ids)
+                await db.commit()
+
+        # Regenerate local CRM vaults
+        from harvey.integrations.sheets_sync import regenerate_local_vaults, push_to_google_sheet
+        await regenerate_local_vaults(state)
+        
+        # Fire background webhook sync to Google Sheets for each archived lead
+        for it in items:
+            try:
+                asyncio.create_task(push_to_google_sheet(
+                    email=it[2],
+                    company=it[3],
+                    status="⚠️ Catch-All (LinkedIn Outreach)",
+                    notes="Archived from Email • Connect via LinkedIn or Site Form"
+                ))
+            except Exception:
+                pass
+        
+        return {"success": True, "archived_count": count, "message": f"Archived {count} catch-all drafts! Reserved for LinkedIn outreach."}
+    except Exception as e:
+        logger.exception(f"Archive catch-alls error: {e}")
+        return JSONResponse({"success": False, "message": str(e)}, status_code=500)
+
+
+@app.post("/api/outbox/{item_id}/unarchive")
+async def outbox_unarchive(item_id: str):
+    """Restore an archived draft back to pending_review in Outbox."""
+    try:
+        state = _state()
+        await state.init_db()
+        async with aiosqlite.connect(state.db_path) as db:
+            cursor = await db.execute("SELECT prospect_id FROM outbox WHERE id = ?", (item_id,))
+            row = await cursor.fetchone()
+            if row and row[0]:
+                await db.execute("UPDATE prospects SET status = 'queued' WHERE id = ?", (row[0],))
+            await db.execute("UPDATE outbox SET status = 'pending_review', error = '' WHERE id = ?", (item_id,))
+            await db.commit()
+        from harvey.integrations.sheets_sync import regenerate_local_vaults
+        await regenerate_local_vaults(state)
+        return {"success": True}
+    except Exception as e:
+        return JSONResponse({"success": False, "message": str(e)}, status_code=500)
+
+
+@app.post("/api/outbox/drain")
+async def outbox_drain():
+    """Dispatch due approved emails through configured provider immediately."""
+    try:
+        sent = await _drain_now()
+        return {"success": True, "sent": sent}
     except Exception as e:
         return JSONResponse({"success": False, "message": str(e)}, status_code=500)
 
@@ -727,6 +890,8 @@ async def outbox_approve(item_id: str):
         state = _state()
         await state.init_db()
         n = await state.approve_outbox(item_id)
+        # Immediately trigger background dispatch for due items
+        asyncio.create_task(_drain_now())
         return {"success": bool(n)}
     except Exception as e:
         return JSONResponse({"success": False, "message": str(e)}, status_code=500)
@@ -741,6 +906,166 @@ async def outbox_reject(item_id: str):
         return {"success": True}
     except Exception as e:
         return JSONResponse({"success": False, "message": str(e)}, status_code=500)
+
+
+@app.post("/api/outbox/{item_id}/cancel")
+async def outbox_cancel(item_id: str):
+    try:
+        state = _state()
+        await state.init_db()
+        await state.update_outbox_item(item_id, status="cancelled")
+        return {"success": True}
+    except Exception as e:
+        return JSONResponse({"success": False, "message": str(e)}, status_code=500)
+
+
+@app.post("/api/outbox/{item_id}/unapprove")
+async def outbox_unapprove(item_id: str):
+    try:
+        state = _state()
+        await state.init_db()
+        await state.update_outbox_item(item_id, status="pending_review")
+        return {"success": True}
+    except Exception as e:
+        return JSONResponse({"success": False, "message": str(e)}, status_code=500)
+
+
+@app.post("/api/outbox/{item_id}/edit")
+async def outbox_edit(item_id: str, request: Request):
+    try:
+        data = await request.json()
+        state = _state()
+        await state.init_db()
+        updates = {}
+        if "subject" in data:
+            updates["subject"] = str(data["subject"]).strip()
+        if "body" in data:
+            updates["body"] = str(data["body"]).strip()
+        if updates:
+            await state.update_outbox_item(item_id, **updates)
+        return {"success": True}
+    except Exception as e:
+        return JSONResponse({"success": False, "message": str(e)}, status_code=500)
+
+
+@app.post("/api/prospect/instant-url")
+async def prospect_instant_url(request: Request):
+    try:
+        data = await request.json()
+        raw_url = str(data.get("url") or "").strip()
+        if not raw_url:
+            return JSONResponse({"success": False, "message": "Website URL is required"}, status_code=200)
+
+        # Normalize URL
+        clean_url = raw_url
+        if not clean_url.startswith(("http://", "https://")):
+            clean_url = "https://" + clean_url
+
+        import urllib.parse
+        parsed = urllib.parse.urlparse(clean_url)
+        domain = (parsed.netloc or parsed.path).lower()
+        if domain.startswith("www."):
+            domain = domain[4:]
+        domain = domain.split("/")[0].strip()
+
+        if not domain or "." not in domain:
+            return JSONResponse({"success": False, "message": "Please enter a valid website domain"}, status_code=200)
+
+        # Clean company name
+        base_name = domain.split(".")[0]
+        if base_name in ("dlf", "gmr", "emaar", "damac", "sobha"):
+            company_name = base_name.upper()
+        else:
+            company_name = base_name.replace("-", " ").replace("_", " ").title()
+
+        from harvey.scoring import compute_icp_score
+        prospect_title = "Founder / Managing Director"
+        score, detected_industry = compute_icp_score(
+            company=company_name, domain=domain, title=prospect_title, email_status="verified"
+        )
+
+        now_iso = datetime.now(timezone.utc).replace(tzinfo=None).isoformat()
+        state = _state()
+        await state.init_db()
+
+        async with state._connect() as db:
+            db.row_factory = aiosqlite.Row
+            # 1. Company
+            async with db.execute("SELECT * FROM companies WHERE domain = ? OR website LIKE ? LIMIT 1", (domain, f"%{domain}%")) as cur:
+                existing_company = await cur.fetchone()
+
+            if existing_company:
+                company_id = existing_company["id"]
+                company_name = existing_company["name"] or company_name
+            else:
+                company_id = str(uuid.uuid4())
+                await db.execute(
+                    """INSERT INTO companies (id, name, domain, website, industry, source, created_at, updated_at)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (company_id, company_name, domain, clean_url, detected_industry, "instant_url", now_iso, now_iso)
+                )
+                await db.commit()
+
+            # 2. Prospect
+            prospect_email = f"contact@{domain}"
+            async with db.execute("SELECT * FROM prospects WHERE email = ? LIMIT 1", (prospect_email,)) as cur:
+                existing_prospect = await cur.fetchone()
+
+            if existing_prospect:
+                prospect_id = existing_prospect["id"]
+                await db.execute("UPDATE prospects SET score = ?, industry = ? WHERE id = ?", (score, detected_industry, prospect_id))
+                await db.commit()
+            else:
+                prospect_id = str(uuid.uuid4())
+                await db.execute(
+                    """INSERT INTO prospects (id, company_id, company, first_name, last_name, email, email_status, title, industry, score, source, created_at, updated_at)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (prospect_id, company_id, company_name, "Team", company_name, prospect_email, "verified", prospect_title, detected_industry, score, "instant_url", now_iso, now_iso)
+                )
+                await db.commit()
+
+            # 3. Personalized Speed-to-Lead Email Pitch
+            subject = f"Quick question regarding {company_name} buyer inquiries"
+            body = (
+                f"Hi {company_name} Team,\n\n"
+                f"I noticed that when high-net-worth buyers inquire about properties or high-ticket services through "
+                f"{company_name}'s digital campaigns, sales teams often take an hour or more to manually follow up.\n\n"
+                f"In high-ticket transactions, international buyer intent drops significantly after the first 15 minutes.\n\n"
+                f"At TrackKaro AI, we build backend speed-to-lead nervous systems: the moment an inquiry submits, "
+                f"the client gets the full brochure & floorplan instantly delivered on WhatsApp, while your assigned "
+                f"sales reps receive an immediate sound alert on Telegram with a 1-click direct call trigger.\n\n"
+                f"You can test our live 30-second simulation here:\n"
+                f"👉 https://trackkaroai.com\n\n"
+                f"Would you be open to a 5-minute teardown of your current lead response time this week?\n\n"
+                f"Best,\nMangal Soren\nLead Automation | TrackKaro AI"
+            )
+
+            # Check if pending outbox item exists for this email
+            async with db.execute("SELECT id FROM outbox WHERE to_email = ? AND status = 'pending_review' LIMIT 1", (prospect_email,)) as cur:
+                existing_outbox = await cur.fetchone()
+
+            if existing_outbox:
+                item_id = existing_outbox["id"]
+            else:
+                item_id = str(uuid.uuid4())
+                await db.execute(
+                    """INSERT INTO outbox (id, prospect_id, to_email, subject, body, step, kind, status, send_at, provider, created_at, updated_at)
+                       VALUES (?, ?, ?, ?, ?, 1, 'instant_pitch', 'pending_review', ?, 'resend', ?, ?)""",
+                    (item_id, prospect_id, prospect_email, subject, body, now_iso, now_iso, now_iso)
+                )
+                await db.commit()
+
+        return {
+            "success": True,
+            "company": company_name,
+            "domain": domain,
+            "website": clean_url,
+            "email": prospect_email,
+            "item_id": item_id
+        }
+    except Exception as e:
+        logger.exception("Instant prospect URL failed")
+        return JSONResponse({"success": False, "message": str(e)}, status_code=200)
 
 
 @app.post("/api/sending/{action}")
@@ -781,6 +1106,188 @@ async def export_prospects(all: bool = False, min_score: int = 0, email_status: 
         media_type="text/csv",
         headers={"Content-Disposition": 'attachment; filename="prospects.csv"'},
     )
+
+
+@app.get("/api/crm/table")
+async def get_crm_table():
+    """Returns the live CRM spreadsheet records directly from local vaults/DB."""
+    try:
+        from harvey.paths import PROJECT_ROOT, get_workspace_dir
+        ws = get_workspace_dir()
+        is_root = (ws.resolve() == PROJECT_ROOT.resolve() or ws.name in ("trackkaro", ""))
+
+        # If this is the root TrackKaro workspace, load the 28 leads from the master TSV/vault
+        if is_root:
+            from harvey.integrations.sheets_sync import DEFAULT_TSV_PATH
+            import csv
+            if os.path.exists(DEFAULT_TSV_PATH):
+                with open(DEFAULT_TSV_PATH, "r", encoding="utf-8") as f:
+                    reader = csv.reader(f, delimiter="\t")
+                    rows = list(reader)
+                    if rows:
+                        items = []
+                        for r in rows[1:]:
+                            if not r or len(r) < 8:
+                                continue
+                            def _clean_formula(val):
+                                if val.startswith("=HYPERLINK("):
+                                    parts = val.replace("=HYPERLINK(\"", "").replace("\")", "").split("\", \"")
+                                    return parts[0] if len(parts) > 0 else val
+                                return val
+
+                            items.append({
+                                "company": r[0] if len(r) > 0 else "",
+                                "region": r[1] if len(r) > 1 else "",
+                                "niche": r[2] if len(r) > 2 else "",
+                                "pain_point": r[3] if len(r) > 3 else "",
+                                "decision_maker": r[4] if len(r) > 4 else "",
+                                "contact": r[5] if len(r) > 5 else "",
+                                "score": r[6] if len(r) > 6 else "95",
+                                "status": r[7] if len(r) > 7 else "Queued",
+                                "deal_size": r[8] if len(r) > 8 else "$3,000 – $6,000",
+                                "website": _clean_formula(r[9]) if len(r) > 9 else "",
+                                "linkedin": _clean_formula(r[10]) if len(r) > 10 else "",
+                                "notes": r[11] if len(r) > 11 else ""
+                            })
+                        return {"rows": items, "count": len(items)}
+
+        # For custom/client workspaces (e.g. cold_email_outreach), load ONLY prospects from THIS workspace's DB:
+        prospects = await query_db(
+            "SELECT p.*, c.name as company_name, c.domain, c.industry, c.location "
+            "FROM prospects p "
+            "LEFT JOIN companies c ON p.company_id = c.id "
+            "ORDER BY p.score DESC, p.created_at DESC"
+        )
+        if prospects:
+            items = []
+            for p in prospects:
+                status_raw = p.get("status", "new")
+                email_status = p.get("email_status", "")
+                
+                if status_raw == "contacted":
+                    status_badge = "🚀 Contacted (Email Delivered)"
+                elif email_status == "verified" or p.get("email_verified"):
+                    status_badge = "✅ Verified Safe"
+                elif email_status == "catch_all":
+                    status_badge = "⚠️ Catch-All"
+                elif email_status in ("invalid", "bounced"):
+                    status_badge = "❌ Bounced / Invalid Email"
+                else:
+                    status_badge = "⏳ Queued"
+
+                items.append({
+                    "company": p.get("company_name") or p.get("company") or "Unknown",
+                    "region": p.get("location") or "Global",
+                    "niche": p.get("industry") or "B2B",
+                    "pain_point": "Lead Automation & Outbound Growth",
+                    "decision_maker": f"{p.get('first_name', '')} {p.get('last_name', '')} ({p.get('title', 'Founder')})".strip(),
+                    "contact": f"{p.get('email', 'N/A')} • {p.get('phone') or 'N/A'}",
+                    "score": str(p.get("score") or 90),
+                    "status": status_badge,
+                    "deal_size": "$2,500 – $5,000",
+                    "website": f"https://{p.get('domain')}" if p.get("domain") and not str(p.get("domain")).startswith("http") else (p.get("domain") or ""),
+                    "linkedin": p.get("linkedin_url") or "—",
+                    "notes": p.get("personalization_notes") or ""
+                })
+            return {"rows": items, "count": len(items)}
+
+        # Clean slate: zero prospects in this isolated workspace
+        return {"rows": [], "count": 0}
+    except Exception as e:
+        logger.warning(f"CRM table load error: {e}")
+        return {"error": str(e), "rows": [], "count": 0}
+
+
+@app.get("/api/crm/export.tsv")
+async def export_crm_tsv():
+    """Direct TSV/Excel download of the active CRM Vault."""
+    from harvey.paths import PROJECT_ROOT, get_workspace_dir
+    ws = get_workspace_dir()
+    is_root = (ws.resolve() == PROJECT_ROOT.resolve() or ws.name in ("trackkaro", ""))
+    
+    if is_root:
+        from harvey.integrations.sheets_sync import DEFAULT_TSV_PATH
+        if os.path.exists(DEFAULT_TSV_PATH):
+            with open(DEFAULT_TSV_PATH, "r", encoding="utf-8") as f:
+                content = f.read()
+        else:
+            content = ""
+    else:
+        # Generate clean TSV from workspace DB
+        prospects = await query_db(
+            "SELECT p.*, c.name as company_name, c.domain, c.industry, c.location "
+            "FROM prospects p LEFT JOIN companies c ON p.company_id = c.id "
+            "ORDER BY p.score DESC, p.created_at DESC"
+        )
+        lines = ["Company\tRegion\tNiche\tPain Point\tDecision Maker\tContact\tScore\tStatus\tDeal Size\tWebsite\tLinkedIn\tStrategy Notes"]
+        for p in prospects:
+            c_name = p.get("company_name") or p.get("company") or ""
+            lines.append(f"{c_name}\t{p.get('location','')}\t{p.get('industry','')}\tLead Automation\t{p.get('first_name','')} {p.get('last_name','')}\t{p.get('email','')}\t{p.get('score',90)}\t{p.get('status','Queued')}\t$2,500 – $5,000\t{p.get('domain','')}\t{p.get('linkedin_url','')}\t{p.get('personalization_notes','')}")
+        content = "\n".join(lines)
+
+    return PlainTextResponse(
+        content,
+        media_type="text/tab-separated-values",
+        headers={"Content-Disposition": f'attachment; filename="{ws.name}_crm_vault.tsv"'}
+    )
+
+
+@app.get("/api/workspace/info")
+async def get_workspace_info():
+    """Returns active workspace metadata and its specific Google Sheet URL."""
+    from harvey.paths import PROJECT_ROOT, get_workspace_dir
+    ws = get_workspace_dir()
+    is_root = (ws.resolve() == PROJECT_ROOT.resolve() or ws.name in ("trackkaro", ""))
+
+    sheet_url = ""
+    webhook_url = ""
+    if is_root:
+        sheet_url = "https://docs.google.com/spreadsheets/d/1b9xhW3LQLFCXSapKBBuGESZuUzBwdVWd6kXLqIqtMkQ/edit"
+        webhook_url = os.getenv("GOOGLE_SHEET_WEBHOOK_URL", "")
+    else:
+        ws_env = ws / ".env"
+        if ws_env.is_file():
+            for line in ws_env.read_text().splitlines():
+                if line.startswith("GOOGLE_SHEET_URL="):
+                    sheet_url = line.split("=", 1)[1].strip()
+                elif line.startswith("GOOGLE_SHEET_WEBHOOK_URL="):
+                    webhook_url = line.split("=", 1)[1].strip()
+
+    return {
+        "workspace": ws.name if not is_root else "trackkaro",
+        "is_root": is_root,
+        "sheet_url": sheet_url,
+        "has_sheet": bool(sheet_url),
+        "has_webhook": bool(webhook_url),
+    }
+
+
+@app.post("/api/sync/sheets")
+async def sync_sheets_api():
+    """1-Click CRM Sync: Regenerates TSV & CSV vaults and pushes live webhook event."""
+    try:
+        from harvey.integrations.sheets_sync import regenerate_local_vaults, push_to_google_sheet
+        state = _state()
+        await state.init_db()
+        count = await regenerate_local_vaults(state)
+        from harvey.paths import PROJECT_ROOT, get_workspace_dir
+        ws = get_workspace_dir()
+        is_root = (ws.resolve() == PROJECT_ROOT.resolve() or ws.name in ("trackkaro", ""))
+
+        if is_root:
+            await push_to_google_sheet(
+                email="mangal@trackkaroai.com",
+                status="Manual Sync Triggered",
+                company="TrackKaro AI",
+                notes=f"Full CRM Sync executed for {count} prospects"
+            )
+            return {"success": True, "count": count, "message": f"Synced {count} leads to CRM vaults & Google Sheet!"}
+        else:
+            return {"success": True, "count": count, "message": f"Regenerated local CRM vaults ({count} leads)."}
+    except Exception as e:
+        logger.exception(f"Sync error: {e}")
+        return JSONResponse({"success": False, "message": str(e)}, status_code=500)
+
 
 
 @app.get("/api/campaigns")
@@ -1061,7 +1568,7 @@ async def get_today():
                        if c.get("required") and not c.get("done")]
             items.append({
                 "key": "setup", "tone": "warn",
-                "title": "Finish setting Harvey up",
+                "title": "Finish setting Jarvis up",
                 "detail": ", ".join(missing[:3]) or "Some required steps are incomplete.",
                 "action": "Open setup", "tab": "settings",
             })
@@ -1072,7 +1579,7 @@ async def get_today():
                 "title": (f"{len(proposed)} signal waiting for your confirmation"
                           if len(proposed) == 1
                           else f"{len(proposed)} signals waiting for your confirmation"),
-                "detail": ("Harvey won't collect anything you haven't approved. "
+                "detail": ("Jarvis won't collect anything you haven't approved. "
                            "Confirm which signals define a good prospect for you."),
                 "action": "Review signals", "tab": "signals",
             })
@@ -1118,7 +1625,7 @@ async def get_today():
                 "key": "replies", "tone": "good",
                 "title": (f"{open_convos} live conversation" if open_convos == 1
                           else f"{open_convos} live conversations"),
-                "detail": "People replied. Check how Harvey is handling them.",
+                "detail": "People replied. Check how Jarvis is handling them.",
                 "action": "Read conversations", "tab": "conversations",
             })
 
@@ -1137,7 +1644,7 @@ async def get_today():
 CATEGORY_META = {
     "discovery": {
         "label": "Discovery — who exists",
-        "blurb": "How Harvey finds businesses at all, and how visible they are. "
+        "blurb": "How Jarvis finds businesses at all, and how visible they are. "
                  "This is the only stage that costs money.",
     },
     "profile": {
@@ -1332,6 +1839,6 @@ def start_dashboard(host: str = "127.0.0.1", port: int = 5555):
     """Start the dashboard server."""
     import uvicorn
 
-    print(f"\n  Harvey Dashboard running at http://{host}:{port}")
+    print(f"\n  Jarvis Dashboard running at http://{host}:{port}")
     print("  Press Ctrl+C to stop.\n")
     uvicorn.run(app, host=host, port=port, log_level="warning")

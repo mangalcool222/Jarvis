@@ -16,9 +16,18 @@ from urllib.parse import quote_plus
 
 logger = logging.getLogger("harvey.linkedin")
 
-from harvey.paths import PROJECT_ROOT
+from harvey.paths import PROJECT_ROOT, get_data_dir
 
-DATA_DIR = PROJECT_ROOT / "data"
+
+class _DynamicDataDir:
+    def __fspath__(self):
+        return str(get_data_dir())
+
+    def __truediv__(self, other):
+        return get_data_dir() / other
+
+
+DATA_DIR = _DynamicDataDir()
 COOKIES_PATH = DATA_DIR / "linkedin_cookies.json"
 ACTIVITY_PATH = DATA_DIR / "linkedin_activity.json"
 

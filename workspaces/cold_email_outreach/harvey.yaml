@@ -1,0 +1,82 @@
+persona:
+  name: "Mangal Soren"
+  company: "TrackKaro AI"
+  role: "GTM Automation Architect"
+  email: "mangal@trackkaroai.com"
+  linkedin: "https://www.linkedin.com/in/mangal-soren-1312ba31a/"
+  tone: "direct, data-backed, builder-vibe, low-hype, consultative, growth engineer"
+
+product:
+  name: "Autonomous AI SDR & B2B Outbound Engine"
+  description: "Done-for-you autonomous outbound engine for B2B Agencies, High-Ticket Services, and SaaS Founders. Replaces the $5,000/mo human SDR cost by deploying an intelligent multi-agent pipeline: finds decision-makers matching live buying signals, verifies 100% deliverable mailboxes, writes individualized value propositions, and books qualified discovery meetings directly on your calendar."
+  pricing: "$1,500 – $2,500/month Retainer • Zero Software Headaches"
+  key_benefits:
+    - "Saves $4,000–$6,000/mo compared to hiring an in-house SDR"
+    - "Scrapes 1,000+ targeted decision-makers per month matching verified ICP buying signals"
+    - "Triple-layer email verification (Reoon/ZeroBounce) protecting domain sender score"
+    - "Hyper-personalized AI sequence writing based on prospect's real site and offerings"
+    - "Automated objection handling & meeting scheduling directly to Google / Calendly calendar"
+    - "Full Done-For-You infrastructure: we manage the scrapers, deliverability, and copy"
+  objection_responses:
+    "too expensive": "A human SDR costs $4,000–$6,000/mo plus overhead, management, and high turnover. Our autonomous engine runs 24/7 at half that cost, and just 1 closed client retainer recovers the entire investment."
+    "already have Apollo or Instantly": "Most founders have software tools they don't have time to manage. We don't sell you software to learn — we run the entire outbound pipeline on our infrastructure so you only show up to closed meetings."
+    "cold email goes to spam": "Generic blasts go to spam. We use isolated secondary domains, SPF/DKIM/DMARC warmup, triple verification, and hyper-personalized hooks for each prospect so deliverability stays >95%."
+  offer:
+    primary: "$2,500/mo Autonomous AI SDR & Outbound Retainer (Guaranteed Pipeline)"
+    entry: "Free 60-Second Video Audit of Your Agency's Outbound & ICP TAM"
+    goal: "book_call"
+    booking_method: "calendar_link"
+    booking_url: "https://calendly.com/trackkaroai/15min"
+    meeting_duration: "15 minutes"
+    meeting_owner: "Mangal Soren"
+
+icp:
+  industries:
+    - "B2B Marketing & Growth Agencies"
+    - "Performance Creative & Ad Agencies"
+    - "B2B SaaS ($1M-$10M ARR)"
+    - "High-Ticket Consulting & Advisory"
+    - "Custom Software Development & Dev Agencies"
+    - "Recruitment & Executive Search Firms"
+  company_size: "5-100 employees"
+  titles:
+    - "Founder & CEO"
+    - "Managing Partner"
+    - "Co-Founder"
+    - "Head of Growth"
+    - "VP Sales"
+    - "Chief Revenue Officer"
+    - "Director of Business Development"
+  geography:
+    - "United States"
+    - "United Kingdom"
+    - "Dubai, UAE"
+    - "Canada"
+    - "Australia"
+  hiring_signals:
+    - "Growth Manager"
+    - "Sales Director"
+    - "Account Executive"
+    - "SDR"
+
+channels:
+  email:
+    enabled: true
+    provider: "smtp"          # gmail | smtp (Resend) | instantly
+    reply_to: "mangal@trackkaroai.com"
+    max_daily_sends: 25
+    require_approval: true      # Emails wait in outbox dashboard for 1-click approval
+    send_to_risky: false
+    max_bounce_rate: 0.03
+  linkedin:
+    enabled: false
+    max_daily_connections: 15
+    max_daily_messages: 10
+
+usage:
+  max_daily_claude_percent: 80
+  heartbeat_interval_minutes: 15
+  quiet_hours:
+    start: "22:00"
+    end: "07:00"
+    timezone: "Asia/Kolkata"

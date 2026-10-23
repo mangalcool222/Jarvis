@@ -1,0 +1,81 @@
+persona:
+  name: "Mangal Soren"
+  company: "TrackKaro AI"
+  role: "Lead Automation"
+  email: "mangal@trackkaroai.com"
+  linkedin: "https://www.linkedin.com/in/mangal-soren-1312ba31a/"
+  tone: "direct, honest, builder-vibe, low-hype, consultative, lead automation specialist"
+
+product:
+  name: "TrackKaro Instant Lead Response Engine"
+  description: "Speed-to-lead automation for Performance Marketing Agencies, Dubai Luxury Real Estate, and High-Ticket Teams. Connects Meta/Google ad leads and website forms directly to instant sales alerts (Telegram with 1-click calls) and structured Google Sheets CRM so high-intent leads never slip away."
+  pricing: "$500 - $997 Done-For-You Setup + Optional Maintenance"
+  key_benefits:
+    - "Connects incoming ad leads to sales reps within seconds instead of hours"
+    - "Plugs client lead leaks for performance marketing agencies (improving client retention)"
+    - "Instant Telegram sound notification with prospect details and 1-click call button"
+    - "Instant automated WhatsApp brochure & confirmation delivery"
+    - "Zero lead leakage with real-time Google Sheets & CRM auto-sync"
+    - "Test the live demo in 30 seconds here: https://trackkaroai.com"
+  objection_responses:
+    "too expensive": "Preventing just 1 or 2 dropped high-ticket leads or protecting 1 agency client retainer recovers the setup cost immediately."
+    "already have HubSpot/Salesforce": "TrackKaro doesn't replace your CRM — it sits between your lead forms and your sales team so reps get alerted instantly without checking CRM dashboards."
+    "sales team already calls fast": "Most internal teams take 1 to 2 hours to respond to ad leads. See how fast the instant dispatch triggers on our live demo: https://trackkaroai.com"
+  offer:
+    primary: "$500 - $997 Complete Rapid Lead Engine DFY Deployment"
+    entry: "Test the live demo in 30 seconds here: https://trackkaroai.com"
+    goal: "book_call"
+    booking_method: "calendar_link"
+    booking_url: "https://calendly.com/trackkaroai/15min"
+    meeting_duration: "15 minutes"
+    meeting_owner: "Mangal Soren"
+
+icp:
+  industries:
+    - "Luxury Real Estate"
+    - "Real Estate Agency"
+    - "Commercial Real Estate"
+    - "Property Management"
+    - "B2B SaaS"
+    - "Performance Marketing Agency"
+  company_size: "5-100 employees"
+  titles:
+    - "Managing Partner"
+    - "Principal Broker"
+    - "Founder & CEO"
+    - "Director of Sales"
+    - "Head of Growth"
+    - "VP Marketing"
+  geography:
+    - "Dubai, UAE"
+    - "Miami, FL"
+    - "Austin, TX"
+    - "Dallas, TX"
+    - "London, UK"
+    - "Scottsdale, AZ"
+  hiring_signals:
+    - "Sales Director"
+    - "Performance Marketer"
+    - "Growth Manager"
+
+channels:
+  email:
+    enabled: true
+    provider: "smtp"          # gmail | smtp (Resend) | instantly
+    reply_to: "mangal@trackkaroai.com"  # Reply address matching professional domain
+    max_daily_sends: 25
+    require_approval: true      # Every email waits in your dashboard for 1-click approval
+    send_to_risky: false
+    max_bounce_rate: 0.03
+  linkedin:
+    enabled: false
+    max_daily_connections: 15
+    max_daily_messages: 10
+
+usage:
+  max_daily_claude_percent: 80
+  heartbeat_interval_minutes: 15
+  quiet_hours:
+    start: "22:00"
+    end: "07:00"
+    timezone: "America/New_York"

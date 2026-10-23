@@ -376,7 +376,9 @@ async def verify_reoon(email: str, api_key: str) -> Optional[dict]:
         return None
     status = str(data.get("status") or "").lower()
     is_catch_all = bool(data.get("is_catch_all") or status == "catch_all")
-    return {"status": status, "catch_all": is_catch_all}
+    is_safe = bool(data.get("is_safe_to_send", False))
+    # If Reoon explicitly marks it safe, treat status as safe/valid
+    return {"status": status, "catch_all": is_catch_all, "is_safe_to_send": is_safe}
 
 
 async def verify_zerobounce(email: str, api_key: str) -> Optional[dict]:
@@ -476,7 +478,7 @@ def _status_from_verdict(verdict: dict) -> Optional[str]:
     if verdict.get("catch_all"):
         return "risky"
     status = verdict.get("status", "")
-    if status in ("valid", "deliverable"):
+    if status in ("valid", "deliverable", "safe"):
         return "verified"
     if status in ("invalid", "undeliverable", "disabled"):
         return "invalid"

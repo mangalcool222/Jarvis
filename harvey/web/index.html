@@ -3,20 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Harvey — Command Deck</title>
-<link rel="stylesheet" href="/static/app.css">
+<title>Jarvis — Autonomous AI SDR | TrackKaro AI</title>
+<link rel="stylesheet" href="/static/app.css?v=jarvis1">
 </head>
 <body>
 
 <header>
   <div class="brand">
-    <div class="mark">H</div>
+    <div class="mark">⚡</div>
     <div>
-      <h1>Harvey</h1>
-      <div class="tagline">Always Be Closing</div>
+      <h1>Jarvis — Autonomous AI SDR</h1>
+      <div class="tagline">B2B Lead Automation & Outbound OS • Architected by Mangal Soren (TrackKaro AI)</div>
     </div>
   </div>
   <div class="header-controls">
+    <a href="#" 
+       target="_blank" rel="noopener noreferrer" 
+       id="header-sheet-link"
+       class="btn-sheets" 
+       style="display:none;"
+       title="Open Google Sheets Master CRM">
+      <span style="font-size:14px;">📊</span> Google Sheet CRM <span style="font-size:11px;opacity:0.8;">↗</span>
+    </a>
     <div class="harvey-status" id="header-status">
       <span class="status-dot stopped" id="header-dot"></span>
       <span id="header-status-text">Checking…</span>
@@ -35,6 +43,7 @@
   <button onclick="showTab('prospects', this)">Contacts</button>
   <button onclick="showTab('campaigns', this)">Campaigns</button>
   <button onclick="showTab('outbox', this)">Outbox<span class="nav-count" id="nav-outbox"></span></button>
+  <button onclick="showTab('crm-sheet', this)" style="color:#22c55e;font-weight:650;">📊 CRM Sheet</button>
   <button onclick="showTab('conversations', this)">Conversations</button>
   <button onclick="showTab('activity', this)">Activity</button>
   <button onclick="showTab('usage', this)">Usage</button>
@@ -49,7 +58,7 @@
 <div id="today" class="section active">
   <div class="section-head">
     <h2>Today</h2>
-    <p>Anything waiting on you, then everything Harvey has built so far.</p>
+    <p>Anything waiting on you, then everything Jarvis has built so far.</p>
   </div>
   <div class="today-grid">
     <div class="today-main">
@@ -78,7 +87,7 @@
 <div id="signals" class="section">
   <div class="section-head">
     <h2>Signals</h2>
-    <p>Harvey proposes what it knows how to look for. You decide what actually
+    <p>Jarvis proposes what it knows how to look for. You decide what actually
        defines a good prospect &mdash; nothing is collected until you confirm it.</p>
   </div>
   <div id="signals-summary"></div>
@@ -108,7 +117,7 @@
     <div class="form-row" style="margin-bottom:14px">
       <div class="form-group" style="flex:2">
         <label class="form-label">Cities</label>
-        <input class="form-input" id="disc-cities" placeholder="from your ICP — or override, one per line">
+        <input class="form-input" id="disc-cities" placeholder="e.g. New York, Austin, London (or leave blank to use your ICP)">
       </div>
       <div class="form-group">
         <label class="form-label">Results per query</label>
@@ -137,14 +146,14 @@
 
 <!-- Companies -->
 <div id="companies" class="section">
-  <div class="section-head"><h2>Companies</h2><p>Organizations Harvey has researched. Click a row to see its contacts.</p></div>
+  <div class="section-head"><h2>Companies</h2><p>Organizations Jarvis has researched. Click a row to see its contacts.</p></div>
   <div id="companies-list"></div>
 </div>
 
 <!-- Contacts -->
 <div id="prospects" class="section">
   <div class="section-head" style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
-    <div><h2>Contacts</h2><p>People Harvey has found and verified.</p></div>
+    <div><h2>Contacts</h2><p>People Jarvis has found and verified.</p></div>
     <div style="display:flex;gap:8px;flex-shrink:0">
       <a class="btn btn-secondary btn-sm" href="/api/export/prospects.csv" download>Export deliverable CSV</a>
       <a class="btn btn-secondary btn-sm" href="/api/export/prospects.csv?all=true" download>Export all</a>
@@ -155,7 +164,7 @@
 
 <!-- Campaigns -->
 <div id="campaigns" class="section">
-  <div class="section-head"><h2>Campaigns</h2><p>Email sequences Harvey has written and deployed.</p></div>
+  <div class="section-head"><h2>Campaigns</h2><p>Email sequences Jarvis has written and deployed.</p></div>
   <div id="campaigns-list"></div>
 </div>
 
@@ -169,20 +178,79 @@
     </div>
     <div style="display:flex;gap:8px;flex-shrink:0" id="outbox-actions"></div>
   </div>
+  <!-- Quick Direct Website URL Prospecting Bar -->
+  <div class="card" style="margin-bottom:18px; padding:12px 18px; background:var(--bg-2); border:1px solid rgba(59,130,246,0.3); border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:22px; line-height:1;">⚡</span>
+        <div>
+          <div style="font-weight:600; font-size:13px; color:var(--text); letter-spacing:0.2px;">Direct Website URL Pitch Generator</div>
+          <div style="font-size:12px; color:var(--text-2);">Directly paste any website URL to instantly profile &amp; draft a Speed-to-Lead pitch in Outbox</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; flex:1; max-width:560px; min-width:280px;">
+        <input id="quick-url-input" type="text" placeholder="e.g. luxhabitat.ae or https://luxuryproperty.com" 
+               style="flex:1; padding:8px 12px; font-size:13px; border-radius:6px; border:1px solid var(--border); background:var(--bg); color:var(--text); outline:none;" 
+               onkeydown="if(event.key==='Enter') quickProspectUrl()">
+        <button id="quick-url-btn" class="btn btn-primary btn-sm" onclick="quickProspectUrl()" style="white-space:nowrap; display:flex; align-items:center; gap:6px; padding:8px 14px; font-weight:600;">
+          <span>🚀 Generate Pitch</span>
+        </button>
+      </div>
+    </div>
+    <div id="quick-url-status" style="display:none; margin-top:8px; font-size:12px; padding:6px 10px; border-radius:6px; background:var(--bg);"></div>
+  </div>
   <div id="outbox-banner"></div>
   <div id="outbox-desk"></div>
   <div id="outbox-list"></div>
 </div>
 
+<!-- TrackKaro Autonomous CRM Sheet -->
+<div id="crm-sheet" class="section">
+  <div class="section-head" style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px;">
+    <div>
+      <h2 style="display:flex;align-items:center;gap:8px;margin:0;">
+        <span style="font-size:24px;">📊</span> Autonomous CRM Data Vault
+      </h2>
+      <p style="margin:4px 0 0 0;color:var(--text-2);font-size:13px;">Direct, real-time lead pipeline running locally with zero external sheet/script breakage. Always in sync.</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;" id="crm-sheet-controls">
+      <a href="/api/crm/export.tsv" download="crm_vault.tsv" class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:5px;font-weight:600;">
+        <span>📥</span> Download Excel / TSV
+      </a>
+      <a href="#" id="crm-sheet-link" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="display:none;align-items:center;gap:5px;border-color:rgba(34,197,94,0.4);color:#22c55e;">
+        <span>📊</span> Google Sheet CRM ↗
+      </a>
+      <button class="btn btn-primary btn-sm" onclick="loadCrmSheet()">🔄 Refresh</button>
+    </div>
+  </div>
+
+  <!-- Filter & Search Toolbar -->
+  <div class="card" style="margin-bottom:16px;padding:12px 16px;background:var(--bg-2);border:1px solid var(--border);">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;" id="crm-filter-pills">
+        <!-- Rendered by app.js -->
+      </div>
+      <div style="flex:1;max-width:320px;min-width:200px;">
+        <input type="text" id="crm-search-input" placeholder="🔍 Search company, email, contact..." 
+               style="width:100%;padding:6px 12px;font-size:12px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);outline:none;"
+               oninput="filterCrmTable()">
+      </div>
+    </div>
+  </div>
+
+  <!-- The Spreadsheet Table -->
+  <div id="crm-table-container"></div>
+</div>
+
 <!-- Conversations -->
 <div id="conversations" class="section">
-  <div class="section-head"><h2>Conversations</h2><p>Every reply, and how Harvey handled it.</p></div>
+  <div class="section-head"><h2>Conversations</h2><p>Every reply, and how Jarvis handled it.</p></div>
   <div id="conversations-list"></div>
 </div>
 
 <!-- Activity -->
 <div id="activity" class="section">
-  <div class="section-head"><h2>Activity</h2><p>A running log of every action Harvey's agents have taken.</p></div>
+  <div class="section-head"><h2>Activity</h2><p>A running log of every action Jarvis's agents have taken.</p></div>
   <div id="activity-list"></div>
 </div>
 
@@ -200,7 +268,7 @@
   <div class="section-head"><h2>Settings</h2><p>Credentials are stored locally in <span style="font-family:var(--mono);font-size:12px">.env</span> — never sent anywhere except the services themselves.</p></div>
   <div class="card">
     <h2>Email Provider</h2>
-    <p class="lede">How Harvey sends and reads replies. Active provider: <b id="active-provider">…</b> — change it by setting <span style="font-family:var(--mono);font-size:12px">channels.email.provider</span> in <span style="font-family:var(--mono);font-size:12px">harvey.yaml</span> to <span style="font-family:var(--mono);font-size:12px">gmail</span>, <span style="font-family:var(--mono);font-size:12px">smtp</span>, or <span style="font-family:var(--mono);font-size:12px">instantly</span>.</p>
+    <p class="lede">How Jarvis sends and reads replies. Active provider: <b id="active-provider">…</b> — change it by setting <span style="font-family:var(--mono);font-size:12px">channels.email.provider</span> in <span style="font-family:var(--mono);font-size:12px">harvey.yaml</span> to <span style="font-family:var(--mono);font-size:12px">gmail</span>, <span style="font-family:var(--mono);font-size:12px">smtp</span>, or <span style="font-family:var(--mono);font-size:12px">instantly</span>.</p>
 
     <div style="border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px">
       <div style="font-weight:650;margin-bottom:4px">Gmail / Google Workspace <span class="optional-tag">recommended</span> <span id="gmail-status" class="email-tag"></span></div>
@@ -260,7 +328,7 @@
 
   <div class="card">
     <h2>LinkedIn <span class="optional-tag">optional</span></h2>
-    <p class="lede">For automated LinkedIn prospecting. Harvey logs in and searches like a human.</p>
+    <p class="lede">For automated LinkedIn prospecting. Jarvis logs in and searches like a human.</p>
     <div class="form-group">
       <label class="form-label" for="linkedin-email">Email / Username</label>
       <input type="text" class="form-input" id="linkedin-email" placeholder="your@email.com" autocomplete="off">
@@ -289,7 +357,7 @@
 
 <!-- Controls -->
 <div id="controls" class="section">
-  <div class="section-head"><h2>Controls</h2><p>Start and stop Harvey's heartbeat loop, and watch what it's doing.</p></div>
+  <div class="section-head"><h2>Controls</h2><p>Start and stop Jarvis's heartbeat loop, and watch what it's doing.</p></div>
   <div class="control-panel">
     <div class="card">
       <h2>Agent</h2>
@@ -299,13 +367,13 @@
       </div>
       <div class="status-meta" id="control-meta"></div>
       <div class="btn-group">
-        <button class="btn btn-primary" id="btn-start" onclick="startHarvey()">Start Harvey</button>
-        <button class="btn btn-danger" id="btn-stop" onclick="stopHarvey()" style="display:none">Stop Harvey</button>
+        <button class="btn btn-primary" id="btn-start" onclick="startHarvey()">Start Jarvis</button>
+        <button class="btn btn-danger" id="btn-stop" onclick="stopHarvey()" style="display:none">Stop Jarvis</button>
       </div>
     </div>
     <div class="card">
       <h2>Recent Logs</h2>
-      <div class="log-viewer" id="log-viewer">No logs yet. Start Harvey to see activity.</div>
+      <div class="log-viewer" id="log-viewer">No logs yet. Start Jarvis to see activity.</div>
       <div class="btn-group">
         <button class="btn btn-secondary btn-sm" onclick="loadLogs()">Refresh Logs</button>
       </div>
@@ -315,35 +383,35 @@
 
 <!-- Help -->
 <div id="help" class="section">
-  <div class="section-head"><h2>Help</h2><p>What Harvey is, how it works, and how to fix the usual problems.</p></div>
+  <div class="section-head"><h2>Help</h2><p>What Jarvis is, how it works, and how to fix the usual problems.</p></div>
 
   <div class="help-section">
-    <h2>What is Harvey?</h2>
-    <p>Harvey is an autonomous AI sales agent. Once set up, Harvey runs on its own: finds people who match your ideal customer, writes personalized cold emails, sends them through your email platform, reads every reply, handles objections, and works toward booking a meeting. You review everything through this dashboard.</p>
-    <p>Harvey runs on your Claude Max subscription (or, if you opt in, your ChatGPT plan through Codex), so there are no extra AI costs. Everything stays on your machine in one folder.</p>
+    <h2>What is Jarvis?</h2>
+    <p>Jarvis is an autonomous AI SDR (Sales Development Representative) engineered by Mangal Soren (TrackKaro AI). Once set up, Jarvis runs on its own: finds people who match your ideal customer, writes personalized cold emails, sends them through your email platform, reads every reply, handles objections, and works toward booking a meeting. You review everything through this dashboard.</p>
+    <p>Jarvis runs on your Claude Max subscription (or, if you opt in, your ChatGPT plan through Codex), so there are no extra AI costs. Everything stays on your machine in one folder.</p>
   </div>
 
   <div class="help-section">
     <h2>Getting Started</h2>
     <p>There are three things to do:</p>
     <pre>1. Go to the Settings tab and enter your Instantly API key
-2. Train Harvey on your product (through Claude or the command line)
+2. Train Jarvis on your product (through Claude or the command line)
 3. Go to the Controls tab and click Start</pre>
     <p>The Setup tab shows you exactly what's done and what still needs to happen.</p>
   </div>
 
   <div class="help-section">
     <h2>Where Everything Lives</h2>
-    <p>Everything Harvey needs is inside this one project folder. Nothing is stored elsewhere.</p>
+    <p>Everything Jarvis needs is inside this one project folder. Nothing is stored elsewhere.</p>
     <div class="table-card" style="padding:6px 4px">
     <table class="file-table">
       <tr><td>.env</td><td>Your API keys and credentials (never shared or committed)</td></tr>
       <tr><td>harvey.yaml</td><td>Your product info, target customers, and behavior settings</td></tr>
-      <tr><td>skills/</td><td>Sales knowledge files. Edit these to change how Harvey writes and sells.</td></tr>
-      <tr><td>skills/product_knowledge.md</td><td>Everything Harvey knows about your product (auto-generated from training)</td></tr>
+      <tr><td>skills/</td><td>Sales knowledge files. Edit these to change how Jarvis writes and sells.</td></tr>
+      <tr><td>skills/product_knowledge.md</td><td>Everything Jarvis knows about your product (auto-generated from training)</td></tr>
       <tr><td>prompts/</td><td>Prompt templates for each agent. Advanced customization.</td></tr>
       <tr><td>data/harvey.db</td><td>Database with all prospects, campaigns, and conversations</td></tr>
-      <tr><td>data/harvey.log</td><td>Log file showing what Harvey is doing</td></tr>
+      <tr><td>data/harvey.log</td><td>Log file showing what Jarvis is doing</td></tr>
     </table>
     </div>
   </div>
@@ -354,7 +422,7 @@
     <details>
       <summary>Instantly API Key (required)</summary>
       <div class="faq-body">
-        <p>Instantly is the email platform Harvey uses to send campaigns.</p>
+        <p>Instantly is the email platform Jarvis uses to send campaigns.</p>
         <p>1. Sign up at <a href="https://instantly.ai" target="_blank" rel="noopener">instantly.ai</a> (you need the Growth plan for API access)</p>
         <p>2. Go to Settings &gt; Integrations</p>
         <p>3. Copy your API key</p>
@@ -365,20 +433,20 @@
     <details>
       <summary>LinkedIn Credentials (optional)</summary>
       <div class="faq-body">
-        <p>If you want Harvey to find prospects on LinkedIn, enter your LinkedIn email and password. Harvey uses a real browser to search LinkedIn like a human would, with random delays and rate limits to avoid detection.</p>
-        <p>If you skip this, Harvey will find prospects through Google searches and company website scraping instead.</p>
+        <p>If you want Jarvis to find prospects on LinkedIn, enter your LinkedIn email and password. Jarvis uses a real browser to search LinkedIn like a human would, with random delays and rate limits to avoid detection.</p>
+        <p>If you skip this, Jarvis will find prospects through Google searches and company website scraping instead.</p>
       </div>
     </details>
 
     <details>
       <summary>Cloudflare Browser Rendering (optional)</summary>
       <div class="faq-body">
-        <p>This is only used during product training (when Harvey crawls your website to learn about your product). It handles JavaScript-heavy websites that a basic crawler can't read.</p>
+        <p>This is only used during product training (when Jarvis crawls your website to learn about your product). It handles JavaScript-heavy websites that a basic crawler can't read.</p>
         <p>1. Sign up at <a href="https://dash.cloudflare.com" target="_blank" rel="noopener">Cloudflare</a> (paid Workers plan, ~$5/month)</p>
         <p>2. Go to Workers &amp; Pages &gt; Browser Rendering</p>
         <p>3. Create an API token with Browser Rendering Edit permissions</p>
         <p>4. Enter your Account ID and API Token in the Settings tab</p>
-        <p>Without this, Harvey uses a built-in crawler that works fine for most websites but can't render JavaScript.</p>
+        <p>Without this, Jarvis uses a built-in crawler that works fine for most websites but can't render JavaScript.</p>
       </div>
     </details>
   </div>
@@ -387,7 +455,7 @@
     <h2>Common Issues</h2>
 
     <details>
-      <summary>"command not found: harvey"</summary>
+      <summary>"command not found: harvey" or "command not found: jarvis"</summary>
       <div class="faq-body">You need to activate the virtual environment first: <code>source .venv/bin/activate</code></div>
     </details>
 
@@ -398,23 +466,23 @@
 
     <details>
       <summary>Claude headless mode fails</summary>
-      <div class="faq-body">Make sure you've run <code>claude login</code> in your terminal and have an active Claude Max subscription. Harvey uses your existing subscription, not a separate API key.</div>
+      <div class="faq-body">Make sure you've run <code>claude login</code> in your terminal and have an active Claude Max subscription. Jarvis uses your existing subscription, not a separate API key.</div>
     </details>
 
     <details>
       <summary>Codex calls fail</summary>
-      <div class="faq-body">With <code>brain.provider: codex</code>, set <code>brain.model: gpt-5.5</code> (the verified text-only model; a blank model fails on current ChatGPT accounts and code-mode models are refused), run <code>codex login</code> and choose "Sign in with ChatGPT" (API-key logins are refused). Harvey never renews your Codex login: if the log says it has expired or is due for renewal, use Codex once or run <code>codex login</code>. Harvey needs Codex CLI 0.159.3 on macOS or Linux (Codex isn't supported on Windows; use Claude there) and refuses other versions. While Codex can't be used, Harvey pauses (the Actions card shows "Codex paused" and why), leaves replies and queued emails untouched, and resumes once it's fixed; <code>harvey status --check</code> checks on demand. If the log says isolation could not be verified, a Codex config layer is forcing a tool, hook, MCP server or custom endpoint back on — Harvey refuses to send prompts until it is removed. Harvey never falls back to Claude on its own.</div>
+      <div class="faq-body">With <code>brain.provider: codex</code>, set <code>brain.model: gpt-5.5</code> (the verified text-only model; a blank model fails on current ChatGPT accounts and code-mode models are refused), run <code>codex login</code> and choose "Sign in with ChatGPT" (API-key logins are refused). Jarvis never renews your Codex login: if the log says it has expired or is due for renewal, use Codex once or run <code>codex login</code>. Jarvis needs Codex CLI 0.159.3 on macOS or Linux (Codex isn't supported on Windows; use Claude there) and refuses other versions. While Codex can't be used, Jarvis pauses (the Actions card shows "Codex paused" and why), leaves replies and queued emails untouched, and resumes once it's fixed; <code>harvey status --check</code> checks on demand. If the log says isolation could not be verified, a Codex config layer is forcing a tool, hook, MCP server or custom endpoint back on — Jarvis refuses to send prompts until it is removed. Jarvis never falls back to Claude on its own.</div>
     </details>
 
     <details>
-      <summary>Harvey isn't finding prospects</summary>
-      <div class="faq-body">Check that your ICP (ideal customer profile) in harvey.yaml has realistic titles, industries, and geography. If LinkedIn is set up, check that the credentials are correct. Check the Activity tab to see what Harvey has been trying to do.</div>
+      <summary>Jarvis isn't finding prospects</summary>
+      <div class="faq-body">Check that your ICP (ideal customer profile) in harvey.yaml has realistic titles, industries, and geography. If LinkedIn is set up, check that the credentials are correct. Check the Activity tab to see what Jarvis has been trying to do.</div>
     </details>
   </div>
 </div>
 
 </main>
 
-<script src="/static/app.js"></script>
+<script src="/static/app.js?v=jarvis1"></script>
 </body>
 </html>

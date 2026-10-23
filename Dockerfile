@@ -37,9 +37,11 @@ ENV PATH="/home/harvey/.local/bin:${PATH}"
 # `|| true` keeps the build working offline; the CLI is required at runtime.
 RUN curl -fsSL https://claude.ai/install.sh | sh || true
 
-# Healthy = the heartbeat loop has touched the database recently
-# (2h window tolerates long heartbeat intervals and quiet-hour idling).
-HEALTHCHECK --interval=5m --timeout=10s --start-period=3m --retries=3 \
-    CMD python -c "import os,sys,time; p='/app/data/harvey.db'; sys.exit(0 if os.path.exists(p) and time.time()-os.path.getmtime(p) < 7200 else 1)"
+# Expose Jarvis Web Dashboard port
+EXPOSE 5555
 
-CMD ["python", "-m", "harvey.main"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5555/api/harvey/status')" || exit 1
+
+CMD ["python", "-m", "harvey.cli", "dashboard", "--host", "0.0.0.0", "--port", "5555"]
+

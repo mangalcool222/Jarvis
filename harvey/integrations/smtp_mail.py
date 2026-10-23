@@ -22,6 +22,8 @@ from email.message import EmailMessage
 from email.utils import make_msgid, parseaddr
 
 import aiosmtplib
+import html
+import re
 
 from harvey.integrations.mail_provider import (
     InboundMessage,
@@ -42,10 +44,10 @@ class SmtpImapProvider(MailProvider):
         self.smtp_port = int(getattr(env, "smtp_port", 587) or 587)
         self.smtp_user = getattr(env, "smtp_username", "")
         self.smtp_pass = getattr(env, "smtp_password", "")
-        self.imap_host = getattr(env, "imap_host", "") or self.smtp_host
+        self.imap_host = getattr(env, "imap_host", "")
         self.imap_port = int(getattr(env, "imap_port", 993) or 993)
-        self.imap_user = getattr(env, "imap_username", "") or self.smtp_user
-        self.imap_pass = getattr(env, "imap_password", "") or self.smtp_pass
+        self.imap_user = getattr(env, "imap_username", "") or (self.smtp_user if self.imap_host else "")
+        self.imap_pass = getattr(env, "imap_password", "") or (self.smtp_pass if self.imap_host else "")
 
     def is_configured(self) -> bool:
         return bool(self.smtp_host and self.smtp_user and self.smtp_pass)
@@ -62,6 +64,9 @@ class SmtpImapProvider(MailProvider):
         msg = EmailMessage()
         msg["To"] = to_email
         msg["From"] = f"{persona.name} <{persona.email or self.smtp_user}>"
+        reply_to = getattr(self.config.channels.email, "reply_to", "") or getattr(persona, "reply_to", "")
+        if reply_to:
+            msg["Reply-To"] = f"{persona.name} <{reply_to}>"
         msg["Subject"] = subject
         message_id = make_msgid(domain=(persona.email or self.smtp_user).split("@")[-1])
         msg["Message-ID"] = message_id
@@ -69,6 +74,23 @@ class SmtpImapProvider(MailProvider):
             msg["In-Reply-To"] = in_reply_to
             msg["References"] = in_reply_to
         msg.set_content(body)
+        
+        # Ensure URLs are guaranteed clickable across all devices/clients without capturing subsequent text/newlines
+        def _linkify(match):
+            url = match.group(0)
+            trailing = ""
+            while url and url[-1] in ".,;:?!>)":
+                trailing = url[-1] + trailing
+                url = url[:-1]
+            return f'<a href="{url}" style="color: #2563eb; text-decoration: underline;">{url}</a>{trailing}'
+
+        safe_body = html.escape(body, quote=False)
+        html_formatted = re.sub(r'https?://[^\s<>"]+', _linkify, safe_body)
+        html_formatted = html_formatted.replace("\n", "<br>")
+        msg.add_alternative(
+            f'<div style="font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #111827;">{html_formatted}</div>',
+            subtype="html"
+        )
 
         try:
             await aiosmtplib.send(
@@ -87,6 +109,8 @@ class SmtpImapProvider(MailProvider):
         return SendResult(ok=True, message_id=message_id, thread_ref=message_id)
 
     async def get_replies(self, limit: int = 50) -> list[InboundMessage]:
+        if not self.imap_host or not self.imap_user or not self.imap_pass:
+            return []
         loop = asyncio.get_event_loop()
         try:
             return await loop.run_in_executor(None, self._fetch_unseen, limit)
@@ -168,7 +192,10 @@ class SmtpImapProvider(MailProvider):
             await smtp.quit()
         except Exception as e:
             return False, f"SMTP login failed: {str(e)[:200]}"
-        # IMAP handshake
+        # IMAP handshake (only if IMAP is configured)
+        if not self.imap_host or not self.imap_user or not self.imap_pass:
+            return True, f"SMTP connected as {self.smtp_user} (IMAP inbound polling disabled)"
+
         loop = asyncio.get_event_loop()
 
         def _imap_check():

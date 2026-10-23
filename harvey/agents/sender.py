@@ -60,6 +60,7 @@ class Sender:
         self.brain = brain
         self.state = state
         self.config = config
+        self.env = env
         self.instantly = InstantlyClient(env.instantly_api_key)
         self.provider = get_mail_provider(config, env)
         # Disabled in tests to skip inter-send sleeps.
@@ -461,6 +462,21 @@ class Sender:
                 )
                 continue
 
+            # Timezone working hours gate: Ensure recipient is in their local business hours
+            from harvey.scheduler import check_prospect_working_hours
+            allowed, tz_reason, next_slot = check_prospect_working_hours(
+                location=item.get("location", "") or getattr(prospect, "location", ""),
+                company=item.get("company", "") or getattr(prospect, "company", ""),
+                email=item["to_email"]
+            )
+            if not allowed:
+                await self.state.update_outbox_item(item["id"], send_at=next_slot.isoformat())
+                logger.info(
+                    f"Sender: {item['to_email']} is off-hours ({tz_reason}). "
+                    f"Rescheduled for local prime window at {next_slot.isoformat()}."
+                )
+                continue
+
             gate = pre_send_check(
                 item["to_email"], item["subject"], item["body"],
                 prospect=prospect, allow_risky=allow_risky, kind=item["kind"],
@@ -475,6 +491,29 @@ class Sender:
                     f"{gate.reasons}"
                 )
                 continue
+
+            # Live Reoon Bounce-Proof Verification Gate
+            reoon_key = getattr(self.env, "reoon_api_key", "") if self.env else ""
+            if not reoon_key:
+                import os
+                reoon_key = os.getenv("REOON_API_KEY", "")
+
+            if reoon_key:
+                from harvey.integrations.email_finder import verify_reoon
+                verdict = await verify_reoon(item["to_email"], reoon_key)
+                if verdict:
+                    ver_status = str(verdict.get("status") or "").lower()
+                    is_safe = bool(verdict.get("is_safe_to_send", False))
+                    if ver_status not in ("valid", "safe") and not is_safe:
+                        await self.state.update_outbox_item(
+                            item["id"], status="failed", error=f"Reoon blocked: {ver_status} (unsafe to send)"
+                        )
+                        if prospect:
+                            await self.state.update_prospect_status(prospect.id, "lost")
+                        logger.warning(
+                            f"Sender: Reoon BLOCKED unsafe email to {item['to_email']} (status: {ver_status}). Prevented bounce!"
+                        )
+                        continue
 
             result = await self.provider.send_email(
                 item["to_email"], item["subject"], item["body"],
@@ -495,6 +534,20 @@ class Sender:
             )
             if prospect.status in ("new", "queued"):
                 await self.state.update_prospect_status(prospect.id, "contacted")
+
+            # Autonomous Google Sheets & CRM Vault Sync
+            try:
+                from harvey.integrations.sheets_sync import sync_prospect_status
+                step_num = item.get("step", 1)
+                asyncio.create_task(sync_prospect_status(
+                    prospect=prospect,
+                    status=f"Contacted (Step {step_num} Sent)",
+                    state=self.state,
+                    env=self.env,
+                    notes=f"Step {step_num} dispatched via {self.provider.name} at {now_iso}"
+                ))
+            except Exception as sync_err:
+                logger.debug(f"Sender: Sheets sync error: {sync_err}")
 
             # A sent reply belongs in its conversation thread.
             if item["kind"] == "reply" and item.get("conversation_id"):
@@ -530,3 +583,4 @@ class Sender:
         if sent:
             logger.info(f"Sender: {sent} email(s) sent this cycle "
                         f"({sent_today + sent}/{max_daily} today).")
+        return sent

@@ -1,0 +1,67 @@
+persona:
+  name: "[Your Name]"
+  company: "[Your Company Name]"
+  role: "Founder / Head of Growth"
+  email: "you@yourcompany.com"
+  linkedin: "https://www.linkedin.com/in/yourprofile"
+  tone: "consultative, data-backed, high-conviction, professional"
+
+product:
+  name: "[Your Product Name]"
+  description: "[One paragraph explaining what your product does, who it is for, and the transformation it delivers]"
+  pricing: "[e.g. $499/mo or $1,500 setup + $300/mo]"
+  key_benefits:
+    - "[Main benefit 1 - e.g. Increases conversion by 40%]"
+    - "[Main benefit 2 - e.g. Saves 15 hours of manual work per week]"
+    - "[Main benefit 3 - e.g. Integrates in 15 minutes with zero code]"
+  objection_responses:
+    "too expensive": "[How to address price: compare to cost of inaction or ROI]"
+    "already have a tool": "[How you differ or complement existing software]"
+    "not the right time": "[Why starting now prevents revenue loss]"
+  offer:
+    primary: "[Main paid offer - e.g. 14-day pilot or DFY setup]"
+    entry: "[Low friction hook - e.g. Free audit link, interactive demo, or case study]"
+    goal: "book_call"
+    booking_method: "calendar_link"
+    booking_url: "https://calendly.com/your-team/15min"
+    meeting_duration: "15 minutes"
+
+icp:
+  industries:
+    - "B2B SaaS"
+    - "Marketing Agency"
+    - "E-Commerce"
+  company_size: "10-100 employees"
+  titles:
+    - "Founder & CEO"
+    - "Chief Marketing Officer"
+    - "VP Sales"
+    - "Head of Growth"
+  geography:
+    - "United States"
+    - "United Kingdom"
+    - "Dubai, UAE"
+  hiring_signals:
+    - "Growth Manager"
+    - "Sales Director"
+
+channels:
+  email:
+    enabled: true
+    provider: "gmail"          # gmail | smtp | instantly
+    max_daily_sends: 25
+    require_approval: true      # Emails wait in outbox dashboard for 1-click approval
+    send_to_risky: false
+    max_bounce_rate: 0.03
+  linkedin:
+    enabled: false
+    max_daily_connections: 15
+    max_daily_messages: 10
+
+usage:
+  max_daily_claude_percent: 80
+  heartbeat_interval_minutes: 15
+  quiet_hours:
+    start: "22:00"
+    end: "07:00"
+    timezone: "America/New_York"

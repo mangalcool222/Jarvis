@@ -22,9 +22,9 @@ from harvey.models.prospect import Prospect
 from harvey.models.campaign import Campaign, EmailStep  # noqa: F401 (EmailStep re-exported)
 from harvey.models.conversation import Conversation, Message  # noqa: F401
 
-from harvey.paths import PROJECT_ROOT
+from harvey.paths import PROJECT_ROOT, get_db_path
 
-DB_PATH = PROJECT_ROOT / "data" / "harvey.db"
+DB_PATH = get_db_path()
 
 # How long (seconds) a connection waits on a locked database before failing.
 BUSY_TIMEOUT_SECONDS = 30.0
@@ -444,7 +444,7 @@ _CONVERSATION_COLUMNS = frozenset({
 
 class StateManager:
     def __init__(self, db_path: str | None = None):
-        self.db_path = db_path or str(DB_PATH)
+        self.db_path = db_path or str(get_db_path())
 
     @asynccontextmanager
     async def _connect(self):
@@ -697,6 +697,23 @@ class StateManager:
                         if row:
                             prospect.id = row[0]
                             break
+            else:
+                # New prospect discovered by Harvey scout -> dispatch real-time webhook
+                try:
+                    from harvey.webhook import dispatch_event
+                    dispatch_event("prospect_discovered", {
+                        "action": "new_lead",
+                        "company": prospect.company,
+                        "name": f"{prospect.first_name} {prospect.last_name}".strip(),
+                        "email": prospect.email,
+                        "phone": prospect.phone,
+                        "website": prospect.source_url or "",
+                        "score": prospect.score or 95,
+                        "status": "queued",
+                        "niche": prospect.industry or "High-Ticket Client"
+                    })
+                except Exception:
+                    pass
         return prospect.id
 
     async def get_prospect(self, prospect_id: str) -> Prospect | None:
@@ -725,6 +742,24 @@ class StateManager:
                 (status, _utcnow().isoformat(), prospect_id),
             )
             await db.commit()
+
+            # Trigger real-time n8n sync webhook
+            try:
+                db.row_factory = aiosqlite.Row
+                async with db.execute("SELECT * FROM prospects WHERE id = ?", (prospect_id,)) as cur:
+                    p_row = await cur.fetchone()
+                    if p_row:
+                        from harvey.webhook import dispatch_event
+                        dispatch_event("prospect_status_updated", {
+                            "prospect_id": prospect_id,
+                            "company": p_row["company"] if "company" in p_row.keys() else (p_row["company_name"] if "company_name" in p_row.keys() else ""),
+                            "name": f"{p_row['first_name']} {p_row['last_name']}".strip() if "first_name" in p_row.keys() else "",
+                            "email": p_row["email"] if "email" in p_row.keys() else "",
+                            "status": status,
+                            "score": p_row["score"] if "score" in p_row.keys() else 98
+                        })
+            except Exception:
+                pass
 
     async def get_prospect_by_email(self, email: str) -> Prospect | None:
         """Look up a prospect by email address (indexed, case-insensitive)."""
@@ -856,15 +891,19 @@ class StateManager:
     ) -> list[dict]:
         where, params = [], []
         if status:
-            where.append("status = ?")
+            where.append("o.status = ?")
             params.append(status)
         if due_before:
-            where.append("(send_at IS NULL OR send_at <= ?)")
+            where.append("(o.send_at IS NULL OR o.send_at <= ?)")
             params.append(due_before)
-        sql = "SELECT * FROM outbox"
+        sql = """SELECT o.*, p.company, p.email_status, p.email_verified, c.website, c.domain, c.industry, c.location
+                 FROM outbox o
+                 LEFT JOIN prospects p ON o.prospect_id = p.id
+                 LEFT JOIN companies c ON (p.company_id = c.id OR (c.domain != '' AND o.to_email LIKE '%' || c.domain))"""
         if where:
             sql += " WHERE " + " AND ".join(where)
-        sql += " ORDER BY send_at ASC, created_at ASC LIMIT ?"
+        order_clause = "replace(o.created_at, ' ', 'T') DESC" if status == "pending_review" else "replace(o.send_at, ' ', 'T') ASC, replace(o.created_at, ' ', 'T') ASC"
+        sql += f" GROUP BY o.id ORDER BY {order_clause} LIMIT ?"
         params.append(int(limit))
         async with self._connect() as db:
             db.row_factory = aiosqlite.Row

@@ -211,6 +211,21 @@ class Handler:
         # Update prospect status + stop-on-reply: a human answered, so every
         # queued sequence email for them is now wrong to send.
         await self.state.update_prospect_status(prospect.id, "replied")
+
+        # Autonomous Google Sheets & CRM Vault Sync on Reply
+        try:
+            import asyncio
+            from harvey.integrations.sheets_sync import sync_prospect_status
+            asyncio.create_task(sync_prospect_status(
+                prospect=prospect,
+                status="Replied 🔥",
+                state=self.state,
+                env=getattr(self, "env", None),
+                notes="Inbound reply received from prospect!"
+            ))
+        except Exception as sync_err:
+            logger.debug(f"Handler: Sheets reply sync error: {sync_err}")
+
         try:
             cancelled = await self.state.cancel_pending_outbox_for_prospect(prospect.id)
             if cancelled:

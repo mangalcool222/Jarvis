@@ -1,29 +1,29 @@
 persona:
   name: "Mangal Soren"
   company: "TrackKaro AI"
-  role: "Founder & GTM Automation Systems"
+  role: "Lead Automation"
   email: "mangal@trackkaroai.com"
-  linkedin: "https://www.linkedin.com/in/mangal-soren-1312ba31/"
-  tone: "consultative, data-backed, high-conviction, professional"
+  linkedin: "https://www.linkedin.com/in/mangal-soren-1312ba31a/"
+  tone: "direct, honest, builder-vibe, low-hype, consultative, lead automation specialist"
 
 product:
-  name: "TrackKaro 3-Second Lead Automation Engine"
-  description: "High-ticket speed-to-lead acceleration platform for Luxury Real Estate Developers, Commercial Brokers, and B2B SaaS. Automatically converts Meta & Google ad leads via instant WhatsApp VIP brochures and Telegram sales alerts in < 3 seconds."
-  pricing: "$997 Done-For-You Setup + $299/mo Maintenance & Server Hosting"
+  name: "TrackKaro Instant Lead Response Engine"
+  description: "Speed-to-lead automation for Performance Marketing Agencies, Dubai Luxury Real Estate, and High-Ticket Teams. Connects Meta/Google ad leads and website forms directly to instant sales alerts (Telegram with 1-click calls) and structured Google Sheets CRM so high-intent leads never slip away."
+  pricing: "$500 - $997 Done-For-You Setup + Optional Maintenance"
   key_benefits:
-    - "Cuts lead response time from 47 minutes to under 3 seconds"
-    - "Protects $80+ Meta/Google CPL from going cold"
-    - "Automatic WhatsApp VIP PDF brochure delivery directly into lead's mobile chat in < 1.4s"
-    - "Telegram instant audio notification with 1-click 'Call Now' direct dial for sales reps in < 2.4s"
+    - "Connects incoming ad leads to sales reps within seconds instead of hours"
+    - "Plugs client lead leaks for performance marketing agencies (improving client retention)"
+    - "Instant Telegram sound notification with prospect details and 1-click call button"
+    - "Instant automated WhatsApp brochure & confirmation delivery"
     - "Zero lead leakage with real-time Google Sheets & CRM auto-sync"
-    - "Live interactive simulator to test: https://demo.gtm.trackkaroai.com"
+    - "Test the live demo in 30 seconds here: https://trackkaroai.com"
   objection_responses:
-    "too expensive": "At an $80 CPL in Miami or Dubai, saving just 10 qualified leads pays for the entire $997 system 10x over. Responding in 3 seconds increases qualification by 391%."
-    "already have HubSpot/Salesforce": "TrackKaro doesn't replace your CRM — it sits between your Meta Ads webhook and your CRM to ensure zero second latency before instant WhatsApp & sales rep alerts."
-    "sales team already calls fast": "Industry average response time in US real estate is 47 minutes. Test your own team's phone on our live simulator: https://demo.gtm.trackkaroai.com"
+    "too expensive": "Preventing just 1 or 2 dropped high-ticket leads or protecting 1 agency client retainer recovers the setup cost immediately."
+    "already have HubSpot/Salesforce": "TrackKaro doesn't replace your CRM — it sits between your lead forms and your sales team so reps get alerted instantly without checking CRM dashboards."
+    "sales team already calls fast": "Most internal teams take 1 to 2 hours to respond to ad leads. See how fast the instant dispatch triggers on our live demo: https://trackkaroai.com"
   offer:
-    primary: "$997 Complete 3-Second Lead Engine DFY Deployment"
-    entry: "Test our 30-second live simulator with your own phone number: https://demo.gtm.trackkaroai.com"
+    primary: "$500 - $997 Complete Rapid Lead Engine DFY Deployment"
+    entry: "Test the live demo in 30 seconds here: https://trackkaroai.com"
     goal: "book_call"
     booking_method: "calendar_link"
     booking_url: "https://calendly.com/trackkaroai/15min"
@@ -32,18 +32,23 @@ product:
 
 icp:
   industries:
+    - "Performance Marketing & Lead-Gen Agencies"
+    - "Dubai Luxury Real Estate"
     - "Luxury Real Estate"
-    - "Real Estate Agency"
-    - "Commercial Real Estate"
-    - "Property Management"
-    - "B2B SaaS"
-    - "Performance Marketing Agency"
+    - "High-Ticket B2B SaaS"
+    - "Solar & Roofing Contractors"
+    - "Aesthetic Clinics & MedSpas"
   company_size: "5-100 employees"
   titles:
+    - "Founder & CEO"
+    - "Managing Director"
     - "Managing Partner"
     - "Principal Broker"
+    - "Head of Growth"
+    - "Director of Sales"
     - "Founder & CEO"
     - "Director of Sales"
+    - "Clinic Director"
     - "Head of Growth"
     - "VP Marketing"
   geography:
@@ -61,7 +66,8 @@ icp:
 channels:
   email:
     enabled: true
-    provider: "gmail"          # gmail (recommended) | smtp | instantly
+    provider: "smtp"          # gmail | smtp (Resend) | instantly
+    reply_to: "mangal@trackkaroai.com"  # Reply address matching professional domain
     max_daily_sends: 25
     require_approval: true      # Every email waits in your dashboard for 1-click approval
     send_to_risky: false
@@ -77,4 +83,4 @@ usage:
   quiet_hours:
     start: "22:00"
     end: "07:00"
-    timezone: "America/New_York"
+    timezone: "Asia/Kolkata"

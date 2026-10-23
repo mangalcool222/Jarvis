@@ -10,7 +10,7 @@ import yaml
 from dotenv import load_dotenv
 from pydantic import BaseModel, ValidationError, field_validator
 
-from harvey.paths import PROJECT_ROOT
+from harvey.paths import PROJECT_ROOT, get_workspace_dir
 
 logger = logging.getLogger("harvey.config")
 
@@ -85,6 +85,8 @@ class EmailChannelConfig(BaseModel):
     # Kill switch: pause all sending when bounces exceed this fraction of
     # sent mail (measured over the trailing sends). 0 disables the switch.
     max_bounce_rate: float = 0.05
+    # Optional Reply-To address (e.g. personal Gmail to receive lead replies directly on phone)
+    reply_to: str = ""
 
     @field_validator("max_daily_sends")
     @classmethod
@@ -324,8 +326,15 @@ def load_brain_config(config_path: str | None = None) -> BrainConfig:
 
 
 def load_env() -> EnvConfig:
-    """Load environment variables from .env file."""
-    load_dotenv()
+    """Load environment variables from .env file (workspace-aware)."""
+    # Load global project .env first if present
+    load_dotenv(PROJECT_ROOT / ".env")
+
+    # If workspace has its own .env, override with workspace-specific values
+    ws = get_workspace_dir()
+    if ws != PROJECT_ROOT and (ws / ".env").is_file():
+        load_dotenv(ws / ".env", override=True)
+
     env = EnvConfig(
         instantly_api_key=os.getenv("INSTANTLY_API_KEY", "").strip(),
         dataforseo_login=os.getenv("DATAFORSEO_LOGIN", "").strip(),
@@ -352,25 +361,35 @@ def load_env() -> EnvConfig:
 
 
 def _find_config_file() -> str:
-    """Search for Harvey's config.
+    """Search for Harvey's config (workspace-aware).
 
-    ``harvey.local.yaml`` wins when present. It is gitignored, so a fork can
-    carry a real product configuration (trained on an actual company) while
-    the tracked ``harvey.yaml`` stays an untrained template — nobody
-    publishes their positioning, pricing, and prospect targeting by accident.
+    ``harvey.local.yaml`` wins when present. Checks active workspace first,
+    then cwd, then PROJECT_ROOT.
     """
+    ws = get_workspace_dir()
     candidates = [
+        ws / "harvey.local.yaml",
+        ws / "harvey.yaml",
         Path.cwd() / "harvey.local.yaml",
         PROJECT_ROOT / "harvey.local.yaml",
         Path.cwd() / "harvey.yaml",
         Path.cwd().parent / "harvey.yaml",
         PROJECT_ROOT / "harvey.yaml",
     ]
-    for path in candidates:
+    seen = set()
+    unique_candidates = []
+    for c in candidates:
+        r = c.resolve()
+        if r not in seen:
+            seen.add(r)
+            unique_candidates.append(c)
+
+    for path in unique_candidates:
         if path.exists():
             return str(path)
     raise ConfigFileNotFoundError(
         "harvey.yaml not found in "
-        + ", ".join(str(p.parent) for p in candidates)
+        + ", ".join(str(p.parent) for p in unique_candidates)
         + ". Create one from harvey.yaml.example or run 'harvey setup'."
     )
+
