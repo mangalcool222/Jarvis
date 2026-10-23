@@ -13,13 +13,31 @@
 
 <header>
   <div class="brand">
-    <div class="mark">⚡</div>
+    <div class="radar-orb" title="Autonomous SDR Intent Radar • Active">
+      <div class="radar-sweep"></div>
+      <div class="radar-ring ring-1"></div>
+      <div class="radar-ring ring-2"></div>
+      <div class="radar-blip blip-1"></div>
+      <div class="radar-blip blip-2"></div>
+      <span class="radar-center-mark">⚡</span>
+    </div>
     <div>
-      <h1>Jarvis — Autonomous AI SDR</h1>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <h1>Jarvis — Autonomous AI SDR</h1>
+        <span class="apple-status-pill"><span class="pulse-dot green"></span> Engine Active</span>
+      </div>
       <div class="tagline">B2B Lead Automation & Outbound OS • Architected by Mangal Soren (TrackKaro AI)</div>
     </div>
   </div>
   <div class="header-controls">
+    <div class="telemetry-pill-strip">
+      <div class="telemetry-chip" title="21-23 Live Buying Signals configured">
+        <span class="chip-icon">📡</span> Radar: <strong>23 Signals</strong>
+      </div>
+      <div class="telemetry-chip" title="Real-time Lead Ingestion SLA">
+        <span class="chip-icon">⚡</span> Latency: <strong>&lt; 15s</strong>
+      </div>
+    </div>
     <a href="#" 
        target="_blank" rel="noopener noreferrer" 
        id="header-sheet-link"
@@ -38,30 +56,137 @@
   </div>
 </header>
 
-<nav>
-  <button class="active" onclick="showTab('today', this)">Today<span class="nav-count" id="nav-today"></span></button>
-  <button onclick="showTab('signals', this)">Signals<span class="nav-count" id="nav-signals"></span></button>
-  <button onclick="showTab('discover', this)">Discover</button>
-  <button onclick="showTab('companies', this)">Companies</button>
-  <button onclick="showTab('prospects', this)">Contacts</button>
-  <button onclick="showTab('campaigns', this)">Campaigns</button>
-  <button onclick="showTab('outbox', this)">Outbox<span class="nav-count" id="nav-outbox"></span></button>
-  <button onclick="showTab('crm-sheet', this)" style="color:#22c55e;font-weight:650;">📊 CRM Sheet</button>
-  <button onclick="showTab('conversations', this)">Conversations</button>
-  <button onclick="showTab('activity', this)">Activity</button>
-  <button onclick="showTab('usage', this)">Usage</button>
-  <button onclick="showTab('settings', this)">Settings</button>
-  <button onclick="showTab('controls', this)">Controls</button>
-  <button onclick="showTab('help', this)">Help</button>
-</nav>
+<div class="apple-dock-wrapper">
+  <nav class="apple-dock">
+    <div id="dock-slider" class="dock-slider"></div>
+    <button class="active" onclick="showTab('today', this)">Today<span class="nav-count" id="nav-today"></span></button>
+    <button onclick="showTab('signals', this)">Signals<span class="nav-count" id="nav-signals"></span></button>
+    <button onclick="showTab('discover', this)">Discover</button>
+    <button onclick="showTab('companies', this)">Companies</button>
+    <button onclick="showTab('prospects', this)">Contacts</button>
+    <button onclick="showTab('campaigns', this)">Campaigns</button>
+    <button onclick="showTab('outbox', this)">Outbox<span class="nav-count" id="nav-outbox"></span></button>
+    <button onclick="showTab('crm-sheet', this)" style="color:#10b981;font-weight:650;">📊 CRM Vault</button>
+    <button onclick="showTab('conversations', this)">Conversations</button>
+    <button onclick="showTab('activity', this)">Activity</button>
+    <button onclick="showTab('usage', this)">Usage</button>
+    <button onclick="showTab('settings', this)">Settings</button>
+    <button onclick="showTab('controls', this)">Controls</button>
+    <button onclick="showTab('help', this)">Help</button>
+  </nav>
+</div>
 
 <main>
 
 <!-- Today: what needs a human -->
 <div id="today" class="section active">
-  <div class="section-head">
-    <h2>Today</h2>
-    <p>Anything waiting on you, then everything Jarvis has built so far.</p>
+  
+  <!-- Apple Bento Command Center Hero -->
+  <div class="apple-bento-hero">
+    <!-- Card 1: Intent Radar -->
+    <div class="bento-card bento-radar-card" onclick="showTab('signals')">
+      <div class="bento-top">
+        <span class="bento-badge green"><span class="pulse-dot green"></span> INTENT RADAR</span>
+        <span class="bento-arrow">↗</span>
+      </div>
+      <div class="bento-stat">
+        <span class="bento-num">23</span>
+        <span class="bento-unit">Signals</span>
+      </div>
+      <div class="bento-label">Active Intent Detection</div>
+      <div class="bento-sub">Meta Ad Pixels • Hiring Velocity • Speed-to-Lead Latency</div>
+    </div>
+
+    <!-- Card 2: 3-Tier Deliverability Shield -->
+    <div class="bento-card" onclick="showTab('outbox')">
+      <div class="bento-top">
+        <span class="bento-badge blue"><span class="chip-icon">🛡️</span> DOMAIN SHIELD</span>
+        <span class="bento-arrow">↗</span>
+      </div>
+      <div class="bento-stat">
+        <span class="bento-num">&lt; 3%</span>
+        <span class="bento-unit">Bounce SLA</span>
+      </div>
+      <div class="bento-label">Multi-Tier Mailbox Gate</div>
+      <div class="bento-sub">Syntax Gate • DNS MX Verification • Catch-All Quarantine</div>
+    </div>
+
+    <!-- Card 3: Autonomous Routing -->
+    <div class="bento-card" onclick="showTab('crm-sheet')">
+      <div class="bento-top">
+        <span class="bento-badge cyan"><span class="chip-icon">⚡</span> NERVOUS ENGINE</span>
+        <span class="bento-arrow">↗</span>
+      </div>
+      <div class="bento-stat">
+        <span class="bento-num">&lt; 15s</span>
+        <span class="bento-unit">Dispatch</span>
+      </div>
+      <div class="bento-label">Sub-15s Telemetry Bridge</div>
+      <div class="bento-sub">Telegram Audio Alerts • WhatsApp Asset Dispatch • Live CRM</div>
+    </div>
+
+    <!-- Card 4: Architecture Infrastructure -->
+    <div class="bento-card" onclick="showTab('controls')">
+      <div class="bento-top">
+        <span class="bento-badge purple"><span class="chip-icon">💎</span> BESPOKE ARCHITECTURE</span>
+        <span class="bento-arrow">↗</span>
+      </div>
+      <div class="bento-stat">
+        <span class="bento-num">100%</span>
+        <span class="bento-unit">Isolated</span>
+      </div>
+      <div class="bento-label">Autonomous Daemon Node</div>
+      <div class="bento-sub">Dockerized FastAPI • Sandboxed SQLite • Zero Data Contamination</div>
+    </div>
+  </div>
+
+  <!-- 4-Stage Autonomous Pipeline Conduit Banner -->
+  <div class="pipeline-conduit-card">
+    <div class="conduit-header">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="pulse-dot green"></span>
+        <span style="font-weight:700;letter-spacing:0.04em;font-size:11.5px;color:var(--text);">// JARVIS AUTONOMOUS REVENUE CYCLE • 4-STAGE PIPELINE</span>
+      </div>
+      <span class="conduit-active-pill">PIPELINE OPERATIONAL</span>
+    </div>
+    <div class="conduit-stages">
+      <div class="stage-step" onclick="showTab('signals')">
+        <div class="step-num">01</div>
+        <div class="step-info">
+          <strong>📡 Intent Radar</strong>
+          <span>23 Real-Time Buying Signals</span>
+        </div>
+      </div>
+      <div class="conduit-pulse"></div>
+      <div class="stage-step" onclick="showTab('discover')">
+        <div class="step-num">02</div>
+        <div class="step-info">
+          <strong>🛡️ Zero-Bounce Gate</strong>
+          <span>Multi-Tier Deliverability Filter</span>
+        </div>
+      </div>
+      <div class="conduit-pulse"></div>
+      <div class="stage-step" onclick="showTab('outbox')">
+        <div class="step-num">03</div>
+        <div class="step-info">
+          <strong>⚡ 1-to-1 AI Engine</strong>
+          <span>Signal-Citing Contextual Copy</span>
+        </div>
+      </div>
+      <div class="conduit-pulse"></div>
+      <div class="stage-step" onclick="showTab('crm-sheet')">
+        <div class="step-num">04</div>
+        <div class="step-info">
+          <strong>📅 Calendar Bookings</strong>
+          <span>Automated Demo Call Drop</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head" style="margin-top:28px;">
+    <h2>Action Queue & Telemetry</h2>
+    <p>Live system tasks, scheduled dispatches, and prospect verification pipeline.</p>
   </div>
   <div class="today-grid">
     <div class="today-main">

@@ -177,6 +177,35 @@ function toggleVisibility(inputId) {
   el.type = el.type === 'password' ? 'text' : 'password';
 }
 
+// ── Apple Segmented Dock & Bento Micro-physics ──
+
+function updateDockSlider(activeBtn) {
+  const slider = document.getElementById('dock-slider');
+  if (!slider) return;
+  if (!activeBtn) {
+    activeBtn = document.querySelector('nav button.active') ||
+      document.querySelector('nav button[onclick*="showTab(\'' + (currentTab || 'today') + '\'"]') ||
+      document.querySelector('nav button');
+  }
+  if (!activeBtn) return;
+  slider.style.opacity = '1';
+  slider.style.width = activeBtn.offsetWidth + 'px';
+  slider.style.transform = `translateX(${activeBtn.offsetLeft}px)`;
+}
+
+function initBentoSpotlight() {
+  const cards = document.querySelectorAll('.bento-card');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+}
+
 // ── Tabs ──
 
 function showTab(id, btn) {
@@ -188,7 +217,9 @@ function showTab(id, btn) {
   if (sec) sec.classList.add('active');
   if (!btn) btn = document.querySelector('nav button[onclick*="\'' + id + '\'"]');
   if (btn) btn.classList.add('active');
+  updateDockSlider(btn);
   try { history.replaceState(null, '', '#' + id); } catch(e) {}
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   loadCurrentTab();
 }
 
@@ -196,7 +227,18 @@ window.addEventListener('DOMContentLoaded', () => {
   const hash = (location.hash || '').replace('#', '');
   if (hash && document.getElementById(hash)) {
     showTab(hash);
+  } else {
+    setTimeout(updateDockSlider, 60);
   }
+  initBentoSpotlight();
+});
+
+window.addEventListener('load', () => {
+  updateDockSlider();
+});
+
+window.addEventListener('resize', () => {
+  updateDockSlider();
 });
 
 function loadCurrentTab() {
