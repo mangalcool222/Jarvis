@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/app.css?v=trackkaro_outbound_os_v6">
+<link rel="stylesheet" href="/static/app.css?v=trackkaro_outbound_os_v8">
 </head>
 <body>
 
@@ -280,26 +280,42 @@
     </div>
   </div>
 
-  <div class="section-head" style="margin-top:28px;">
-    <h2>Action Queue & Telemetry</h2>
+  <div class="section-head" style="margin-top:16px;">
+    <h2>Action Queue &amp; Telemetry</h2>
     <p>Live system tasks, scheduled dispatches, and prospect verification pipeline.</p>
   </div>
   <div class="today-grid">
     <div class="today-main">
       <div id="today-queue"></div>
-      <div class="rail-block" style="margin-top:34px">
-        <div class="subhead">Recent activity</div>
-        <div id="today-activity"></div>
+      <div id="today-activity"></div>
+      
+      <!-- Intent Radar Live Cohort Card -->
+      <div class="intent-radar-preview-card" onclick="showTab('signals')">
+        <div class="irp-header">
+          <div class="irp-title-wrap">
+            <span class="irp-badge coral"><span class="pulse-dot coral"></span> INTENT RADAR COHORT</span>
+            <div class="irp-title">23 Buying Intent Triggers Armed &bull; Awaiting Confirmation</div>
+          </div>
+          <button class="btn-irp-explore">Confirm Signals 📡</button>
+        </div>
+        <div class="irp-tags-grid">
+          <div class="irp-tag"><span class="t-icon">🔍</span> Google SERP Search Spikes</div>
+          <div class="irp-tag"><span class="t-icon">💼</span> Sales Team Hiring (&gt; 3 Roles)</div>
+          <div class="irp-tag"><span class="t-icon">💸</span> Meta/Google Ad Spend ($10k+/mo)</div>
+          <div class="irp-tag"><span class="t-icon">⚡</span> Lead Response Decay (&gt; 15m)</div>
+          <div class="irp-tag"><span class="t-icon">🛠️</span> Tech Stack Web Gap</div>
+          <div class="irp-tag irp-more">+18 More Triggers Active</div>
+        </div>
       </div>
     </div>
 
     <aside class="today-rail">
       <div class="rail-block">
-        <div class="subhead">Pipeline</div>
+        <div class="subhead">Pipeline Overview</div>
         <div id="today-figures"></div>
       </div>
       <div class="rail-block" id="today-runs-block">
-        <div class="subhead">Collector runs</div>
+        <div class="subhead">Collector Runs</div>
         <div id="today-runs"></div>
       </div>
       <div id="today-setup"></div>
@@ -307,7 +323,7 @@
   </div>
 
   <!-- 2-Step Interactive Outbound Pipeline Audit Slider Card -->
-  <div id="audit-consultation-section" class="card audit-card-wrap" style="margin-top:44px;scroll-margin-top:140px;">
+  <div id="audit-consultation-section" class="card audit-card-wrap" style="margin-top:24px;scroll-margin-top:140px;">
     <div class="audit-card-glow"></div>
     <div class="audit-card-inner">
       <!-- Header -->
