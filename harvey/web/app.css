@@ -2596,6 +2596,56 @@ details[open] summary::before { content: '– '; }
   font-family: var(--mono);
 }
 
+.sim-icp-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sim-icp-icon.icon-emerald {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: #10B981;
+}
+
+.sim-icp-icon.icon-indigo {
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: #818CF8;
+}
+
+.sim-icp-icon.icon-purple {
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  color: #C084FC;
+}
+
+.sim-icp-btn.active .sim-icp-icon.icon-emerald {
+  background: #059669;
+  border-color: #047857;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.4);
+}
+
+.sim-icp-btn.active .sim-icp-icon.icon-indigo {
+  background: #4F46E5;
+  border-color: #4338CA;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4);
+}
+
+.sim-icp-btn.active .sim-icp-icon.icon-purple {
+  background: #9333EA;
+  border-color: #7E22CE;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.4);
+}
+
 .sim-context-sub-badge {
   display: flex;
   align-items: center;
@@ -2691,23 +2741,69 @@ details[open] summary::before { content: '– '; }
 }
 
 .sim-node-circle {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
-  transition: all 0.25s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.sim-node.active .sim-node-circle {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #38BDF8;
-  box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
-  transform: scale(1.06);
+/* 01. RADAR */
+.sim-node-circle.node-radar {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #FBBF24;
+}
+.sim-node.active .sim-node-circle.node-radar {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  border-color: #F59E0B;
+  color: #FFFFFF;
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.55);
+  transform: translateY(-2px) scale(1.1);
+}
+
+/* 02. SHIELD */
+.sim-node-circle.node-shield {
+  background: rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(37, 99, 235, 0.3);
+  color: #60A5FA;
+}
+.sim-node.active .sim-node-circle.node-shield {
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+  border-color: #3B82F6;
+  color: #FFFFFF;
+  box-shadow: 0 0 18px rgba(37, 99, 235, 0.55);
+  transform: translateY(-2px) scale(1.1);
+}
+
+/* 03. OUTBOX GATE */
+.sim-node-circle.node-outbox {
+  background: rgba(147, 51, 234, 0.12);
+  border: 1px solid rgba(147, 51, 234, 0.3);
+  color: #C084FC;
+}
+.sim-node.active .sim-node-circle.node-outbox {
+  background: linear-gradient(135deg, #A855F7, #9333EA);
+  border-color: #A855F7;
+  color: #FFFFFF;
+  box-shadow: 0 0 18px rgba(147, 51, 234, 0.55);
+  transform: translateY(-2px) scale(1.1);
+}
+
+/* 04. BOOKED */
+.sim-node-circle.node-booked {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34D399;
+}
+.sim-node.active .sim-node-circle.node-booked {
+  background: linear-gradient(135deg, #10B981, #059669);
+  border-color: #10B981;
+  color: #FFFFFF;
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.55);
+  transform: translateY(-2px) scale(1.1);
 }
 
 .sim-node-meta {
@@ -2726,7 +2822,23 @@ details[open] summary::before { content: '– '; }
 }
 
 .sim-node.active .sim-node-num {
-  color: #38BDF8;
+  font-weight: 800;
+}
+.sim-node.active#sim-node-1 .sim-node-num,
+body.is-logged-out .sim-node.active#sim-node-1 .sim-node-num {
+  color: #D97706 !important;
+}
+.sim-node.active#sim-node-2 .sim-node-num,
+body.is-logged-out .sim-node.active#sim-node-2 .sim-node-num {
+  color: #2563EB !important;
+}
+.sim-node.active#sim-node-3 .sim-node-num,
+body.is-logged-out .sim-node.active#sim-node-3 .sim-node-num {
+  color: #9333EA !important;
+}
+.sim-node.active#sim-node-4 .sim-node-num,
+body.is-logged-out .sim-node.active#sim-node-4 .sim-node-num {
+  color: #059669 !important;
 }
 
 .sim-node-title {
@@ -4760,6 +4872,27 @@ body.is-logged-out .sim-icp-btn.active {
   color: #FFFFFF !important;
 }
 
+body.is-logged-out .sim-icp-btn.active .sim-icp-icon.icon-emerald {
+  background: #059669 !important;
+  border-color: #047857 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.4) !important;
+}
+
+body.is-logged-out .sim-icp-btn.active .sim-icp-icon.icon-indigo {
+  background: #4F46E5 !important;
+  border-color: #4338CA !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4) !important;
+}
+
+body.is-logged-out .sim-icp-btn.active .sim-icp-icon.icon-purple {
+  background: #9333EA !important;
+  border-color: #7E22CE !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.4) !important;
+}
+
 body.is-logged-out .sim-context-banner {
   background: #F8FAFC !important;
   border-bottom: 1px solid #E2E8F0 !important;
@@ -5341,16 +5474,52 @@ body.is-logged-out .sim-node.active {
   color: #18181B !important;
 }
 
-body.is-logged-out .sim-node-circle {
-  background: #FFFFFF !important;
-  border: 1px solid #E5E7EB !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+body.is-logged-out .sim-node-circle.node-radar {
+  background: #FFFBEB !important;
+  border: 1px solid #FDE68A !important;
+  color: #D97706 !important;
+}
+body.is-logged-out .sim-node.active .sim-node-circle.node-radar {
+  background: linear-gradient(135deg, #F59E0B, #D97706) !important;
+  border-color: #B45309 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35) !important;
 }
 
-body.is-logged-out .sim-node.active .sim-node-circle {
-  background: #18181B !important;
-  border-color: #18181B !important;
+body.is-logged-out .sim-node-circle.node-shield {
+  background: #EFF6FF !important;
+  border: 1px solid #BFDBFE !important;
+  color: #2563EB !important;
+}
+body.is-logged-out .sim-node.active .sim-node-circle.node-shield {
+  background: linear-gradient(135deg, #3B82F6, #2563EB) !important;
+  border-color: #1D4ED8 !important;
   color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
+}
+
+body.is-logged-out .sim-node-circle.node-outbox {
+  background: #FAF5FF !important;
+  border: 1px solid #E9D5FF !important;
+  color: #9333EA !important;
+}
+body.is-logged-out .sim-node.active .sim-node-circle.node-outbox {
+  background: linear-gradient(135deg, #A855F7, #9333EA) !important;
+  border-color: #7E22CE !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(147, 51, 234, 0.35) !important;
+}
+
+body.is-logged-out .sim-node-circle.node-booked {
+  background: #ECFDF5 !important;
+  border: 1px solid #A7F3D0 !important;
+  color: #059669 !important;
+}
+body.is-logged-out .sim-node.active .sim-node-circle.node-booked {
+  background: linear-gradient(135deg, #10B981, #059669) !important;
+  border-color: #047857 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35) !important;
 }
 
 body.is-logged-out .sim-node-num {

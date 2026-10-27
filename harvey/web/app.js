@@ -2455,7 +2455,7 @@ const SIM_DATA = {
     calDate: "29",
     calTitle: "Apex Growth ✕ Ramp Performance Review",
     calAttendees: "Sarah Jenkins (VP Growth) + You (Agency Founder)",
-    calTime: "⏰ 3:00 PM - 3:30 PM EST"
+    calTime: "3:00 PM - 3:30 PM EST"
   },
   saas: {
     tabId: "saas",
@@ -2488,7 +2488,7 @@ const SIM_DATA = {
     calDate: "03",
     calTitle: "Enterprise SecOps Architecture Demo",
     calAttendees: "Alex Rivera (Head of Infra) + Your Sales Team",
-    calTime: "⏰ 11:00 AM - 11:30 AM PST"
+    calTime: "11:00 AM - 11:30 AM PST"
   },
   devstudio: {
     tabId: "devstudio",
@@ -2521,7 +2521,7 @@ const SIM_DATA = {
     calDate: "04",
     calTitle: "AWS Core Banking Modernization Scoping",
     calAttendees: "David Chen (CTO) + Your Dev Partner",
-    calTime: "⏰ 4:00 PM - 4:30 PM EST"
+    calTime: "4:00 PM - 4:30 PM EST"
   },
   retool: {
     tabId: "retool",
@@ -2554,7 +2554,7 @@ const SIM_DATA = {
     calDate: "05",
     calTitle: "Retool On-Premise Architecture Review",
     calAttendees: "Kavitha S. (VP Eng) + Your Sales Team",
-    calTime: "⏰ 2:00 PM - 2:30 PM EST"
+    calTime: "2:00 PM - 2:30 PM EST"
   },
   supabase: {
     tabId: "supabase",
@@ -2587,7 +2587,7 @@ const SIM_DATA = {
     calDate: "10",
     calTitle: "Supabase Enterprise Pipeline Strategy",
     calAttendees: "Paul Copplestone (CEO) + You (Outbound Partner)",
-    calTime: "⏰ 4:00 PM - 4:30 PM PST"
+    calTime: "4:00 PM - 4:30 PM PST"
   }
 };
 
@@ -2691,8 +2691,13 @@ function renderSimData() {
   if (calTitle) calTitle.textContent = d.calTitle;
   const calAtt = document.getElementById('sim-cal-attendees');
   if (calAtt) calAtt.textContent = d.calAttendees;
-  const calTime = document.getElementById('sim-cal-time');
-  if (calTime) calTime.textContent = d.calTime;
+  const calTimeText = document.getElementById('sim-cal-time-text');
+  if (calTimeText) {
+    calTimeText.textContent = d.calTime ? d.calTime.replace(/^⏰\s*/, '') : '';
+  } else {
+    const calTime = document.getElementById('sim-cal-time');
+    if (calTime) calTime.textContent = d.calTime;
+  }
 
   resetOutboxButtons();
 }
