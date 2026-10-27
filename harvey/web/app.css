@@ -2558,19 +2558,21 @@ details[open] summary::before { content: '– '; }
 }
 
 .sim-icp-btn {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
   background: transparent;
   border: 1px solid transparent;
   border-radius: 7px;
-  padding: 5px 8px;
+  padding: 6px 6px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   color: #94A3B8;
   font-family: var(--sans);
+  text-align: left;
 }
 
 .sim-icp-btn:hover {
@@ -2585,15 +2587,29 @@ details[open] summary::before { content: '– '; }
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
+.icp-label-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  line-height: 1.15;
+}
+
 .sim-icp-btn .icp-name {
   font-size: 11px;
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sim-icp-btn .icp-sub {
-  font-size: 9px;
+  font-size: 8.5px;
   opacity: 0.65;
   font-family: var(--mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sim-icp-icon {
@@ -7155,6 +7171,55 @@ html, body {
     box-sizing: border-box !important;
   }
 
+  /* 0. Header Constraints to Prevent Blowout */
+  header {
+    padding: 10px 12px !important;
+    gap: 8px !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+  .brand {
+    gap: 8px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+  .brand-text {
+    min-width: 0 !important;
+  }
+  .brand h1 {
+    font-size: 13.5px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .brand .tagline,
+  .brand h1 span:last-child {
+    display: none !important;
+  }
+  #header-status-badge {
+    padding: 2px 6px !important;
+    font-size: 10px !important;
+  }
+  .header-controls {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+  }
+  .header-controls .btn-sheets,
+  .header-controls .refresh-btn,
+  .header-controls #theme-btn,
+  .header-controls .btn-logout-header {
+    display: none !important;
+  }
+  .header-controls .btn-cta-audit {
+    padding: 6px 12px !important;
+    font-size: 11.5px !important;
+    white-space: nowrap !important;
+  }
+
   /* 1. Eliminate 1,048px table blow-out */
   .live-pipeline-section {
     max-width: 100% !important;
@@ -7172,45 +7237,105 @@ html, body {
     overflow: hidden !important;
   }
 
-  /* 2. Hero Trust Bar & Ecosystem Strip flex wrap */
-  .hero-trust-bar {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-    gap: 8px 14px !important;
-    max-width: 100% !important;
-    padding: 0 10px !important;
-    font-size: 11.5px !important;
-  }
-  .hero-ecosystem-strip {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-    gap: 6px !important;
-    max-width: 100% !important;
-    padding: 0 10px !important;
-  }
-  .eco-pill {
-    font-size: 11px !important;
-    padding: 4px 8px !important;
-  }
-
-  /* 3. Interactive Simulator Container & Steps (Responsive Fit) */
-  main {
-    padding: 16px 14px 88px !important;
-    max-width: 100vw !important;
-    overflow-x: hidden !important;
-  }
+  /* 2. Hero Typography, Content, Trust Bar & Ecosystem Strip */
   .heyreach-unified-hero {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0, 1fr) !important;
     width: 100% !important;
     max-width: 100% !important;
     gap: 20px !important;
     padding: 16px 0 !important;
+    box-sizing: border-box !important;
+  }
+  .hero-content {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .editorial-serif-title,
+  .hero-main-title {
+    font-size: clamp(26px, 6.2vw, 34px) !important;
+    line-height: 1.18 !important;
+    letter-spacing: -0.02em !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .hero-main-sub {
+    font-size: 13.5px !important;
+    line-height: 1.55 !important;
+    max-width: 100% !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    box-sizing: border-box !important;
+  }
+  .hero-cta-group {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .hero-cta-group .btn-hero-primary,
+  .hero-cta-group .btn-hero-secondary {
+    padding: 10px 16px !important;
+    font-size: 12.5px !important;
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+  .hero-trust-bar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 6px 12px !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    font-size: 11px !important;
+    box-sizing: border-box !important;
+  }
+  .hero-trust-bar span {
+    white-space: nowrap !important;
+  }
+  .hero-ecosystem-strip {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 8px 0 0 0 !important;
+    box-sizing: border-box !important;
+  }
+  .eco-pills-wrap {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 5px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .eco-pill {
+    font-size: 10.5px !important;
+    padding: 4px 8px !important;
+    white-space: nowrap !important;
+  }
+
+  /* 3. Interactive Simulator Container & Steps (Responsive Fit) */
+  main {
+    padding: 14px 12px 88px !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
   }
   .hero-stage {
     width: 100% !important;
     max-width: 100% !important;
+    box-sizing: border-box !important;
     justify-content: center !important;
   }
   .interactive-live-simulator {
@@ -7346,20 +7471,15 @@ html, body {
     padding: 3px 6px !important;
   }
 
-  /* Compact mode for split screens under 540px */
-  @media (max-width: 540px) {
-    .sim-icp-btn .icp-sub {
-      display: none !important;
-    }
-    .sim-header-row {
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      gap: 4px !important;
-    }
-    .sim-fps-badge {
-      font-size: 8.5px !important;
-      padding: 2px 6px !important;
-    }
+  /* Compact settings for split screens */
+  .sim-header-row {
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+  .sim-fps-badge {
+    font-size: 8.5px !important;
+    padding: 2px 6px !important;
   }
 
   /* 4. Bento Grid & Bento Cards */
