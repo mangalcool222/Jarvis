@@ -7195,32 +7195,171 @@ html, body {
     padding: 4px 8px !important;
   }
 
-  /* 3. Interactive Simulator Container & Steps */
-  .interactive-live-simulator,
-  .sim-body,
-  .sim-step-pane,
-  .sim-header,
-  .sim-timeline-stepper {
+  /* 3. Interactive Simulator Container & Steps (Responsive Fit) */
+  main {
+    padding: 16px 14px 88px !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+  .heyreach-unified-hero {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 20px !important;
+    padding: 16px 0 !important;
+  }
+  .hero-stage {
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-content: center !important;
+  }
+  .interactive-live-simulator {
     max-width: 100% !important;
     width: 100% !important;
     overflow-x: hidden !important;
     box-sizing: border-box !important;
+    margin: 0 auto !important;
+    border-radius: 16px !important;
   }
-  .sim-timeline-stepper {
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
+  .sim-header {
+    padding: 10px 12px 8px !important;
+  }
+  .sim-icp-tabs {
+    display: flex !important;
+    width: 100% !important;
     gap: 4px !important;
-    padding: 8px 4px !important;
+    box-sizing: border-box !important;
   }
-  .sim-step-node {
+  .sim-icp-btn {
+    flex: 1 1 0 !important;
     min-width: 0 !important;
-    padding: 4px 2px !important;
+    padding: 6px 4px !important;
+    gap: 4px !important;
   }
-  .sim-step-title {
-    font-size: 10px !important;
+  .sim-icp-icon {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  .sim-icp-icon svg {
+    width: 13px !important;
+    height: 13px !important;
+  }
+  .sim-icp-btn .icp-name {
+    font-size: 10.5px !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
+  }
+  .sim-icp-btn .icp-sub {
+    font-size: 8.5px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .sim-context-sub-badge {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    padding: 4px 8px !important;
+  }
+  #sim-context-text {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+  .sim-kinetic-wire {
+    padding: 6px 10px 4px !important;
+  }
+  .sim-wire-track {
+    margin: 4px 10px 12px 10px !important;
+  }
+  .sim-nodes-strip {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 3px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .sim-node {
+    min-width: 0 !important;
+    padding: 4px 2px !important;
+    width: 100% !important;
+  }
+  .sim-node-circle {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  .sim-node-circle svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  .sim-node-meta {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-align: center !important;
+  }
+  .sim-node-num {
+    font-size: 8px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+  }
+  .sim-node-title {
+    font-size: 8.5px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+  }
+  .sim-screen-container {
+    padding: 10px 12px !important;
+  }
+  .shield-row {
+    padding: 6px 8px !important;
+    gap: 6px !important;
+  }
+  .shield-item-text {
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+  .shield-item-text strong,
+  .shield-item-text span {
+    font-size: 10.5px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .sim-control-bar {
+    padding: 8px 10px !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+  }
+  .sim-step-pills {
+    flex-wrap: wrap !important;
+    gap: 3px !important;
+  }
+  .step-pill {
+    font-size: 9px !important;
+    padding: 3px 6px !important;
+  }
+
+  /* Compact mode for split screens under 540px */
+  @media (max-width: 540px) {
+    .sim-icp-btn .icp-sub {
+      display: none !important;
+    }
+    .sim-header-row {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 4px !important;
+    }
+    .sim-fps-badge {
+      font-size: 8.5px !important;
+      padding: 2px 6px !important;
+    }
   }
 
   /* 4. Bento Grid & Bento Cards */
