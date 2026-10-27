@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/app.css?v=trackkaro_warm_editorial_v3">
+<link rel="stylesheet" href="/static/app.css?v=trackkaro_warm_editorial_v4">
 
 <style>
 /* Mode Switcher Floating Pill */
@@ -724,7 +724,7 @@ body.is-logged-in .public-access-banner {
       </p>
       <div class="hero-cta-group">
         <button type="button" onclick="scrollToAuditForm(event)" class="btn-hero-primary">Book Pipeline Audit ↗</button>
-        <button type="button" class="btn-hero-secondary" onclick="showTab('signals')">Explore 23 Intent Signals</button>
+        <button type="button" class="btn-hero-secondary" onclick="openSignalsExplorerModal()">Explore 23 Intent Signals</button>
       </div>
       <div class="hero-trust-bar">
         <span><strong>✓</strong> Zero Generic Spam</span>
@@ -1039,7 +1039,7 @@ body.is-logged-in .public-access-banner {
   <!-- Apple Bento Command Center Hero -->
   <div class="apple-bento-hero">
     <!-- Card 1: Intent Radar -->
-    <div class="bento-card bento-radar-card" onclick="showTab('signals')">
+    <div class="bento-card bento-radar-card" onclick="openSignalsExplorerModal()">
       <div class="bento-top">
         <span class="bento-badge green"><span class="pulse-dot green"></span> INTENT RADAR</span>
         <span class="bento-arrow">↗</span>
@@ -2379,6 +2379,479 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="/static/app.js?v=trackkaro_live_sim_v12"></script>
 
 </div>
+
+<!-- Modal: 23 Buying Intent Signals Explorer (Warm Light Editorial) -->
+<div id="signals-explorer-modal" class="modal-overlay" onclick="handleSignalsBackdropClick(event)">
+  <div class="signals-modal-container" onclick="event.stopPropagation()">
+    <!-- Header -->
+    <div class="signals-modal-head">
+      <div class="signals-modal-badge">
+        <span>⚡</span> 23 BUYING INTENT TRIGGERS DETECTED BY JARVIS
+      </div>
+      <h3 class="signals-modal-title">Real-Time Intent Detection Radar</h3>
+      <p class="signals-modal-sub">
+        Jarvis continuously intercepts 23 buying signals across the web. When a high-ticket prospect exhibits active demand, Jarvis verifies DNS deliverability and triggers bespoke 1-to-1 outreach within minutes.
+      </p>
+      <button class="btn-close-signals-modal" onclick="closeSignalsExplorerModal()" title="Close Explorer">✕</button>
+    </div>
+
+    <!-- Filter Strip & Search Bar -->
+    <div class="signals-filter-strip">
+      <div class="signals-cat-pills">
+        <button class="sig-cat-btn active" data-cat="all" onclick="filterSignalsCategory('all', this)">All Signals (23)</button>
+        <button class="sig-cat-btn" data-cat="hiring" onclick="filterSignalsCategory('hiring', this)">💼 Hiring Velocity (6)</button>
+        <button class="sig-cat-btn" data-cat="spend" onclick="filterSignalsCategory('spend', this)">💸 Ad Spend & Growth (6)</button>
+        <button class="sig-cat-btn" data-cat="decay" onclick="filterSignalsCategory('decay', this)">⚡ Speed-to-Lead Gaps (5)</button>
+        <button class="sig-cat-btn" data-cat="tech" onclick="filterSignalsCategory('tech', this)">🛠️ Tech Stack & Web Gaps (6)</button>
+      </div>
+      <input type="text" class="signals-search-input" id="signals-search-input" placeholder="Search signals (e.g. SDR, WhatsApp, Reoon)..." oninput="searchSignals(this.value)">
+    </div>
+
+    <!-- Scrollable Cards Grid: 23 Real Signals -->
+    <div class="signals-grid-scroll" id="signals-cards-grid">
+      <!-- Signal 01 -->
+      <div class="signal-directory-card" data-cat="hiring" data-keywords="sdr bdr hiring sales headcount jobs">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">01</span>
+            <div class="sig-name">Outbound SDR Headcount Expansion (> 3 Roles)</div>
+          </div>
+          <span class="sig-pill-status fire">🔥 High Hiring Intent</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Google Jobs & LinkedIn search intercepts 3+ active Outbound SDR job openings posted in the last 14 days.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Sales pipeline is falling behind quota. Leadership is burning cash hiring manual SDRs ($6k/mo each) to solve pipeline bottlenecks.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Cites active job IDs in 1-to-1 email + calculates immediate CAC reduction vs slow recruitment.</div>
+        </div>
+      </div>
+
+      <!-- Signal 02 -->
+      <div class="signal-directory-card" data-cat="hiring" data-keywords="vp sales cro executive leadership transition">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">02</span>
+            <div class="sig-name">New VP of Sales / CRO Hired (&lt; 60 Days)</div>
+          </div>
+          <span class="sig-pill-status fire">🔥 90-Day Mandate</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Executive leadership transition detected on company team page or PR newswire within past 60 days.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Incoming revenue leaders have a strict 90-day mandate to hit immediate pipeline traction and replace underperforming tools.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Congratulatory hook citing previous company win + tailored Outbound Architecture audit.</div>
+        </div>
+      </div>
+
+      <!-- Signal 03 -->
+      <div class="signal-directory-card" data-cat="hiring" data-keywords="engineering dev headcount hiring soc2">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">03</span>
+            <div class="sig-name">Engineering Headcount Surge (+40% QoQ)</div>
+          </div>
+          <span class="sig-pill-status router">⚡ Scale Acceleration</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Rapid developer hiring sprint flagged across GitHub, career portals, and tech forums.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Product feature sprint underway. Needs dev studio capacity, SOC-2 security compliance, or infra modernization.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Routes pitch to VP of Eng citing specific technology stack expansion.</div>
+        </div>
+      </div>
+
+      <!-- Signal 04 -->
+      <div class="signal-directory-card" data-cat="hiring" data-keywords="account executive ae closers demos">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">04</span>
+            <div class="sig-name">Account Executive (AE) Hiring Without SDR Support</div>
+          </div>
+          <span class="sig-pill-status fire">🔥 Pipeline Starvation</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Target is recruiting multiple Account Executives but zero lead-generation SDRs.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Closers will be forced to manually prospect, wasting 65% of closing bandwidth on cold leads.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Delivers qualified discovery calls straight into AE calendars so they focus 100% on closing.</div>
+        </div>
+      </div>
+
+      <!-- Signal 05 -->
+      <div class="signal-directory-card" data-cat="hiring" data-keywords="customer success cs onboarding retention">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">05</span>
+            <div class="sig-name">Customer Success &amp; Onboarding Firefighting Hires</div>
+          </div>
+          <span class="sig-pill-status router">⚡ Retention Sprint</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Multiple simultaneous CS / Onboarding specialist postings opened.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Client churn risk or onboarding friction requiring automated client communications and speed-to-lead.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Speed-to-lead and client communication automation pitch.</div>
+        </div>
+      </div>
+
+      <!-- Signal 06 -->
+      <div class="signal-directory-card" data-cat="hiring" data-keywords="competitor departures sales reps churn">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">06</span>
+            <div class="sig-name">Competitor Sales Rep Departures &amp; Account Churn</div>
+          </div>
+          <span class="sig-pill-status fire">🔥 Displacement Window</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Sales executives exiting rival firms in the same vertical or geographic market.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Orphaned accounts left vulnerable during vendor transition; high openness to switching.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Bespoke comparison angle highlighting zero-friction migration.</div>
+        </div>
+      </div>
+
+      <!-- Signal 07 -->
+      <div class="signal-directory-card" data-cat="spend" data-keywords="meta google ad library spend paid ads scale">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">07</span>
+            <div class="sig-name">Meta &amp; Google Ad Scale Spike (> $15k/mo)</div>
+          </div>
+          <span class="sig-pill-status fire">🔥 High Ad Burn</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Meta Ad Library & Google Ads show 45+ new active creative variants launched in last 30 days.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Massive ad budget deployed. High CAC anxiety — urgently needs sub-15s response to prevent paid lead decay.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Real-time Speed-to-Lead audit showing how instant WhatsApp response doubles ad ROI.</div>
+        </div>
+      </div>
+
+      <!-- Signal 08 -->
+      <div class="signal-directory-card" data-cat="spend" data-keywords="series a funding growth capital investment">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">08</span>
+            <div class="sig-name">Series A / Growth Round Funding Announcement</div>
+          </div>
+          <span class="sig-pill-status router">⚡ Fresh Capital</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Verified investment round announcement on SEC filings, Crunchbase, or tech PR newswires.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Board demands aggressive revenue growth and top-of-funnel pipeline acceleration within 90 days.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Scales qualified meetings immediately without the 4-month lag of hiring an in-house team.</div>
+        </div>
+      </div>
+
+      <!-- Signal 09 -->
+      <div class="signal-directory-card" data-cat="spend" data-keywords="dubai us uk international expansion global entity">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">09</span>
+            <div class="sig-name">Geographic Expansion (Dubai / US / UK Entity Launch)</div>
+          </div>
+          <span class="sig-pill-status router">⚡ New Market Launch</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> New localized web landing pages, Dubai DED license filings, or US Delaware entity registry.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Zero existing network or inbound presence in the new geography; 100% dependent on cold outreach.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Deploys localized multi-workspace outreach targeting local decision-makers.</div>
+        </div>
+      </div>
+
+      <!-- Signal 10 -->
+      <div class="signal-directory-card" data-cat="spend" data-keywords="retargeting pixel tracking paid traffic conversions">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">10</span>
+            <div class="sig-name">Paid Retargeting Pixels With Low Organic Conversion</div>
+          </div>
+          <span class="sig-pill-status tech">🛠️ Traffic Leaks</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Meta Pixel & TikTok Pixel installed on domains with low conversion architecture.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Founder is pouring money into paid traffic but leaking leads on long, slow web forms.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Pitches automated speed-to-lead conversion funnel.</div>
+        </div>
+      </div>
+
+      <!-- Signal 11 -->
+      <div class="signal-directory-card" data-cat="spend" data-keywords="enterprise pricing tier custom quote abm">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">11</span>
+            <div class="sig-name">Pricing Page Overhaul &amp; Enterprise Tier Launch</div>
+          </div>
+          <span class="sig-pill-status fire">🔥 Upmarket Pivot</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Website DOM diff reveals new "Contact Sales / Enterprise Custom Quote" tier.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Pivot from low-ticket self-serve to high-ticket $25k-$100k contract sales requiring Account-Based Marketing.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Maps enterprise buyer personas (VP, CTO, Head of Ops) for outbound ABM.</div>
+        </div>
+      </div>
+
+      <!-- Signal 12 -->
+      <div class="signal-directory-card" data-cat="spend" data-keywords="rfp tender procurement government enterprise">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">12</span>
+            <div class="sig-name">Public RFP &amp; Commercial Tender Submissions</div>
+          </div>
+          <span class="sig-pill-status router">⚡ Budget Allocated</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Public procurement RFPs and vendor requests published on corporate or municipal portals.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Capital is already budgeted and allocated — actively evaluating external partners.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Direct capability outreach to procurement directors and C-level stakeholders.</div>
+        </div>
+      </div>
+
+      <!-- Signal 13 -->
+      <div class="signal-directory-card" data-cat="decay" data-keywords="speed to lead decay latency form response whatsapp">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">13</span>
+            <div class="sig-name">Inbound Web Form Decay (> 15-Minute Latency)</div>
+          </div>
+          <span class="sig-pill-status fire">🔥 Lead Decay Alert</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Automated mystery test lead submitted to public contact form took > 4 hours to receive response.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> 78% of B2B clients buy from the vendor that contacts them first; target is losing 60%+ of paid leads.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Video teardown demonstrating TrackKaro sub-15s WhatsApp dispatch pipeline.</div>
+        </div>
+      </div>
+
+      <!-- Signal 14 -->
+      <div class="signal-directory-card" data-cat="decay" data-keywords="whatsapp sms mobile lead capture landing page">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">14</span>
+            <div class="sig-name">Missing Instant WhatsApp / SMS Follow-Up on Ads</div>
+          </div>
+          <span class="sig-pill-status router">⚡ Speed Gap</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> High-ticket ad redirect leads to static desktop form with no mobile instant chat option.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Mobile visitors bounce at 85%+ rate when asked to fill 6-field forms on phones.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Demonstrates 1-click WhatsApp brochure delivery router.</div>
+        </div>
+      </div>
+
+      <!-- Signal 15 -->
+      <div class="signal-directory-card" data-cat="decay" data-keywords="sales info generic email shared inbox calendar">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">15</span>
+            <div class="sig-name">Generic 'sales@' or 'info@' Inbound Blackhole</div>
+          </div>
+          <span class="sig-pill-status router">⚡ Process Decay</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Contact page directs leads to shared mailbox without direct rep calendar links.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Inbound prospects wait days for replies; sales team lacks automated lead routing.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Proposes automated round-robin calendar booking engine.</div>
+        </div>
+      </div>
+
+      <!-- Signal 16 -->
+      <div class="signal-directory-card" data-cat="decay" data-keywords="blog traffic organic lead magnet capture attention">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">16</span>
+            <div class="sig-name">High-Traffic Technical Blog With Zero Lead Asset</div>
+          </div>
+          <span class="sig-pill-status tech">🛠️ Attention Leak</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Domain receives 10k+ monthly organic visitors with zero gated whitepaper or intent capture asset.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Massive organic traffic being completely unmonetized; needs automated intent asset capture.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Autonomous intent lead magnet workflow integration.</div>
+        </div>
+      </div>
+
+      <!-- Signal 17 -->
+      <div class="signal-directory-card" data-cat="decay" data-keywords="webinar event attendees virtual summit intent">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">17</span>
+            <div class="sig-name">Webinar &amp; Industry Virtual Event Registrations</div>
+          </div>
+          <span class="sig-pill-status fire">🔥 Warm Cohort</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Live virtual summit or webinar announced with 500+ registrations.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> High-intent cohort actively studying solutions to topical business problems.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Pre-event and post-event multi-touch sequence.</div>
+        </div>
+      </div>
+
+      <!-- Signal 18 -->
+      <div class="signal-directory-card" data-cat="tech" data-keywords="apollo zoominfo tracking scrapers manual prospecting">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">18</span>
+            <div class="sig-name">Apollo / ZoomInfo Installed (Manual Prospecting Trap)</div>
+          </div>
+          <span class="sig-pill-status tech">🛠️ Tool Underutilization</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Headless crawler detects tracking scripts from Apollo, Cognism, or ZoomInfo on target domain.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Team pays thousands for raw databases but lacks autonomous signal-based execution.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> "You own the raw data — Jarvis automates the intent-to-inbox execution loop."</div>
+        </div>
+      </div>
+
+      <!-- Signal 19 -->
+      <div class="signal-directory-card" data-cat="tech" data-keywords="catch all deliverability mx dns reoon bounce blacklist">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">19</span>
+            <div class="sig-name">Catch-All Email Configuration (High Bounce Risk)</div>
+          </div>
+          <span class="sig-pill-status shield">🛡️ Deliverability Shield</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> MX DNS handshake indicates domain accepts all incoming addresses without real mailbox validation.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> High risk of domain spam-trap blacklisting if cold outreach is sent without multi-tier verification.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Applies 3-tier Reoon MX shield (< 3% Bounce SLA guarantee).</div>
+        </div>
+      </div>
+
+      <!-- Signal 20 -->
+      <div class="signal-directory-card" data-cat="tech" data-keywords="crm decay hubspot salesforce dormant leads webhook">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">20</span>
+            <div class="sig-name">Legacy CRM Decay (HubSpot / Salesforce Dormancy)</div>
+          </div>
+          <span class="sig-pill-status tech">🛠️ Data Decay</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Outdated CRM form endpoints on older landing pages.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Thousands of uncontacted leads rotting in dormant CRM databases without re-engagement.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Webhook re-activation sequence triggering immediate pipeline revival.</div>
+        </div>
+      </div>
+
+      <!-- Signal 21 -->
+      <div class="signal-directory-card" data-cat="tech" data-keywords="soc2 compliance security enterprise security review">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">21</span>
+            <div class="sig-name">Missing SOC-2 / Security Trust Certification</div>
+          </div>
+          <span class="sig-pill-status shield">🛡️ Enterprise Gate</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> B2B SaaS scaling enterprise deals without SOC-2 or ISO-27001 badge on footer.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Stalling enterprise security review processes; deals blocked in legal review.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Dev studio / compliance engineering acceleration angle.</div>
+        </div>
+      </div>
+
+      <!-- Signal 22 -->
+      <div class="signal-directory-card" data-cat="tech" data-keywords="mobile responsive viewport broken form buttons conversion">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">22</span>
+            <div class="sig-name">Unresponsive Mobile Form Leaks</div>
+          </div>
+          <span class="sig-pill-status router">⚡ Mobile Conversion Leak</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Headless mobile viewport emulator flags unclickable submit buttons on screen width &lt; 400px.</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> 50%+ paid mobile ad traffic dropping off immediately with zero capture.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Proves immediate conversion lift with frictionless speed-to-lead workflow.</div>
+        </div>
+      </div>
+
+      <!-- Signal 23 -->
+      <div class="signal-directory-card" data-cat="tech" data-keywords="tech stack migration nextjs webflow cms framework">
+        <div class="sig-card-top">
+          <div class="sig-title-wrap">
+            <span class="sig-num-badge">23</span>
+            <div class="sig-name">Recent Web Framework &amp; Tech Stack Migration</div>
+          </div>
+          <span class="sig-pill-status router">⚡ Modernization Cycle</span>
+        </div>
+        <div class="sig-meta-row">
+          <div class="sig-detect-line"><strong>What Jarvis Detects:</strong> Framework header switch (e.g. legacy WordPress to Next.js or Webflow).</div>
+          <div class="sig-intent-box"><strong>Commercial Buying Intent:</strong> Active engineering/marketing development sprint with budget allocated to growth modernization.</div>
+          <div class="sig-action-line">⚡ <strong>Jarvis Autonomous Response:</strong> Timely developer capacity and growth pipeline integration pitch.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky Bottom CTA -->
+    <div class="signals-modal-footer">
+      <div class="signals-footer-text">
+        <h5>Want Jarvis to scan these 23 signals for your target accounts?</h5>
+        <p>Get a custom Outbound Architecture plan + 10 live-verified target accounts mapped to your ICP at zero cost.</p>
+      </div>
+      <button class="btn-signals-footer-cta" onclick="closeSignalsModalAndAudit()">
+        Map 10 Free Verified Leads ↗
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openSignalsExplorerModal() {
+  const modal = document.getElementById('signals-explorer-modal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeSignalsExplorerModal() {
+  const modal = document.getElementById('signals-explorer-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+function handleSignalsBackdropClick(event) {
+  if (event.target.id === 'signals-explorer-modal') {
+    closeSignalsExplorerModal();
+  }
+}
+
+function filterSignalsCategory(cat, btn) {
+  document.querySelectorAll('.sig-cat-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const cards = document.querySelectorAll('.signal-directory-card');
+  cards.forEach(card => {
+    if (cat === 'all' || card.dataset.cat === cat) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+function searchSignals(query) {
+  const q = (query || '').toLowerCase().trim();
+  const cards = document.querySelectorAll('.signal-directory-card');
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    const keywords = (card.dataset.keywords || '').toLowerCase();
+    if (!q || text.includes(q) || keywords.includes(q)) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+function closeSignalsModalAndAudit() {
+  closeSignalsExplorerModal();
+  setTimeout(() => {
+    const auditSec = document.getElementById('audit-consultation-section');
+    if (auditSec) {
+      auditSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 150);
+}
+</script>
 
 <!-- Modal: Scan Client Domain & ICP Engine -->
 <div id="scan-domain-modal" class="modal-overlay">
