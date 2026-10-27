@@ -336,19 +336,20 @@
 
 
 <style id="auth-gate-styles">
-/* Default state is logged-out (public landing view) */
-body.is-logged-out .apple-dock-wrapper {
-  display: none !important;
-}
+/* Default state is logged-out (clean public landing view) */
+body.is-logged-out .apple-dock-wrapper,
+body.is-logged-out .workspace-command-hero,
 body.is-logged-out .today-grid,
 body.is-logged-out #today-activity-section,
-body.is-logged-out .today-section-head {
-  display: none !important;
-}
-body.is-logged-out .workspace-wrapper {
-  display: none !important;
-}
-body.is-logged-out .btn-logout-header {
+body.is-logged-out .today-section-head,
+body.is-logged-out .workspace-wrapper,
+body.is-logged-out .btn-logout-header,
+body.is-logged-out #header-sheet-link,
+body.is-logged-out .refresh-btn,
+body.is-logged-out #theme-btn,
+body.is-logged-out .mode-switcher-bar,
+body.is-logged-out #floating-agent-pill,
+body.is-logged-out #auth-view {
   display: none !important;
 }
 body.is-logged-out .btn-signin-header {
@@ -381,6 +382,9 @@ body.is-logged-in .live-pipeline-section,
 body.is-logged-in #audit-consultation-section,
 body.is-logged-in .btn-cta-audit {
   display: none !important;
+}
+body.is-logged-in .workspace-command-hero {
+  display: flex !important;
 }
 
 /* Mission Control Workspace Bar */
@@ -510,70 +514,6 @@ body.is-logged-in .public-access-banner {
 </head>
 <body class="is-logged-out">
 
-<!-- Dev/Preview Mode Switcher Bar -->
-<div class="mode-switcher-bar">
-  <button id="btn-view-auth" class="mode-btn" onclick="handleLogout()">
-    <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg> Public Landing View
-  </button>
-  <button id="btn-view-dash" class="mode-btn active" onclick="switchMainView('dashboard')">
-    <svg class="ui-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg> Operator Cockpit (Jarvis OS)
-  </button>
-</div>
-
-
-<!-- VIEW 1: BEFORE LOGIN (AUTH GATE) -->
-<div id="auth-view" style="display:none;">
-  <div class="auth-hero-container">
-    <div class="auth-hero-badge">
-      <span>⚡ Autonomous Outbound Intelligence • TrackKaro AI</span>
-    </div>
-    
-    <h1 class="auth-hero-title">
-      Discovers intent. Verifies deliverability. <br>
-      <span>Books meetings on autopilot.</span>
-    </h1>
-
-    <p class="auth-hero-sub">
-      Jarvis (TrackKaro Outbound OS) autonomously scans 23 buying signals across the web, 
-      shields your domain with multi-tier verification, and executes bespoke 1-to-1 cold outreach.
-    </p>
-
-    <!-- Auth Card -->
-    <div class="auth-card">
-      <div style="margin-bottom: 20px;">
-        <h3 style="font-size:18px; font-weight:700; margin-bottom:6px; color:#FFFFFF;">Sign in to TrackKaro OS</h3>
-        <p style="font-size:13px; color:#94A3B8;">Access your autonomous revenue workspaces & Jarvis SDR agents</p>
-      </div>
-
-      <button class="btn-google-auth" onclick="switchMainView('dashboard')">
-        <svg width="18" height="18" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-        </svg>
-        Continue with Google
-      </button>
-
-      <div class="auth-divider-line">
-        <span>or work email</span>
-      </div>
-
-      <form onsubmit="switchMainView('dashboard'); return false;">
-        <div class="auth-input-group">
-          <label class="auth-label">Work Email</label>
-          <input type="email" class="auth-input" value="mangal@trackkaroai.com" required>
-        </div>
-        <div class="auth-input-group">
-          <label class="auth-label">Password</label>
-          <input type="password" class="auth-input" value="trackkaro2026" required>
-        </div>
-        <button type="submit" class="btn-enter-workspace">Enter Jarvis OS →</button>
-      </form>
-    </div>
-  </div>
-</div>
-
 <div id="dashboard-view">
 
 
@@ -638,13 +578,16 @@ body.is-logged-in .public-access-banner {
   </div>
 </div>
 
-    <button class="icon-btn btn-logout-header" onclick="handleLogout()" title="Logout to Auth Gate" style="font-size:11px; margin-right:4px;">Logout</button>
+    <button class="icon-btn btn-logout-header" onclick="handleLogout()" title="Logout to Public View" style="font-size:11px; margin-right:4px;">Logout ⏏</button>
     <a href="#audit-consultation-section" 
        onclick="scrollToAuditForm(event)"
        class="btn-cta-audit"
        title="Discuss deploying this custom outbound pipeline for your business">
       Book Pipeline Audit ↗
     </a>
+    <button class="btn-signin-header" onclick="openLoginModal()" title="Operator Access">
+      🔒 Sign In
+    </button>
     <a href="#" 
        target="_blank" rel="noopener noreferrer" 
        id="header-sheet-link"
@@ -3414,37 +3357,28 @@ window.addEventListener('click', (e) => {
 
 <!-- Modal: Login / Workspace Access -->
 <div id="auth-modal-popup" class="modal-overlay">
-  <div class="modal-box" style="max-width: 420px; padding: 28px;">
-    <div class="modal-header-row" style="margin-bottom: 16px;">
+  <div class="modal-box" style="max-width: 400px; padding: 26px;">
+    <div class="modal-header-row" style="margin-bottom: 14px;">
       <div>
-        <h3 style="font-size:18px; font-weight:700; color:#FFFFFF; margin-bottom:4px;">Sign In to TrackKaro OS</h3>
-        <p style="font-size:12px; color:#94A3B8;">Enter your credentials to unlock your autonomous SDR pipeline</p>
+        <h3 style="font-size:17px; font-weight:700; color:#FFFFFF; margin-bottom:4px;">Operator Cockpit Gate</h3>
+        <p style="font-size:12px; color:#94A3B8;">Enter operator credentials to unlock internal pipeline engine</p>
       </div>
       <button class="btn-close-modal" onclick="closeLoginModal()">✕</button>
     </div>
 
-    <button class="btn-google-auth" onclick="handleLoginSubmit()">
-      <svg width="18" height="18" viewBox="0 0 24 24">
-        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-      </svg>
-      Continue with Google
-    </button>
-
-    <div class="auth-divider-line"><span>or work email</span></div>
-
     <form onsubmit="handleLoginSubmit(event)">
-      <div class="auth-input-group">
-        <label class="auth-label">Work Email</label>
-        <input type="email" class="auth-input" value="mangal@trackkaroai.com" required>
+      <div class="auth-input-group" style="margin-bottom:12px;">
+        <label class="auth-label">Operator Email</label>
+        <input type="email" id="operator-email-input" class="auth-input" value="mangal@trackkaroai.com" required>
       </div>
-      <div class="auth-input-group">
-        <label class="auth-label">Password</label>
-        <input type="password" class="auth-input" value="trackkaro2026" required>
+      <div class="auth-input-group" style="margin-bottom:12px;">
+        <label class="auth-label">Access Password</label>
+        <input type="password" id="operator-password-input" class="auth-input" placeholder="Enter password..." required autofocus>
       </div>
-      <button type="submit" class="btn-enter-workspace">Enter Autonomous Cockpit →</button>
+      <div id="operator-auth-error" style="display:none; color:#EF4444; font-size:12px; margin-bottom:12px; font-weight:500;">
+        ⚠️ Invalid password. Access restricted to authorized operators.
+      </div>
+      <button type="submit" class="btn-enter-workspace" style="width:100%; justify-content:center; padding:11px 18px; font-size:13px;">Unlock Operator OS →</button>
     </form>
   </div>
 </div>
@@ -3455,14 +3389,11 @@ let isLoggedIn = false;
 
 function setLoginState(logged) {
   isLoggedIn = logged;
-  const btnAuth = document.getElementById('btn-view-auth');
-  const btnDash = document.getElementById('btn-view-dash');
 
   if (logged) {
     document.body.classList.remove('is-logged-out');
     document.body.classList.add('is-logged-in');
-    if (btnAuth) btnAuth.classList.remove('active');
-    if (btnDash) btnDash.classList.add('active');
+    localStorage.setItem('jarvis_operator_authenticated', 'true');
     
     // Automatically load data from live backend
     if (typeof loadCurrentTab === 'function') loadCurrentTab();
@@ -3471,8 +3402,7 @@ function setLoginState(logged) {
   } else {
     document.body.classList.remove('is-logged-in');
     document.body.classList.add('is-logged-out');
-    if (btnAuth) btnAuth.classList.add('active');
-    if (btnDash) btnDash.classList.remove('active');
+    localStorage.removeItem('jarvis_operator_authenticated');
     
     // Default to today hero view
     if (typeof showTab === 'function') showTab('today');
@@ -3481,7 +3411,12 @@ function setLoginState(logged) {
 
 function openLoginModal() {
   const modal = document.getElementById('auth-modal-popup');
+  const errEl = document.getElementById('operator-auth-error');
+  const pwdInput = document.getElementById('operator-password-input');
+  if (errEl) errEl.style.display = 'none';
+  if (pwdInput) pwdInput.value = '';
   if (modal) modal.classList.add('active');
+  setTimeout(() => { if (pwdInput) pwdInput.focus(); }, 120);
 }
 
 function closeLoginModal() {
@@ -3491,32 +3426,28 @@ function closeLoginModal() {
 
 function handleLoginSubmit(e) {
   if (e) e.preventDefault();
-  closeLoginModal();
-  setLoginState(true);
+  const pwdInput = document.getElementById('operator-password-input');
+  const errEl = document.getElementById('operator-auth-error');
+  const pwd = pwdInput ? pwdInput.value.trim() : '';
+
+  // Accepted passwords: trackkaro2026 or mangal777
+  if (pwd === 'trackkaro2026' || pwd === 'mangal777') {
+    if (errEl) errEl.style.display = 'none';
+    closeLoginModal();
+    setLoginState(true);
+  } else {
+    if (errEl) errEl.style.display = 'block';
+  }
 }
 
 function handleLogout() {
   setLoginState(false);
 }
 
-// Mode switcher buttons
-function switchMainView(view) {
-  if (view === 'auth') {
-    setLoginState(false);
-  } else {
-    setLoginState(true);
-  }
-}
-
-// Initialize on page load (defaults to logged-out for realistic demo)
+// Initialize on page load (clean public landing view by default unless already signed in)
 document.addEventListener('DOMContentLoaded', () => {
-  // Production Security Guard: Show dev mode switcher ONLY on localhost/127.0.0.1
-  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  const devBar = document.querySelector('.mode-switcher-bar');
-  if (devBar && isLocal) {
-    devBar.style.display = 'flex';
-  }
-  setLoginState(false);
+  const isAuth = localStorage.getItem('jarvis_operator_authenticated') === 'true';
+  setLoginState(isAuth);
 });
 </script>
 

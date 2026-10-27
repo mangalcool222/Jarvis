@@ -6286,20 +6286,8 @@ body.is-logged-in .icon-btn {
   color: #475569 !important;
 }
 
-/* Dev Switcher Bar in Warm Light Mode */
-body.is-logged-in .mode-switcher-bar,
-body.is-logged-out .mode-switcher-bar {
-  background: rgba(245, 242, 236, 0.9) !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05) !important;
-}
-body.is-logged-in .mode-btn {
-  color: #64748B !important;
-}
-body.is-logged-in .mode-btn.active {
-  background: #18181B !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+.mode-switcher-bar {
+  display: none !important;
 }
 
 /* Apple Dock Navigation (Warm Light Pill Bar) */
@@ -6858,28 +6846,8 @@ body.is-logged-in kbd {
    ══════════════════════════════════════════════════════════════ */
 
 @media (max-width: 768px) {
-  /* 1. Floating Bottom Dock for Switcher Bar */
   .mode-switcher-bar {
-    position: fixed !important;
-    top: auto !important;
-    bottom: 16px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 9999 !important;
-    background: rgba(255, 255, 255, 0.94) !important;
-    border: 1px solid rgba(0, 0, 0, 0.12) !important;
-    box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.22), 0 2px 6px rgba(0, 0, 0, 0.08) !important;
-    backdrop-filter: blur(20px) !important;
-    border-radius: 999px !important;
-    padding: 4px 6px !important;
-    width: auto !important;
-    max-width: 92vw !important;
-    display: flex !important;
-  }
-  .mode-btn {
-    padding: 8px 14px !important;
-    font-size: 11.5px !important;
-    white-space: nowrap !important;
+    display: none !important;
   }
   .floating-agent-pill,
   #floating-agent-pill {
@@ -7527,11 +7495,8 @@ html, body {
     gap: 12px !important;
   }
 
-  /* 7. Floating Switcher & WhatsApp Alignment */
   .mode-switcher-bar {
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    bottom: 16px !important;
+    display: none !important;
   }
   .floating-architect-pill {
     right: 14px !important;
