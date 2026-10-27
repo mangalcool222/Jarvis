@@ -1983,6 +1983,112 @@ details[open] summary::before { content: '– '; }
   margin-top: 2px;
 }
 
+/* Smart Global Phone Input */
+.smart-phone-input-wrap {
+  display: flex;
+  align-items: stretch;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.2s ease;
+  overflow: hidden;
+  position: relative;
+}
+.smart-phone-input-wrap:focus-within {
+  border-color: #00E599;
+  box-shadow: 0 0 0 3px rgba(0, 229, 153, 0.15);
+  background: rgba(15, 23, 42, 0.95);
+}
+.country-select-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0 4px 0 8px;
+  flex-shrink: 0;
+}
+.audit-country-select {
+  border: none;
+  background: transparent;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  font-family: inherit;
+  padding: 10px 4px;
+}
+.audit-country-select option {
+  background: #0F172A;
+  color: #FFFFFF;
+}
+.phone-number-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.audit-phone-input {
+  width: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 10px 32px 10px 12px !important;
+  font-size: 13px !important;
+  color: #FFFFFF !important;
+  outline: none !important;
+  font-family: var(--mono, monospace) !important;
+  letter-spacing: 0.5px;
+}
+.phone-valid-icon {
+  position: absolute;
+  right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  pointer-events: none;
+}
+.phone-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3px;
+}
+.phone-digit-counter {
+  font-family: var(--mono, monospace);
+  font-size: 10px;
+  color: #64748B;
+  font-weight: 600;
+}
+
+/* Light / Logged-out mode styling */
+body.is-logged-out .smart-phone-input-wrap {
+  background: #F9FAFB !important;
+  border: 1px solid #D1D5DB !important;
+}
+body.is-logged-out .smart-phone-input-wrap:focus-within {
+  background: #FFFFFF !important;
+  border-color: #18181B !important;
+  box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.08) !important;
+}
+body.is-logged-out .country-select-wrap {
+  background: #F3F4F6 !important;
+  border-right: 1px solid #E5E7EB !important;
+}
+body.is-logged-out .audit-country-select {
+  color: #111827 !important;
+}
+body.is-logged-out .audit-country-select option {
+  background: #FFFFFF !important;
+  color: #111827 !important;
+}
+body.is-logged-out .audit-phone-input {
+  color: #111827 !important;
+}
+body.is-logged-out .phone-digit-counter {
+  color: #9CA3AF !important;
+}
+
 /* Actions Row */
 .audit-action-row {
   display: flex;

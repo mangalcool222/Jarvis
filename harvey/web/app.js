@@ -2289,6 +2289,137 @@ function scrollToAuditForm(e) {
   }, 100);
 }
 
+// ── Smart Global Phone Input Handlers ──
+function getSelectedCountryConfig() {
+  const select = document.getElementById('audit-country-code');
+  if (!select) return { code: '+91', digits: 10, placeholder: '98765 43210' };
+  const opt = select.options[select.selectedIndex];
+  return {
+    code: opt.value,
+    digits: parseInt(opt.getAttribute('data-digits') || '10', 10),
+    placeholder: opt.getAttribute('data-placeholder') || '98765 43210'
+  };
+}
+
+function handleCountryCodeChange() {
+  const config = getSelectedCountryConfig();
+  const input = document.getElementById('audit-phone');
+  if (!input) return;
+  
+  input.placeholder = config.placeholder;
+  input.maxLength = config.code ? config.digits + 3 : 18;
+  handleSmartPhoneInput(input);
+}
+
+function handleSmartPhoneInput(input) {
+  if (!input) return;
+  const config = getSelectedCountryConfig();
+  const counter = document.getElementById('phone-digit-counter');
+  const validIcon = document.getElementById('phone-valid-icon');
+  
+  let val = input.value;
+  if (val.startsWith('+')) {
+    detectAndSetCountryFromPaste(val);
+    return;
+  }
+  
+  let digits = val.replace(/[^0-9]/g, '');
+  if (config.code && digits.length > config.digits) {
+    digits = digits.slice(0, config.digits);
+  }
+  
+  let formatted = digits;
+  if (config.code === '+91' || config.digits === 10) {
+    if (digits.length > 5) {
+      formatted = digits.slice(0, 5) + ' ' + digits.slice(5);
+    }
+  } else if (config.code === '+971' || config.code === '+966') {
+    if (digits.length > 5) {
+      formatted = digits.slice(0, 2) + ' ' + digits.slice(2, 5) + ' ' + digits.slice(5);
+    } else if (digits.length > 2) {
+      formatted = digits.slice(0, 2) + ' ' + digits.slice(2);
+    }
+  } else if (config.code === '+1') {
+    if (digits.length > 6) {
+      formatted = digits.slice(0, 3) + ' ' + digits.slice(3, 6) + ' ' + digits.slice(6);
+    } else if (digits.length > 3) {
+      formatted = digits.slice(0, 3) + ' ' + digits.slice(3);
+    }
+  }
+  
+  input.value = formatted;
+  
+  const currentCount = digits.length;
+  const targetCount = config.digits;
+  
+  if (counter) {
+    if (config.code) {
+      if (currentCount === targetCount) {
+        counter.innerHTML = '<span style="color:#059669; font-weight:700;">✓ ' + currentCount + '/' + targetCount + ' digits (Valid)</span>';
+      } else {
+        counter.innerHTML = currentCount + '/' + targetCount + ' digits';
+        counter.style.color = currentCount > 0 ? '#D97706' : '#9CA3AF';
+      }
+    } else {
+      counter.innerHTML = currentCount + ' digits';
+    }
+  }
+  
+  if (validIcon) {
+    if (config.code && currentCount === targetCount) {
+      validIcon.innerHTML = '✓';
+      validIcon.style.color = '#059669';
+    } else {
+      validIcon.innerHTML = '';
+    }
+  }
+}
+
+function detectAndSetCountryFromPaste(text) {
+  const clean = text.trim();
+  const select = document.getElementById('audit-country-code');
+  const input = document.getElementById('audit-phone');
+  if (!select || !input) return;
+  
+  const prefixes = [
+    { code: '+971', val: '+971' },
+    { code: '+966', val: '+966' },
+    { code: '+91',  val: '+91' },
+    { code: '+44',  val: '+44' },
+    { code: '+65',  val: '+65' },
+    { code: '+61',  val: '+61' },
+    { code: '+49',  val: '+49' },
+    { code: '+1',   val: '+1' },
+  ];
+  
+  for (const p of prefixes) {
+    if (clean.startsWith(p.code)) {
+      select.value = p.val;
+      input.value = clean.slice(p.code.length).trim();
+      handleCountryCodeChange();
+      return;
+    }
+  }
+  
+  input.value = clean.replace(/[^0-9]/g, '');
+  handleSmartPhoneInput(input);
+}
+
+function handleSmartPhonePaste(e) {
+  e.preventDefault();
+  const pasted = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+  detectAndSetCountryFromPaste(pasted);
+}
+
+function getFullAuditPhone() {
+  const codeSelect = document.getElementById('audit-country-code');
+  const code = codeSelect ? codeSelect.value : '';
+  const input = document.getElementById('audit-phone');
+  const rawDigits = input ? input.value.replace(/[^0-9]/g, '') : '';
+  if (!rawDigits) return '';
+  return code ? (code + ' ' + rawDigits) : rawDigits;
+}
+
 function goToAuditStep(step) {
   const p1 = document.getElementById('audit-pane-1');
   const p2 = document.getElementById('audit-pane-2');
@@ -2299,7 +2430,9 @@ function goToAuditStep(step) {
     const name = document.getElementById('audit-name')?.value.trim();
     const company = document.getElementById('audit-company')?.value.trim();
     const email = document.getElementById('audit-email')?.value.trim();
-    const phone = document.getElementById('audit-phone')?.value.trim();
+    const phoneInput = document.getElementById('audit-phone');
+    const cleanDigits = phoneInput ? phoneInput.value.replace(/[^0-9]/g, '') : '';
+    const config = getSelectedCountryConfig();
 
     if (!name) {
       alert('Please enter your Full Name.');
@@ -2316,10 +2449,11 @@ function goToAuditStep(step) {
       document.getElementById('audit-email')?.focus();
       return;
     }
-    const cleanPhone = phone.replace(/[^0-9]/g, '');
-    if (!phone || cleanPhone.length < 8 || cleanPhone.length > 15) {
-      alert('Please enter a valid WhatsApp Phone Number (e.g. +91 98765 43210 or 9876543210).');
-      document.getElementById('audit-phone')?.focus();
+    
+    const minRequired = config.code ? config.digits : 8;
+    if (!cleanDigits || cleanDigits.length < minRequired) {
+      alert(`Please enter a valid ${config.code ? config.digits + '-digit' : ''} WhatsApp Phone Number.`);
+      phoneInput?.focus();
       return;
     }
 
@@ -2341,17 +2475,11 @@ async function handleAuditSubmit(e) {
   const name = document.getElementById('audit-name')?.value.trim() || '';
   const company = document.getElementById('audit-company')?.value.trim() || '';
   const email = document.getElementById('audit-email')?.value.trim() || '';
-  const phone = document.getElementById('audit-phone')?.value.trim() || '';
+  const normalizedPhone = getFullAuditPhone();
   const industry = document.getElementById('audit-industry')?.value || 'B2B SaaS & Tech Startups';
   const market = document.getElementById('audit-market')?.value || 'US & North America';
   const dealSize = document.getElementById('audit-deal-size')?.value || '$3,000 – $6,000 / month';
   const goal = document.getElementById('audit-goal')?.value || 'Full DFY Outbound Setup (Book Qualified Calls on Calendar)';
-
-  const cleanDigits = phone.replace(/[^0-9]/g, '');
-  let normalizedPhone = phone;
-  if (cleanDigits.length === 10) {
-    normalizedPhone = '+91 ' + cleanDigits.slice(0, 5) + ' ' + cleanDigits.slice(5);
-  }
 
   const btn = document.getElementById('audit-submit-btn');
   const origBtnHtml = btn ? btn.innerHTML : '';

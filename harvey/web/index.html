@@ -1748,10 +1748,41 @@ body.is-logged-in .public-access-banner {
               <input type="email" id="audit-email" placeholder="e.g. alex@apexscale.com" required autocomplete="email">
             </div>
 
-            <div class="audit-field">
+            <div class="audit-field audit-phone-field">
               <label for="audit-phone">WhatsApp Phone Number <span class="req">*</span></label>
-              <input type="tel" id="audit-phone" placeholder="e.g. +91 98765 43210 or +971 50 000 0000" required autocomplete="tel">
-              <span class="field-hint">Direct line for instant Telegram / WhatsApp dispatch alert</span>
+              <div class="smart-phone-input-wrap">
+                <div class="country-select-wrap">
+                  <select id="audit-country-code" class="audit-country-select" onchange="handleCountryCodeChange()">
+                    <option value="+91" data-flag="🇮🇳" data-digits="10" data-placeholder="98765 43210" selected>🇮🇳 +91</option>
+                    <option value="+971" data-flag="🇦🇪" data-digits="9" data-placeholder="50 123 4567">🇦🇪 +971</option>
+                    <option value="+1" data-flag="🇺🇸" data-digits="10" data-placeholder="555 123 4567">🇺🇸 +1</option>
+                    <option value="+44" data-flag="🇬🇧" data-digits="10" data-placeholder="7911 123456">🇬🇧 +44</option>
+                    <option value="+966" data-flag="🇸🇦" data-digits="9" data-placeholder="50 123 4567">🇸🇦 +966</option>
+                    <option value="+65" data-flag="🇸🇬" data-digits="8" data-placeholder="8123 4567">🇸🇬 +65</option>
+                    <option value="+61" data-flag="🇦🇺" data-digits="9" data-placeholder="412 345 678">🇦🇺 +61</option>
+                    <option value="+49" data-flag="🇩🇪" data-digits="10" data-placeholder="1512 3456789">🇩🇪 +49</option>
+                    <option value="" data-flag="🌐" data-digits="15" data-placeholder="Phone with country code">🌐 Other</option>
+                  </select>
+                </div>
+                <div class="phone-number-wrap">
+                  <input 
+                    type="tel" 
+                    id="audit-phone" 
+                    class="audit-phone-input" 
+                    placeholder="98765 43210" 
+                    maxlength="12" 
+                    autocomplete="tel-national" 
+                    required
+                    oninput="handleSmartPhoneInput(this)"
+                    onpaste="handleSmartPhonePaste(event)"
+                  >
+                  <span id="phone-valid-icon" class="phone-valid-icon"></span>
+                </div>
+              </div>
+              <div class="phone-meta-row">
+                <span class="field-hint">Direct line for instant Telegram / WhatsApp dispatch alert</span>
+                <span class="phone-digit-counter" id="phone-digit-counter">0/10 digits</span>
+              </div>
             </div>
           </div>
 
