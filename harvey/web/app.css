@@ -4203,6 +4203,25 @@ details[open] summary::before { content: '– '; }
   margin-bottom: 18px;
 }
 
+.sdr-node-icon-box {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: #18181B;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25);
+}
+
+.sdr-node-icon {
+  font-size: 28px;
+  filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.6));
+}
+
 .sdr-avatar-ring {
   position: relative;
   width: 72px;
@@ -4877,6 +4896,12 @@ body.is-logged-out .weekday-card:hover {
 body.is-logged-out .weekday-card-visual {
   background: #FAF8F5 !important;
   border: 1px solid #EDE5D8 !important;
+}
+
+body.is-logged-out .sdr-node-icon-box {
+  background: #FFFFFF !important;
+  border: 1px solid #E2D5C3 !important;
+  box-shadow: 0 4px 16px rgba(120, 53, 15, 0.08) !important;
 }
 
 body.is-logged-out .sdr-persona-name {
