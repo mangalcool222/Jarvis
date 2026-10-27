@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/app.css?v=trackkaro_warm_editorial_v8">
+<link rel="stylesheet" href="/static/app.css?v=trackkaro_warm_editorial_v9">
 
 <style>
 /* Mode Switcher Floating Pill */
@@ -1112,6 +1112,18 @@ body.is-logged-in .public-access-banner {
       </div>
     </div>
 
+        <!-- Mobile Segmented Offer Switcher Pill (Visible on Phone Only) -->
+    <div class="mobile-offer-segmented-pill">
+      <button class="m-pill-btn active" id="m-btn-dfy" onclick="switchMobileOfferCard('dfy')">
+        <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Done-For-You (DFY)</span>
+      </button>
+      <button class="m-pill-btn" id="m-btn-platform" onclick="switchMobileOfferCard('platform')">
+        <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+        <span>Platform Copilot</span>
+      </button>
+    </div>
+
     <!-- 2-Column Cards Grid -->
     <div class="weekday-cards-grid">
       <!-- Card 1: Managed Autonomous SDR Engine (DFY Pipeline) -->
@@ -1228,6 +1240,12 @@ body.is-logged-in .public-access-banner {
         </div>
       </div>
     </div>
+  
+    <!-- Mobile Snap Indicator Dots -->
+    <div class="mobile-snap-dots">
+      <span class="m-snap-dot active" id="m-dot-1" onclick="switchMobileOfferCard('dfy')"></span>
+      <span class="m-snap-dot" id="m-dot-2" onclick="switchMobileOfferCard('platform')"></span>
+    </div>
   </section>
 
   <!-- Clay-Style Live Pipeline Stream Table (Data Instrument Cockpit) -->
@@ -1260,6 +1278,120 @@ body.is-logged-in .public-access-banner {
     </div>
 
     <!-- Table Responsive Container -->
+    
+    <!-- Mobile Compact Pipeline Cards Deck (Visible on Phone Only - Replaces Wide Table) -->
+    <div class="mobile-pipeline-stream-deck">
+      <!-- Card 1: Ramp -->
+      <div class="mobile-pipeline-card" onclick="syncTableWithHero('agency')">
+        <div class="mpc-top">
+          <div class="co-cell">
+            <div class="co-avatar grad-ramp">RP</div>
+            <div class="co-meta">
+              <span class="co-name">Ramp Technologies</span>
+              <span class="co-sub">B Platform • 800+ Team</span>
+            </div>
+          </div>
+          <button type="button" class="btn-table-inspect" onclick="event.stopPropagation(); syncTableWithHero('agency')">
+            Inspect ↗
+          </button>
+        </div>
+        <div class="mpc-mid">
+          <span class="signal-tag coral">
+            <span class="tag-icon"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span> Scaled Ads +140%
+          </span>
+          <div class="sla-badge green">
+            <span class="sla-dot"></span>
+            <span>99.8%</span>
+            <span class="sla-mx">Google MX</span>
+          </div>
+        </div>
+        <div class="mpc-bottom">
+          <div class="dm-cell">
+            <span class="dm-name">Sarah Jenkins</span>
+            <span class="dm-title">VP Growth &amp; Acquisition</span>
+          </div>
+          <span class="pipeline-status-pill booked">
+            <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg> Meeting Confirmed
+          </span>
+        </div>
+      </div>
+
+      <!-- Card 2: Brex -->
+      <div class="mobile-pipeline-card" onclick="syncTableWithHero('saas')">
+        <div class="mpc-top">
+          <div class="co-cell">
+            <div class="co-avatar grad-brex">BX</div>
+            <div class="co-meta">
+              <span class="co-name">Brex Inc.</span>
+              <span class="co-sub">Enterprise Spend • 1,200+ Team</span>
+            </div>
+          </div>
+          <button type="button" class="btn-table-inspect" onclick="event.stopPropagation(); syncTableWithHero('saas')">
+            Inspect ↗
+          </button>
+        </div>
+        <div class="mpc-mid">
+          <span class="signal-tag emerald">
+            <span class="tag-icon"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span> 18 Eng Hires (SOC-2)
+          </span>
+          <div class="sla-badge green">
+            <span class="sla-dot"></span>
+            <span>99.9%</span>
+            <span class="sla-mx">MS 365</span>
+          </div>
+        </div>
+        <div class="mpc-bottom">
+          <div class="dm-cell">
+            <span class="dm-name">Alex Rivera</span>
+            <span class="dm-title">Head of Infra &amp; SecOps</span>
+          </div>
+          <span class="pipeline-status-pill booked">
+            <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg> Meeting Confirmed
+          </span>
+        </div>
+      </div>
+
+      <!-- Card 3: Supabase -->
+      <div class="mobile-pipeline-card" onclick="syncTableWithHero('supabase')">
+        <div class="mpc-top">
+          <div class="co-cell">
+            <div class="co-avatar" style="background:linear-gradient(135deg, #059669, #10B981); color:#fff; font-weight:800; font-size:11px;">SB</div>
+            <div class="co-meta">
+              <span class="co-name">Supabase</span>
+              <span class="co-sub">Open Source DB • 80+ Devs</span>
+            </div>
+          </div>
+          <button type="button" class="btn-table-inspect" onclick="event.stopPropagation(); syncTableWithHero('supabase')">
+            Inspect ↗
+          </button>
+        </div>
+        <div class="mpc-mid">
+          <span class="signal-tag amber">
+            <span class="tag-icon"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span> M Series B Growth
+          </span>
+          <div class="sla-badge green">
+            <span class="sla-dot"></span>
+            <span>99.7%</span>
+            <span class="sla-mx">Quarantined</span>
+          </div>
+        </div>
+        <div class="mpc-bottom">
+          <div class="dm-cell">
+            <span class="dm-name">Paul Copplestone</span>
+            <span class="dm-title">CEO &amp; Co-Founder</span>
+          </div>
+          <span class="pipeline-status-pill outbox">
+            <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Outbox Gate Armed
+          </span>
+        </div>
+      </div>
+
+      <!-- Button to Open Full Bottom Sheet Drawer -->
+      <button type="button" class="btn-open-mobile-drawer" onclick="openMobilePipelineDrawer()">
+        <span>📂</span> View All 15 Intercepts (Full Telemetry Drawer) ↗
+      </button>
+    </div>
+
     <div class="live-pipeline-table-wrap">
       <table class="live-pipeline-table">
         <thead>
@@ -2382,6 +2514,100 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="/static/app.js?v=trackkaro_live_sim_v12"></script>
 
 </div>
+
+
+<!-- Mobile Pipeline Drawer (iOS Bottom Sheet Style) -->
+<div id="mobile-pipeline-drawer" class="pipeline-drawer-overlay" onclick="handlePipelineDrawerBackdrop(event)">
+  <div class="pipeline-drawer-sheet" onclick="event.stopPropagation()">
+    <div class="drawer-drag-pill"></div>
+    <div class="drawer-header">
+      <div class="drawer-badge">
+        <span class="live-pulse-dot"></span>
+        <span>LIVE TELEMETRY STREAM • 15 INTERCEPTS</span>
+      </div>
+      <h3 class="drawer-title">Intercepted Target Accounts</h3>
+      <p class="drawer-sub">Continuous 23-signal radar monitoring, MX verification &amp; 1-to-1 bespoke angles</p>
+      <button class="btn-drawer-close" onclick="closeMobilePipelineDrawer()" title="Close Drawer">✕</button>
+    </div>
+    <div class="drawer-cards-list">
+      <!-- Item 1: Ramp -->
+      <div class="drawer-item-card" onclick="syncTableWithHero('agency'); closeMobilePipelineDrawer();">
+        <div class="mpc-top">
+          <div class="co-cell">
+            <div class="co-avatar grad-ramp">RP</div>
+            <div class="co-meta"><span class="co-name">Ramp Technologies</span><span class="co-sub">B Platform • 800+ Team</span></div>
+          </div>
+          <span class="btn-table-inspect">Inspect ↗</span>
+        </div>
+        <div class="mpc-mid">
+          <span class="signal-tag coral">Scaled Ads +140%</span>
+          <span class="sla-badge green">99.8% Google MX</span>
+        </div>
+      </div>
+
+      <!-- Item 2: Brex -->
+      <div class="drawer-item-card" onclick="syncTableWithHero('saas'); closeMobilePipelineDrawer();">
+        <div class="mpc-top">
+          <div class="co-cell">
+            <div class="co-avatar grad-brex">BX</div>
+            <div class="co-meta"><span class="co-name">Brex Inc.</span><span class="co-sub">Enterprise Spend • 1,200+ Team</span></div>
+          </div>
+          <span class="btn-table-inspect">Inspect ↗</span>
+        </div>
+        <div class="mpc-mid">
+          <span class="signal-tag emerald">18 Eng Hires (SOC-2)</span>
+          <span class="sla-badge green">99.9% MS 365</span>
+        </div>
+      </div>
+
+      <!-- Item 3: FinTech Corp -->
+      <div class="drawer-item-card" onclick="syncTableWithHero('saas'); closeMobilePipelineDrawer();">
+        <div class="mpc-top">
+          <div class="co-cell">
+            <div class="co-avatar" style="background:#1E293B; color:#fff;">FT</div>
+            <div class="co-meta"><span class="co-name">FinTech Corp</span><span class="co-sub">Core Banking • M Raised</span></div>
+          </div>
+          <span class="btn-table-inspect">Inspect ↗</span>
+        </div>
+        <div class="mpc-mid">
+          <span class="signal-tag cobalt">AWS Modernization RFP</span>
+          <span class="sla-badge green">99.8% Google MX</span>
+        </div>
+      </div>
+
+      <!-- Item 4: Retool -->
+      <div class="drawer-item-card" onclick="syncTableWithHero('saas'); closeMobilePipelineDrawer();">
+        <div class="mpc-top">
+          <div class="co-cell">
+            <div class="co-avatar" style="background:#6366F1; color:#fff;">RT</div>
+            <div class="co-meta"><span class="co-name">Retool</span><span class="co-sub">Developer Ops • .2B Valuation</span></div>
+          </div>
+          <span class="btn-table-inspect">Inspect ↗</span>
+        </div>
+        <div class="mpc-mid">
+          <span class="signal-tag purple">Enterprise Expansion</span>
+          <span class="sla-badge amber">Handshake In Progress</span>
+        </div>
+      </div>
+
+      <!-- Item 5: Supabase -->
+      <div class="drawer-item-card" onclick="syncTableWithHero('supabase'); closeMobilePipelineDrawer();">
+        <div class="mpc-top">
+          <div class="co-cell">
+            <div class="co-avatar" style="background:#10B981; color:#fff;">SB</div>
+            <div class="co-meta"><span class="co-name">Supabase</span><span class="co-sub">Open Source DB • 80+ Devs</span></div>
+          </div>
+          <span class="btn-table-inspect">Inspect ↗</span>
+        </div>
+        <div class="mpc-mid">
+          <span class="signal-tag amber">M Series B Growth</span>
+          <span class="sla-badge green">99.7% Quarantined</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- Modal: 23 Buying Intent Signals Explorer (Warm Light Editorial) -->
 <div id="signals-explorer-modal" class="modal-overlay" onclick="handleSignalsBackdropClick(event)">
