@@ -3357,26 +3357,22 @@ window.addEventListener('click', (e) => {
 
 <!-- Modal: Login / Workspace Access -->
 <div id="auth-modal-popup" class="modal-overlay">
-  <div class="modal-box" style="max-width: 400px; padding: 26px;">
+  <div class="modal-box" style="max-width: 380px; padding: 26px;">
     <div class="modal-header-row" style="margin-bottom: 14px;">
       <div>
         <h3 style="font-size:17px; font-weight:700; color:#FFFFFF; margin-bottom:4px;">Operator Cockpit Gate</h3>
-        <p style="font-size:12px; color:#94A3B8;">Enter operator credentials to unlock internal pipeline engine</p>
+        <p style="font-size:12px; color:#94A3B8;">Enter master passcode to unlock Jarvis OS</p>
       </div>
       <button class="btn-close-modal" onclick="closeLoginModal()">✕</button>
     </div>
 
     <form onsubmit="handleLoginSubmit(event)">
-      <div class="auth-input-group" style="margin-bottom:12px;">
-        <label class="auth-label">Operator Email</label>
-        <input type="email" id="operator-email-input" class="auth-input" value="mangal@trackkaroai.com" required>
-      </div>
-      <div class="auth-input-group" style="margin-bottom:12px;">
-        <label class="auth-label">Access Password</label>
-        <input type="password" id="operator-password-input" class="auth-input" placeholder="Enter password..." required autofocus>
+      <div class="auth-input-group" style="margin-bottom:14px;">
+        <label class="auth-label">Access Passcode</label>
+        <input type="password" id="operator-password-input" class="auth-input" placeholder="Enter operator passcode..." required autofocus autocomplete="current-password">
       </div>
       <div id="operator-auth-error" style="display:none; color:#EF4444; font-size:12px; margin-bottom:12px; font-weight:500;">
-        ⚠️ Invalid password. Access restricted to authorized operators.
+        ⚠️ Invalid passcode. Access restricted.
       </div>
       <button type="submit" class="btn-enter-workspace" style="width:100%; justify-content:center; padding:11px 18px; font-size:13px;">Unlock Operator OS →</button>
     </form>
