@@ -1814,7 +1814,14 @@ WEB_DIR = (Path(__file__).resolve().parent / "web")
 
 
 TEXT_TYPES = {".css": "text/css", ".js": "text/javascript", ".svg": "image/svg+xml"}
-BINARY_TYPES = {".woff2": "font/woff2", ".woff": "font/woff", ".png": "image/png"}
+BINARY_TYPES = {
+    ".woff2": "font/woff2",
+    ".woff": "font/woff",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".webp": "image/webp",
+}
 
 
 @app.get("/static/{path:path}")
