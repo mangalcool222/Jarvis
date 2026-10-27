@@ -1037,7 +1037,7 @@ async def prospect_instant_url(request: Request):
                 f"You can test our live 30-second simulation here:\n"
                 f"👉 https://trackkaroai.com\n\n"
                 f"Would you be open to a 5-minute teardown of your current lead response time this week?\n\n"
-                f"Best,\nMangal Soren\nLead Automation | TrackKaro AI"
+                f"Best,\nMangal Soren\nLead Automation | TrackKaro AI\nhttps://trackkaroai.com"
             )
 
             # Check if pending outbox item exists for this email

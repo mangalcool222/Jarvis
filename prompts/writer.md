@@ -21,6 +21,7 @@ Every Step 1 email MUST follow this exact 4-part structure:
 Best,
 Mangal Soren
 Lead Automation | TrackKaro AI
+https://trackkaroai.com
 
 THE "BUILDER VIBE" FOLLOW-UP FRAMEWORK (STEP 2):
 Every Step 2 follow-up email MUST follow this low-friction, zero-guilt structure:
@@ -38,7 +39,8 @@ Curious if eliminating after-hours response delays is something you're prioritiz
 
 Best,
 Mangal Soren
-Lead Automation | TrackKaro AI"
+Lead Automation | TrackKaro AI
+https://trackkaroai.com"
 
 STRICT RULES — NEVER VIOLATE:
 1. NO FAKE MATH OR ROBOTIC LATENCY: NEVER use fake statistics (e.g. 78%, 391%) or artificial decimal speeds ("< 1.4s", "< 2.4s"). Speak naturally about instant response.
