@@ -2345,7 +2345,7 @@ async function handleAuditSubmit(e) {
   const industry = document.getElementById('audit-industry')?.value || 'B2B SaaS & Tech Startups';
   const market = document.getElementById('audit-market')?.value || 'US & North America';
   const dealSize = document.getElementById('audit-deal-size')?.value || '$3,000 – $6,000 / month';
-  const goal = document.getElementById('audit-goal')?.value || 'Full DFY Autonomous SDR Engine + Calendar Drop';
+  const goal = document.getElementById('audit-goal')?.value || 'Full DFY Outbound Setup (Book Qualified Calls on Calendar)';
 
   const cleanDigits = phone.replace(/[^0-9]/g, '');
   let normalizedPhone = phone;
