@@ -2500,20 +2500,46 @@ async function handleAuditSubmit(e) {
     lead_source: 'Jarvis Outbound OS (jarvis.trackkaroai.com)',
     property_interest: 'JARVIS OUTBOUND AUDIT: ' + company + ' [' + industry + '] (Target: ' + market + ') (Deal: ' + dealSize + ') (' + goal + ')',
     budget: dealSize + ' • Target Market: ' + market + ' • Goal: ' + goal,
+    admin_notification_email: 'mangalsoren176@gmail.com',
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata',
     locale: typeof navigator !== 'undefined' ? (navigator.language || 'en-IN') : 'en-IN',
     status: 'REAL_JARVIS_OUTBOUND_AUDIT_INQUIRY'
   };
 
+  // 1. Dispatch to n8n Webhook
+  const n8nPromise = fetch('https://n8n.trackkaroai.com/webhook/gtm-agency-lead-inbound', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  // 2. Direct Instant Email Dispatch to mangalsoren176@gmail.com (FormSubmit AJAX)
+  const emailPromise = fetch('https://formsubmit.co/ajax/mangalsoren176@gmail.com', {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      _subject: `🤖 New Jarvis Outbound Audit: ${name} (${company})`,
+      _template: 'table',
+      'Contact Name': name,
+      'Company / Brand': company,
+      'WhatsApp Phone': normalizedPhone,
+      'Work Email': email,
+      'Primary Industry': industry,
+      'Target Geography / Market': market,
+      'Target Deal Size / Retainer': dealSize,
+      'Primary Outbound Goal': goal,
+      'Source': 'Jarvis AI SDR (jarvis.trackkaroai.com)',
+      'Submitted At': new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+    })
+  });
+
   try {
-    const res = await fetch('https://n8n.trackkaroai.com/webhook/gtm-agency-lead-inbound', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    console.log('n8n ingestion response:', res.status);
+    await Promise.allSettled([n8nPromise, emailPromise]);
   } catch (err) {
-    console.log('Webhook dispatched with optimistic fallback:', err);
+    console.log('Ingestion settled with fallback:', err);
   }
 
   // Show success card
