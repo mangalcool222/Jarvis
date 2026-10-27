@@ -602,6 +602,26 @@ async def find_email(
 
     status, catch_all = await _verify_candidate(candidate, mx_type, env)
 
+    # If primary pattern was invalid on a real domain, test top alternatives ({fi}{l}, {f})
+    if status == "invalid" and not catch_all and (getattr(env, "reoon_api_key", "") or getattr(env, "zerobounce_api_key", "")):
+        for alt_pat in ("{fi}{l}", "{f}"):
+            if alt_pat == pattern:
+                continue
+            alt_candidate = build_email(alt_pat, first_name, last_name, domain)
+            alt_status, _ = await _verify_candidate(alt_candidate, mx_type, env)
+            if alt_status == "verified":
+                candidate = alt_candidate
+                status = "verified"
+                pattern = alt_pat
+                if state is not None:
+                    try:
+                        await state.save_email_pattern(
+                            domain, pattern=alt_pat, source="verified_alt", confidence=1.0, mx_type=mx_type
+                        )
+                    except Exception:
+                        pass
+                break
+
     if catch_all and state is not None:
         try:
             await state.save_email_pattern(domain, mx_type=mx_type, is_catch_all=1)

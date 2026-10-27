@@ -1,3 +1,6 @@
+brain:
+  provider: "gemini"
+
 persona:
   name: "Mangal Soren"
   company: "TrackKaro AI"
@@ -32,25 +35,25 @@ product:
 
 icp:
   industries:
-    - "B2B Marketing & Growth Agencies"
-    - "Performance Creative & Ad Agencies"
-    - "B2B SaaS ($1M-$10M ARR)"
-    - "High-Ticket Consulting & Advisory"
-    - "Custom Software Development & Dev Agencies"
-    - "Recruitment & Executive Search Firms"
+    - "B2B Marketing Agency"
+    - "B2B SaaS"
+    - "Performance Creative Agency"
+    - "Custom Software Dev Agency"
+    - "Growth Agency"
+    - "High-Ticket Consulting"
   company_size: "5-100 employees"
   titles:
-    - "Founder & CEO"
+    - "Founder"
+    - "CEO"
     - "Managing Partner"
     - "Co-Founder"
     - "Head of Growth"
     - "VP Sales"
     - "Chief Revenue Officer"
-    - "Director of Business Development"
   geography:
     - "United States"
     - "United Kingdom"
-    - "Dubai, UAE"
+    - "Dubai"
     - "Canada"
     - "Australia"
   hiring_signals:

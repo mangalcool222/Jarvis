@@ -2419,4 +2419,581 @@ function resetAuditForm() {
   goToAuditStep(1);
 }
 
+// ══════════════════════════════════════════════════════════════
+// 🚀 TRACKKARO OUTBOUND LIVE SIMULATOR CONTROLLER (60 FPS)
+// ══════════════════════════════════════════════════════════════
+
+const SIM_DATA = {
+  agency: {
+    tabId: "agency",
+    contextBadge: "Deploying Outbound Engine For: <strong>[ Your Agency Pipeline ]</strong> • Closing Ramp ($8B Fintech)",
+    icpName: "Apex Growth Agency",
+    icpSub: "Your Agency",
+    avatar: "SJ",
+    avatarGrad: "linear-gradient(135deg, #FF6B6B, #8B5CF6)",
+    leadName: "Sarah Jenkins",
+    leadRole: "VP Growth & Acquisition",
+    companyInfo: "Ramp Technologies • $8B Corporate Spend Platform • 800+ Team",
+    radarMeta: "Google Search Radar • Meta Ad Library Signals",
+    signalTitle: "Paid Acquisition Scaling (+140%)",
+    signalText: "Ad Scale Spike: Ramp launched 45 new creative variations and scaled monthly digital ad spend by +140%.",
+    citationBody: "Verified via Meta Ad Library & Google Ads Radar. Detected 45 new active acquisition angles deployed across enterprise finance. Confidence: 99.4%.",
+    telCmd: "GET /v1/ad-library/ramp",
+    telRes: "200 OK (24ms)",
+    radarScore: "Confidence 99.1% • High Agency Budget Allocation",
+    verifiedEmail: "sarah.jenkins@ramp.com",
+    mxProvider: "aspmx.l.google.com (Google Workspace)",
+    shieldScore: "Score: 99.8% • 0% Bounce Risk",
+    emailTo: "sarah.jenkins@ramp.com",
+    emailSub: "Scaling Ramp's paid creative ROAS post-expansion",
+    emailBodyHtml: "Hey Sarah,<br><br>Saw Ramp scaling <mark class=\"sim-signal-highlight\">paid acquisition channels by +140% this quarter</mark>. Creative fatigue usually bottlenecks scale when in-house teams manually test variants and hit diminishing ROAS.<br><br>We built an agile creative testing framework that cut customer acquisition costs by 34% for venture-backed scaleups. Worth a quick 5-min look at the performance breakdowns on Thursday?",
+    emailBodyRehookHtml: "Sarah, saw Ramp's massive paid ads push this month.<br><br>Instead of your in-house team burning hours on manual creative iteration, we scale qualified B2B customer acquisition on pure performance.<br><br>Have 4 mins this Thursday?",
+    tzText: "Timezone Window Armed: Scheduled for 10:30 AM EST (Prospect Working Hours)",
+    replyAuthor: "Sarah Jenkins",
+    replyText: "“Loved your breakdown citing our recent ad scale. Super timely. Let's do a quick intro call Thursday at 3:00 PM!”",
+    calDay: "THU",
+    calDate: "29",
+    calTitle: "Apex Growth ✕ Ramp Performance Review",
+    calAttendees: "Sarah Jenkins (VP Growth) + You (Agency Founder)",
+    calTime: "⏰ 3:00 PM - 3:30 PM EST"
+  },
+  saas: {
+    tabId: "saas",
+    contextBadge: "Deploying Outbound Engine For: <strong>[ Your B2B SaaS Pipeline ]</strong> • Closing Brex (1,200+ Team)",
+    icpName: "CloudScale AI",
+    icpSub: "Your SaaS Company",
+    avatar: "AR",
+    avatarGrad: "linear-gradient(135deg, #00E599, #059669)",
+    leadName: "Alex Rivera",
+    leadRole: "Head of Infrastructure & SecOps",
+    companyInfo: "Brex Inc. • Enterprise Financial OS • 1,200+ Employees",
+    radarMeta: "LinkedIn Talent Insights • GitHub Enterprise",
+    signalTitle: "Engineering Headcount Surge",
+    signalText: "Security Scaling Signal: Brex hired 18 backend engineers & announced enterprise SOC-2 compliance sprint.",
+    citationBody: "Qualified from LinkedIn Talent Insights & GitHub Enterprise. High intent for automated compliance auditing and cloud access policies. Confidence: 99.2%.",
+    telCmd: "GET /v1/talent/brex/infra",
+    telRes: "200 OK (29ms)",
+    radarScore: "Confidence 99.2% • Active Enterprise Software Need",
+    verifiedEmail: "alex.rivera@brex.com",
+    mxProvider: "mail.brex.com (Cloudflare / Microsoft 365)",
+    shieldScore: "Score: 99.9% • 0% Bounce Risk",
+    emailTo: "alex.rivera@brex.com",
+    emailSub: "Automating SOC-2 compliance for Brex's 18 new eng hires",
+    emailBodyHtml: "Hey Alex,<br><br>Noticed Brex just added <mark class=\"sim-signal-highlight\">18 backend engineers for the enterprise SOC-2 sprint</mark>. As engineering headcount scales upstream, managing cloud access policies and audit logs manually creates massive security friction.<br><br>Our platform automates identity auditing and SOC-2 evidence continuous sync in real time. Open to a 5-min look on Tuesday?",
+    emailBodyRehookHtml: "Alex, congrats on Brex scaling the engineering team.<br><br>We automate continuous SOC-2 audit evidence for high-growth dev teams without slowing down deployment velocity.<br><br>Have 4 mins on Tuesday?",
+    tzText: "Timezone Window Armed: Scheduled for 11:00 AM PST via Dedicated Mailbox",
+    replyAuthor: "Alex Rivera",
+    replyText: "“Impressive context on our SOC-2 sprint. Our SecOps team needs this right now. Let's do Tuesday at 11:00 AM.”",
+    calDay: "TUE",
+    calDate: "03",
+    calTitle: "Enterprise SecOps Architecture Demo",
+    calAttendees: "Alex Rivera (Head of Infra) + Your Sales Team",
+    calTime: "⏰ 11:00 AM - 11:30 AM PST"
+  },
+  devstudio: {
+    tabId: "devstudio",
+    contextBadge: "Deploying Outbound Engine For: <strong>[ Your Dev Studio Pipeline ]</strong> • Closing $50k Bank RFP",
+    icpName: "CodeCraft Studio",
+    icpSub: "Your Dev Studio",
+    avatar: "DC",
+    avatarGrad: "linear-gradient(135deg, #3B82F6, #1D4ED8)",
+    leadName: "David Chen",
+    leadRole: "Chief Technology Officer",
+    companyInfo: "FinTech Corp • Digital Banking Platform • $40M Raised",
+    radarMeta: "BuiltWith Radar • Public RFP Procurement Wire",
+    signalTitle: "Cloud Modernization RFP Active",
+    signalText: "Cloud Migration Signal: Published active enterprise RFP for AWS Cloud Architecture & Core Banking Modernization.",
+    citationBody: "Parsed from BuiltWith & Public RFP Procurement Wire. Validated $50k+ technical modernization initiative for AWS microservices. Confidence: 98.9%.",
+    telCmd: "GET /v1/rfp/fintech-cloud",
+    telRes: "200 OK (36ms)",
+    radarScore: "Confidence 98.8% • $50k+ Custom Contract Intent",
+    verifiedEmail: "david.chen@fintechcorp.io",
+    mxProvider: "aspmx.l.google.com (Google Workspace)",
+    shieldScore: "Score: 99.8% • 0% Bounce Risk",
+    emailTo: "david.chen@fintechcorp.io",
+    emailSub: "AWS cloud microservices modernization for FinTech Corp",
+    emailBodyHtml: "Hey David,<br><br>Saw your team's initiative to <mark class=\"sim-signal-highlight\">modernize core banking infrastructure to AWS microservices</mark> this quarter. High-ticket custom migrations usually stall when internal engineers get bogged down maintaining legacy systems.<br><br>Our dev studio delivers dedicated senior cloud architect pods to execute fintech migrations with zero downtime. Worth a 5-min review on Wednesday?",
+    emailBodyRehookHtml: "David, saw your active AWS microservices modernization initiative.<br><br>We deploy senior engineering pods to execute complex fintech cloud migrations with zero downtime.<br><br>Have 5 mins on Wednesday?",
+    tzText: "Timezone Window Armed: Scheduled for 2:30 PM EST (Prospect Peak Window)",
+    replyAuthor: "David Chen",
+    replyText: "“Spot on timing. We're actively evaluating senior engineering partners for this migration. Wednesday 4:00 PM confirmed.”",
+    calDay: "WED",
+    calDate: "04",
+    calTitle: "AWS Core Banking Modernization Scoping",
+    calAttendees: "David Chen (CTO) + Your Dev Partner",
+    calTime: "⏰ 4:00 PM - 4:30 PM EST"
+  },
+  retool: {
+    tabId: "retool",
+    contextBadge: "Deploying Outbound Engine For: <strong>[ Enterprise SaaS Pipeline ]</strong> • Closing Retool ($3.2B Scaleup)",
+    icpName: "Enterprise Tier Expansion",
+    icpSub: "Your SaaS",
+    avatar: "RT",
+    avatarGrad: "linear-gradient(135deg, #8B5CF6, #6366F1)",
+    leadName: "Kavitha S.",
+    leadRole: "VP of Engineering",
+    companyInfo: "Retool • Developer Operations Platform • $3.2B Valuation",
+    radarMeta: "LinkedIn Talent Insights • Product Tier Launch",
+    signalTitle: "Enterprise Tier Expansion",
+    signalText: "Enterprise Expansion Signal: Retool launched dedicated on-premise Kubernetes deployment tier for Fortune 500 accounts.",
+    citationBody: "Detected via Product Tier Launch & LinkedIn Talent. Validated high-priority enterprise compliance need for on-premise Kubernetes. Confidence: 99.1%.",
+    telCmd: "GET /v1/product/retool-enterprise",
+    telRes: "200 OK (22ms)",
+    radarScore: "Confidence 99.1% • High-Value Enterprise Account",
+    verifiedEmail: "kavitha.s@retool.com",
+    mxProvider: "aspmx.l.google.com (Google Workspace)",
+    shieldScore: "Score: 99.6% • 0% Bounce Risk",
+    emailTo: "kavitha.s@retool.com",
+    emailSub: "Dedicated Kubernetes enterprise compliance for Retool",
+    emailBodyHtml: "Hey Kavitha,<br><br>Saw Retool's launch of the <mark class=\"sim-signal-highlight\">dedicated on-premise Kubernetes tier for Fortune 500 teams</mark>. Scaling self-hosted enterprise infrastructure usually creates massive friction when internal teams handle air-gapped security audits manually.<br><br>We automate SOC-2 and HIPAA air-gapped compliance auditing for dev-first platforms. Worth a quick 5-min look on Thursday?",
+    emailBodyRehookHtml: "Kavitha, saw Retool's enterprise on-premise launch.<br><br>We automate air-gapped security compliance for dev scaleups without slowing down deployment velocity.<br><br>Have 4 mins Thursday?",
+    tzText: "Timezone Window Armed: Scheduled for 10:00 AM PST (Prospect Morning Window)",
+    replyAuthor: "Kavitha S.",
+    replyText: "“Super relevant timing with our on-premise rollout. Let's do Thursday 2:00 PM.”",
+    calDay: "THU",
+    calDate: "05",
+    calTitle: "Retool On-Premise Architecture Review",
+    calAttendees: "Kavitha S. (VP Eng) + Your Sales Team",
+    calTime: "⏰ 2:00 PM - 2:30 PM EST"
+  },
+  supabase: {
+    tabId: "supabase",
+    contextBadge: "Deploying Outbound Engine For: <strong>[ Dev Tools Pipeline ]</strong> • Pitching Supabase ($30M Series B)",
+    icpName: "Series B Growth Outreach",
+    icpSub: "Your Outbound Engine",
+    avatar: "PC",
+    avatarGrad: "linear-gradient(135deg, #10B981, #047857)",
+    leadName: "Paul Copplestone",
+    leadRole: "CEO & Co-founder",
+    companyInfo: "Supabase • Open Source Firebase Alternative • 80+ Devs",
+    radarMeta: "Crunchbase Funding Wire • TechCrunch",
+    signalTitle: "$30M Series B Expansion Round",
+    signalText: "Funding Velocity: Closed $30M Series B led by Coatue to accelerate enterprise cloud database scaling.",
+    citationBody: "Verified via Crunchbase Wire & TechCrunch. Validated $30M Series B expansion round led by Coatue. High intent for enterprise pipeline architecture. Confidence: 99.7%.",
+    telCmd: "GET /v1/funding/supabase-series-b",
+    telRes: "200 OK (31ms)",
+    radarScore: "Confidence 99.7% • Validated $30M Expansion Round",
+    verifiedEmail: "paul@supabase.com",
+    mxProvider: "aspmx.l.google.com (Google Workspace)",
+    shieldScore: "Score: 99.7% • Catch-All Quarantined",
+    emailTo: "paul@supabase.com",
+    emailSub: "Enterprise pipeline architecture post-Series B",
+    emailBodyHtml: "Hey Paul,<br><br>Huge congratulations on <mark class=\"sim-signal-highlight\">Supabase's $30M Series B expansion</mark>. As open-source dev platforms scale upstream to enterprise accounts, sales engineering teams struggle to convert cloud developer spikes into contract renewals.<br><br>We deploy autonomous outbound pipelines that turn developer product usage signals into qualified enterprise demo pipeline. Have 5 mins next Tuesday?",
+    emailBodyRehookHtml: "Paul, congrats on the $30M Series B.<br><br>We turn developer product signals into enterprise contract pipeline for fast-scaling dev tools.<br><br>Have 4 mins next Tuesday?",
+    tzText: "Timezone Window Armed: Scheduled for 1:30 PM PST (Prospect Peak Response Time)",
+    replyAuthor: "Paul Copplestone",
+    replyText: "“Sharp timing on our enterprise cloud scaling push. Let's do a quick intro call Tuesday at 4:00 PM.”",
+    calDay: "TUE",
+    calDate: "10",
+    calTitle: "Supabase Enterprise Pipeline Strategy",
+    calAttendees: "Paul Copplestone (CEO) + You (Outbound Partner)",
+    calTime: "⏰ 4:00 PM - 4:30 PM PST"
+  }
+};
+
+let simCurrentICP = 'agency';
+let simCurrentStep = 1;
+let simIsPlaying = true;
+let simTimerInterval = null;
+let simProgressPercent = 0;
+const SIM_STEP_DURATION_MS = 4500;
+const SIM_TICK_MS = 50;
+
+let simTypewriterTimer = null;
+let simApproveTimer = null;
+let simDraftApproved = false;
+let simIsRehooked = false;
+
+function selectSimICP(icpKey) {
+  if (!SIM_DATA[icpKey]) return;
+  simCurrentICP = icpKey;
+  simIsRehooked = false;
+  
+  document.querySelectorAll('.sim-icp-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.icp === icpKey);
+  });
+
+  // Sync Live Pipeline Table Active Highlight
+  document.querySelectorAll('.pipeline-row').forEach(row => {
+    row.classList.toggle('active-row', row.id === 'p-row-' + icpKey);
+  });
+  
+  renderSimData();
+  resetSimTimer();
+}
+
+function syncTableWithHero(icpKey) {
+  selectSimICP(icpKey);
+  const heroCard = document.getElementById('live-simulator');
+  if (heroCard) {
+    heroCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function renderSimData() {
+  const d = SIM_DATA[simCurrentICP];
+  if (!d) return;
+
+  const ctxText = document.getElementById('sim-context-text');
+  if (ctxText && d.contextBadge) {
+    ctxText.innerHTML = d.contextBadge;
+  }
+
+  const avatar = document.getElementById('sim-avatar');
+  if (avatar) {
+    avatar.textContent = d.avatar;
+    avatar.style.background = d.avatarGrad;
+  }
+  const nameEl = document.getElementById('sim-lead-name');
+  if (nameEl) nameEl.textContent = d.leadName;
+  const roleEl = document.getElementById('sim-lead-role');
+  if (roleEl) roleEl.textContent = d.leadRole;
+  const compEl = document.getElementById('sim-company-info');
+  if (compEl) compEl.textContent = d.companyInfo;
+  const radMeta = document.getElementById('sim-radar-meta');
+  if (radMeta) radMeta.textContent = d.radarMeta;
+  const sigTitle = document.getElementById('sim-signal-title');
+  if (sigTitle) sigTitle.textContent = d.signalTitle;
+  const sigText = document.getElementById('sim-signal-text');
+  if (sigText) sigText.textContent = d.signalText;
+  const citBody = document.getElementById('sim-citation-body');
+  if (citBody) citBody.textContent = d.citationBody;
+  const telCmd = document.getElementById('sim-tel-cmd');
+  if (telCmd) telCmd.textContent = d.telCmd;
+  const telRes = document.getElementById('sim-tel-res');
+  if (telRes) telRes.textContent = d.telRes;
+  const radScore = document.getElementById('sim-radar-score');
+  if (radScore) radScore.textContent = d.radarScore;
+
+  const verEmail = document.getElementById('sim-verified-email');
+  if (verEmail) verEmail.textContent = d.verifiedEmail;
+  const mxProv = document.getElementById('sim-mx-provider');
+  if (mxProv) mxProv.textContent = d.mxProvider;
+  const shScore = document.getElementById('sim-shield-score');
+  if (shScore) shScore.textContent = d.shieldScore;
+
+  const emTo = document.getElementById('sim-email-to');
+  if (emTo) emTo.textContent = d.emailTo;
+  const emSub = document.getElementById('sim-email-sub');
+  if (emSub) emSub.textContent = d.emailSub;
+  const emBody = document.getElementById('sim-email-body');
+  if (emBody && simCurrentStep !== 3) emBody.innerHTML = d.emailBodyHtml;
+
+  const repAuth = document.getElementById('sim-reply-author');
+  if (repAuth) repAuth.textContent = d.replyAuthor;
+  const repText = document.getElementById('sim-reply-text');
+  if (repText) repText.textContent = d.replyText;
+  const calDay = document.getElementById('sim-cal-day');
+  if (calDay) calDay.textContent = d.calDay;
+  const calDate = document.getElementById('sim-cal-date');
+  if (calDate) calDate.textContent = d.calDate;
+  const calTitle = document.getElementById('sim-cal-title');
+  if (calTitle) calTitle.textContent = d.calTitle;
+  const calAtt = document.getElementById('sim-cal-attendees');
+  if (calAtt) calAtt.textContent = d.calAttendees;
+  const calTime = document.getElementById('sim-cal-time');
+  if (calTime) calTime.textContent = d.calTime;
+
+  resetOutboxButtons();
+}
+
+function typewriteEmailBody(htmlString, callback) {
+  const container = document.getElementById('sim-email-body');
+  if (!container) return;
+  if (simTypewriterTimer) {
+    clearInterval(simTypewriterTimer);
+    simTypewriterTimer = null;
+  }
+
+  // Tokenize HTML: keep tags intact, characters single
+  const tokens = [];
+  const regex = /(<[^>]+>|[^<])/g;
+  let match;
+  while ((match = regex.exec(htmlString)) !== null) {
+    tokens.push(match[0]);
+  }
+
+  container.innerHTML = '<span class="sim-typing-cursor">|</span>';
+  let curIndex = 0;
+  let accumulated = '';
+
+  simTypewriterTimer = setInterval(() => {
+    if (curIndex >= tokens.length) {
+      clearInterval(simTypewriterTimer);
+      simTypewriterTimer = null;
+      container.innerHTML = htmlString;
+      if (typeof callback === 'function') callback();
+      return;
+    }
+    const step = Math.min(3, tokens.length - curIndex);
+    for (let s = 0; s < step; s++) {
+      accumulated += tokens[curIndex++];
+    }
+    container.innerHTML = accumulated + '<span class="sim-typing-cursor">|</span>';
+  }, 16);
+}
+
+function resetOutboxButtons() {
+  simDraftApproved = false;
+  simIsRehooked = false;
+  if (simApproveTimer) {
+    clearTimeout(simApproveTimer);
+    simApproveTimer = null;
+  }
+  const btnApprove = document.getElementById('sim-btn-approve');
+  const btnReject = document.getElementById('sim-btn-reject');
+  const btnRehook = document.getElementById('sim-btn-rehook');
+  const tzBox = document.getElementById('sim-tz-box');
+  const tzText = document.getElementById('sim-tz-text');
+  const d = SIM_DATA[simCurrentICP];
+
+  if (btnApprove) {
+    btnApprove.classList.remove('approved');
+    btnApprove.disabled = false;
+    btnApprove.innerHTML = '<span>✓ 1-Click Approve</span>';
+  }
+  if (btnReject) {
+    btnReject.disabled = false;
+    btnReject.innerHTML = '✕ Reject';
+  }
+  if (btnRehook) {
+    btnRehook.classList.remove('active-rehook');
+    btnRehook.disabled = false;
+    btnRehook.innerHTML = '🔄 Re-hook';
+  }
+  if (tzBox) {
+    tzBox.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+    tzBox.style.background = 'rgba(8, 11, 20, 0.7)';
+  }
+  if (tzText && d) {
+    tzText.textContent = d.tzText || "Timezone Window Armed: Scheduled for 10:30 AM (Prospect Local Time)";
+  }
+}
+
+function handleSimDraftRehook(e) {
+  if (e) e.stopPropagation();
+  simIsRehooked = !simIsRehooked;
+  const btnRehook = document.getElementById('sim-btn-rehook');
+  const d = SIM_DATA[simCurrentICP];
+  if (!d) return;
+
+  if (btnRehook) {
+    btnRehook.classList.toggle('active-rehook', simIsRehooked);
+    btnRehook.innerHTML = simIsRehooked ? '🔄 Original Hook' : '🔄 Re-hook';
+  }
+
+  const targetBody = simIsRehooked ? (d.emailBodyRehookHtml || d.emailBodyHtml) : d.emailBodyHtml;
+  typewriteEmailBody(targetBody);
+}
+
+function handleSimDraftApprove(e) {
+  if (e) e.stopPropagation();
+  if (simDraftApproved) return;
+  simDraftApproved = true;
+
+  const btnApprove = document.getElementById('sim-btn-approve');
+  const tzBox = document.getElementById('sim-tz-box');
+  const tzText = document.getElementById('sim-tz-text');
+
+  if (btnApprove) {
+    btnApprove.classList.add('approved');
+    btnApprove.innerHTML = '<span>✓ Approved &amp; Queued!</span>';
+    btnApprove.disabled = true;
+  }
+  if (tzBox) {
+    tzBox.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+    tzBox.style.background = 'rgba(16, 185, 129, 0.12)';
+  }
+  if (tzText) {
+    tzText.innerHTML = '<strong style="color:#34D399;">Queued for Prospect Local Hours</strong> • Dispatched via Dedicated Mailbox';
+  }
+
+  // Exactly 1.5s after approval pulse, automatically transition to Stage 4 (Calendar Drop)
+  if (simApproveTimer) clearTimeout(simApproveTimer);
+  simApproveTimer = setTimeout(() => {
+    if (simCurrentStep === 3) {
+      setSimStep(4);
+    }
+  }, 1500);
+}
+
+function handleSimDraftReject(e) {
+  if (e) e.stopPropagation();
+  const btnReject = document.getElementById('sim-btn-reject');
+  const emBody = document.getElementById('sim-email-body');
+  if (btnReject) {
+    btnReject.innerHTML = '✕ Draft Archived';
+    btnReject.disabled = true;
+  }
+  if (emBody) {
+    emBody.innerHTML = '<span style="color:#94A3B8; font-style:italic; font-size:11.5px;">Draft archived by human gatekeeper. Ingesting secondary intent signal &amp; drafting fresh angle...</span>';
+  }
+  setTimeout(() => {
+    if (simCurrentStep === 3) {
+      resetOutboxButtons();
+      const d = SIM_DATA[simCurrentICP];
+      if (d) typewriteEmailBody(d.emailBodyHtml);
+    }
+  }, 1400);
+}
+
+function setSimStep(stepNumber) {
+  simCurrentStep = stepNumber;
+
+  const wireFill = document.getElementById('sim-wire-fill');
+  const wirePhoton = document.getElementById('sim-wire-photon');
+  const fillPercents = [0, 0, 33.3, 66.6, 100];
+  const photonPercents = [0, 0, 33.3, 66.6, 100];
+  if (wireFill) wireFill.style.width = fillPercents[stepNumber] + '%';
+  if (wirePhoton) wirePhoton.style.left = photonPercents[stepNumber] + '%';
+
+  for (let i = 1; i <= 4; i++) {
+    const nodeEl = document.getElementById(`sim-node-${i}`);
+    if (nodeEl) nodeEl.classList.toggle('active', i === stepNumber);
+  }
+
+  for (let i = 1; i <= 4; i++) {
+    const viewEl = document.getElementById(`sim-view-${i}`);
+    if (viewEl) viewEl.classList.toggle('active', i === stepNumber);
+  }
+
+  const stepPills = document.querySelectorAll('.sim-step-pills .step-pill');
+  stepPills.forEach((pill, idx) => {
+    pill.classList.toggle('active', idx + 1 === stepNumber);
+  });
+
+  // Stage 2: Animate Reoon Deliverability Meter
+  const shieldBar = document.getElementById('sim-shield-bar');
+  if (shieldBar) {
+    if (stepNumber === 2) {
+      shieldBar.style.width = '0%';
+      setTimeout(() => {
+        if (simCurrentStep === 2) shieldBar.style.width = '99.8%';
+      }, 100);
+    } else {
+      shieldBar.style.width = '0%';
+    }
+  }
+
+  // Stage 3: Typewriter bespoke email draft
+  if (stepNumber === 3) {
+    resetOutboxButtons();
+    const d = SIM_DATA[simCurrentICP];
+    if (d) {
+      typewriteEmailBody(d.emailBodyHtml);
+    }
+  } else {
+    if (simTypewriterTimer) {
+      clearInterval(simTypewriterTimer);
+      simTypewriterTimer = null;
+    }
+    if (simApproveTimer) {
+      clearTimeout(simApproveTimer);
+      simApproveTimer = null;
+    }
+  }
+
+  resetSimTimer();
+}
+
+function nextSimStep() {
+  let next = simCurrentStep + 1;
+  if (next > 4) {
+    next = 1;
+    const icpKeys = ['agency', 'saas', 'devstudio', 'retool', 'supabase'];
+    const currIdx = icpKeys.indexOf(simCurrentICP);
+    const nextICP = icpKeys[(currIdx + 1) % icpKeys.length];
+    selectSimICP(nextICP);
+  }
+  setSimStep(next);
+}
+
+function toggleSimAutoPlay() {
+  simIsPlaying = !simIsPlaying;
+  const icon = document.getElementById('sim-play-icon');
+  const label = document.getElementById('sim-play-label');
+  if (icon) icon.textContent = simIsPlaying ? '⏸' : '▶';
+  if (label) label.textContent = simIsPlaying ? 'Pause' : 'Play';
+  
+  if (simIsPlaying) {
+    startSimTimer();
+  } else {
+    stopSimTimer();
+  }
+}
+
+function startSimTimer() {
+  stopSimTimer();
+  simTimerInterval = setInterval(() => {
+    if (!simIsPlaying) return;
+    simProgressPercent += (SIM_TICK_MS / SIM_STEP_DURATION_MS) * 100;
+    const bar = document.getElementById('sim-timer-progress');
+    if (bar) bar.style.width = Math.min(simProgressPercent, 100) + '%';
+    
+    // Auto-approve during autoplay on Stage 3 at ~48% (~2.1s)
+    if (simCurrentStep === 3 && simProgressPercent >= 48 && !simDraftApproved) {
+      handleSimDraftApprove();
+    }
+
+    if (simProgressPercent >= 100) {
+      if (simCurrentStep === 3 && simDraftApproved) {
+        // waiting for the 1.5s approve timer to trigger setSimStep(4)
+      } else {
+        nextSimStep();
+      }
+    }
+  }, SIM_TICK_MS);
+}
+
+function stopSimTimer() {
+  if (simTimerInterval) {
+    clearInterval(simTimerInterval);
+    simTimerInterval = null;
+  }
+}
+
+function resetSimTimer() {
+  simProgressPercent = 0;
+  const bar = document.getElementById('sim-timer-progress');
+  if (bar) bar.style.width = '0%';
+}
+
+function runSimImmediateCycle() {
+  simIsPlaying = true;
+  const icon = document.getElementById('sim-play-icon');
+  const label = document.getElementById('sim-play-label');
+  if (icon) icon.textContent = '⏸';
+  if (label) label.textContent = 'Pause';
+  nextSimStep();
+  startSimTimer();
+}
+
+function toggleCitationTooltip(e) {
+  if (e) e.stopPropagation();
+  const wrapper = document.querySelector('.signal-citation-wrapper');
+  if (wrapper) wrapper.classList.toggle('active');
+}
+
+// Close tooltip on click outside
+document.addEventListener('click', () => {
+  const wrapper = document.querySelector('.signal-citation-wrapper');
+  if (wrapper && wrapper.classList.contains('active')) {
+    wrapper.classList.remove('active');
+  }
+});
+
+// Auto-boot simulator
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    renderSimData();
+    setSimStep(1);
+    startSimTimer();
+  });
+} else {
+  renderSimData();
+  setSimStep(1);
+  startSimTimer();
+}
+
+
 

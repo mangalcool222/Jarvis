@@ -30,7 +30,7 @@ def check_prospect_working_hours(location: str = "", company: str = "", email: s
     now_local = datetime.now(tz)
     local_hour = now_local.hour + (now_local.minute / 60.0)
     weekday = now_local.weekday() # 0 = Monday, 6 = Sunday
-    is_workday = weekday < 5 # Monday - Friday
+    is_workday = weekday < 6 # Monday - Saturday (Real estate, clinics & agencies active on Saturday)
 
     if is_workday and (start_hour <= local_hour < end_hour):
         # Currently inside prime business hours
@@ -43,10 +43,10 @@ def check_prospect_working_hours(location: str = "", company: str = "", email: s
     else:
         # Next business day
         days_ahead = 1
-        if weekday == 4: # Friday -> Monday
-            days_ahead = 3
-        elif weekday == 5: # Saturday -> Monday
+        if weekday == 5: # Saturday night -> Monday
             days_ahead = 2
+        elif weekday == 6: # Sunday -> Monday
+            days_ahead = 1
         target_local = (now_local + timedelta(days=days_ahead)).replace(hour=start_hour, minute=random.randint(5, 25), second=0, microsecond=0)
 
     # Convert to UTC naive datetime for SQLite storage

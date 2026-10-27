@@ -65,9 +65,14 @@ class Writer:
             p for p in new_prospects
             if p.email and (p.email_status or "guess") in deliverable
         ]
+        # Undeliverable prospects should not stay in 'new' forever and deadlock the loop
+        undeliverable = [p for p in new_prospects if p not in prospects_with_email]
+        for p in undeliverable:
+            await self.state.update_prospect_status(p.id, "lost")
+
         if not prospects_with_email:
             logger.info(
-                "Writer: No prospects with deliverable (verified/risky) emails yet."
+                "Writer: No prospects with deliverable (verified/risky) emails yet. Undeliverable leads archived."
             )
             return
 

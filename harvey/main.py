@@ -50,6 +50,10 @@ def in_quiet_hours(config: HarveyConfig) -> bool:
     start = time.fromisoformat(qh.start)
     end = time.fromisoformat(qh.end)
 
+    if start == end:
+        # 24/7 Global SDR mode: No global quiet hours; individual recipient timezones handle pacing
+        return False
+
     if start <= end:
         return start <= now <= end
     else:

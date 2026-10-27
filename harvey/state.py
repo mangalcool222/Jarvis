@@ -714,6 +714,21 @@ class StateManager:
                     })
                 except Exception:
                     pass
+
+                # Real-Time Google Sheet CRM Auto-Sync
+                try:
+                    from harvey.integrations.sheets_sync import push_to_google_sheet
+                    loop = asyncio.get_running_loop()
+                    loop.create_task(push_to_google_sheet(
+                        email=prospect.email,
+                        status="🔍 New Prospect",
+                        company=prospect.company,
+                        name=f"{prospect.first_name} {prospect.last_name}".strip(),
+                        score=prospect.score or 95,
+                        notes=f"Auto-scouted via {prospect.source or 'Harvey AI'}"
+                    ))
+                except Exception:
+                    pass
         return prospect.id
 
     async def get_prospect(self, prospect_id: str) -> Prospect | None:

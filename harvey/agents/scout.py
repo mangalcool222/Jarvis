@@ -357,7 +357,7 @@ class Scout:
         resp = await self._fetch(
             "https://google.serper.dev/search",
             method="POST",
-            json_body={"q": query, "num": MAX_RESULTS_PER_QUERY},
+            json_body={"q": query, "num": min(MAX_RESULTS_PER_QUERY, 10)},
             headers={"X-API-KEY": api_key, "Content-Type": "application/json"},
             retries=2,
         )
@@ -376,7 +376,9 @@ class Scout:
             if not isinstance(item, dict):
                 continue
             url = item.get("link", "") or ""
-            snippet = item.get("snippet", "") or ""
+            title = item.get("title", "") or ""
+            raw_snippet = item.get("snippet", "") or ""
+            snippet = f"{title} — {raw_snippet}".strip(" —")
             if url:
                 results.append((url, snippet))
         return results[:MAX_RESULTS_PER_QUERY]
@@ -743,11 +745,15 @@ class Scout:
             if self._queries_this_cycle >= MAX_QUERIES_PER_CYCLE:
                 break
 
-            query = f'site:linkedin.com/in "{title}"'
-            if industry:
-                query += f' "{industry}"'
-            if geo:
-                query += f' "{geo}"'
+            clean_title = title.split("&")[0].split("/")[0].strip()
+            clean_ind = industry.split("&")[0].split("(")[0].strip()
+            clean_geo = geo.split(",")[0].strip()
+
+            query = f'site:linkedin.com/in "{clean_title}"'
+            if clean_ind:
+                query += f' "{clean_ind}"'
+            if clean_geo:
+                query += f' "{clean_geo}"'
 
             results = await self._web_search(query)
 
@@ -759,9 +765,11 @@ class Scout:
                 if not parsed:
                     continue
 
+                company_name = parsed.get("company", "")
                 prospect = Prospect(
                     first_name=parsed.get("first_name", ""),
                     last_name=parsed.get("last_name", ""),
+                    company=company_name,
                     linkedin_url=url,
                     title=title,
                     seniority=self._infer_seniority(title),
@@ -1843,31 +1851,40 @@ Respond ONLY with the JSON array."""
 
         Prefers the snippet (real cased names) and falls back to the URL slug.
         """
+        res = None
         # 1) Snippet often starts with "First Last - Title at Company".
         if snippet:
             name_match = re.match(
                 r"^\s*([A-Z][a-z]+)\s+([A-Z][a-z'\-]+)", snippet.strip()
             )
             if name_match:
-                return {
+                res = {
                     "first_name": name_match.group(1),
                     "last_name": name_match.group(2),
                 }
 
         # 2) Fall back to the URL slug.
-        match = re.search(r"/in/([\w][\w-]+)", url)
-        if match:
-            slug = match.group(1)
-            # Remove trailing hex/numeric IDs that LinkedIn appends.
-            slug = re.sub(r"-[0-9a-f]{4,}$", "", slug)
-            slug = re.sub(r"-\d+$", "", slug)
-            parts = [p for p in slug.split("-") if p]
-            # Drop pure-numeric noise tokens.
-            parts = [p for p in parts if not p.isdigit()]
-            if len(parts) >= 2:
-                return {
-                    "first_name": parts[0].title(),
-                    "last_name": " ".join(p.title() for p in parts[1:]),
-                }
+        if not res:
+            match = re.search(r"/in/([\w][\w-]+)", url)
+            if match:
+                slug = match.group(1)
+                # Remove trailing hex/numeric IDs that LinkedIn appends.
+                slug = re.sub(r"-[0-9a-f]{4,}$", "", slug)
+                slug = re.sub(r"-\d+$", "", slug)
+                parts = [p for p in slug.split("-") if p]
+                # Drop pure-numeric noise tokens.
+                parts = [p for p in parts if not p.isdigit()]
+                if len(parts) >= 2:
+                    res = {
+                        "first_name": parts[0].title(),
+                        "last_name": " ".join(p.title() for p in parts[1:]),
+                    }
 
-        return None
+        if res and snippet:
+            comp_match = re.search(r'(?:at|@)\s+([A-Z0-9][A-Za-z0-9\s&,.\'-]+?)(?:\s*[\|\·\–\—\-]\s*|\s*[\.,]|\s*$)', snippet)
+            if comp_match:
+                candidate = comp_match.group(1).strip()
+                if candidate and len(candidate) > 2 and not candidate.lower().startswith("linkedin"):
+                    res["company"] = candidate
+
+        return res

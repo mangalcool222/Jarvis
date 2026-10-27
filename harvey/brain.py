@@ -10,8 +10,10 @@ other one.
 import asyncio
 import json
 import logging
+import os
 import re
 import time
+import urllib.request
 import uuid
 from pathlib import Path
 
@@ -39,7 +41,7 @@ _NON_RETRYABLE_PATTERNS = (
 )
 
 
-PROVIDER_LABELS = {"claude": "Claude", "codex": "Codex"}
+PROVIDER_LABELS = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini"}
 
 # Settings key holding the brain's last health transition, for `harvey
 # status` and the dashboard: {"provider", "status": "ok"|"paused", "reason",
@@ -237,6 +239,11 @@ class Brain:
         ``agent``/``task`` label the call in the usage_events ledger so the
         dashboard can attribute tokens and cost to specific work.
         """
+        if self.provider == "gemini":
+            return await self._think_gemini(
+                prompt, session_id=session_id, timeout=timeout,
+                max_retries=max_retries, agent=agent, task=task,
+            )
         if self.provider == "codex":
             return await self._think_codex(
                 prompt, session_id=session_id, timeout=timeout,
@@ -315,12 +322,22 @@ class Brain:
                     continue  # retry
 
                 if process.returncode != 0:
+                    raw_out = stdout.decode(errors="replace").strip()
                     error = stderr.decode(errors="replace").strip()
+                    combined_err = (error + " " + raw_out).lower()
                     logger.error(
-                        f"Claude exited with code {process.returncode}: {error[:300]}"
+                        f"Claude exited with code {process.returncode}: {error[:300] or raw_out[:300]}"
                     )
-                    last_error = error
-                    if any(p in error.lower() for p in _NON_RETRYABLE_PATTERNS):
+                    last_error = error or raw_out
+                    if any(p in combined_err for p in _NON_RETRYABLE_PATTERNS) or "not logged in" in combined_err:
+                        if os.getenv("GEMINI_API_KEY"):
+                            logger.info(
+                                "Claude unauthenticated — automatically routing brain call through Gemini Flash."
+                            )
+                            return await self._think_gemini(
+                                prompt, session_id=session_id, timeout=timeout,
+                                max_retries=max_retries, agent=agent, task=task,
+                            )
                         logger.error(
                             "Non-retryable Claude error (auth). "
                             "Run 'claude login' and restart Harvey."
@@ -367,6 +384,53 @@ class Brain:
             f"Brain call failed after {max_retries + 1} attempts. "
             f"Last error: {str(last_error)[:200]}"
         )
+        return ""
+
+    async def _think_gemini(
+        self,
+        prompt: str,
+        session_id: str | None = None,
+        timeout: float = DEFAULT_TIMEOUT_SECONDS,
+        max_retries: int = DEFAULT_MAX_RETRIES,
+        agent: str = "",
+        task: str = "",
+    ) -> str:
+        api_key = os.getenv("GEMINI_API_KEY", "").strip()
+        if not api_key:
+            logger.error("GEMINI_API_KEY is not set in environment.")
+            return ""
+        models = [self.model] if self.model else ["gemini-flash-lite-latest", "gemini-flash-latest"]
+        for model in models:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+            payload = {
+                "contents": [{"parts": [{"text": prompt}]}],
+                "generationConfig": {"temperature": 0.4}
+            }
+            try:
+                loop = asyncio.get_event_loop()
+                def _do_request():
+                    req = urllib.request.Request(
+                        url,
+                        data=json.dumps(payload).encode("utf-8"),
+                        headers={"Content-Type": "application/json"}
+                    )
+                    with urllib.request.urlopen(req, timeout=timeout) as resp:
+                        return json.loads(resp.read().decode())
+                data = await loop.run_in_executor(None, _do_request)
+                candidates = data.get("candidates") or []
+                if candidates:
+                    parts = candidates[0].get("content", {}).get("parts") or []
+                    if parts:
+                        text = parts[0].get("text", "").strip()
+                        if text:
+                            try:
+                                await self.state.increment_usage()
+                            except Exception:
+                                pass
+                            logger.debug(f"Gemini response: {text[:200]}...")
+                            return text
+            except Exception as e:
+                logger.warning(f"Brain Gemini ({model}) call failed: {e}")
         return ""
 
     async def _think_codex(

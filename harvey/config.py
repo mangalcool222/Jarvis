@@ -155,7 +155,7 @@ class UsageConfig(BaseModel):
         return v
 
 
-BRAIN_PROVIDERS = ("claude", "codex")
+BRAIN_PROVIDERS = ("claude", "codex", "gemini")
 CODEX_REASONING_EFFORTS = ("minimal", "low", "medium", "high", "xhigh")
 
 # Model names are passed to a CLI, so they must look like a model name and
@@ -239,6 +239,7 @@ class EnvConfig(BaseModel):
     imap_port: int = 993
     imap_username: str = ""
     imap_password: str = ""
+    google_sheet_webhook_url: str = ""
 
 
 def _format_validation_error(e: ValidationError) -> str:
@@ -356,6 +357,7 @@ def load_env() -> EnvConfig:
         imap_port=int(os.getenv("IMAP_PORT", "993").strip() or 993),
         imap_username=os.getenv("IMAP_USERNAME", "").strip(),
         imap_password=os.getenv("IMAP_PASSWORD", "").strip(),
+        google_sheet_webhook_url=os.getenv("GOOGLE_SHEET_WEBHOOK_URL", "").strip(),
     )
     return env
 

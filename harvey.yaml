@@ -1,3 +1,6 @@
+brain:
+  provider: "gemini"
+
 persona:
   name: "Mangal Soren"
   company: "TrackKaro AI"
@@ -80,6 +83,6 @@ usage:
   max_daily_claude_percent: 80
   heartbeat_interval_minutes: 15
   quiet_hours:
-    start: "22:00"
-    end: "07:00"
+    start: "00:00"
+    end: "00:00"
     timezone: "Asia/Kolkata"
