@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/app.css?v=trackkaro_warm_editorial_v5">
+<link rel="stylesheet" href="/static/app.css?v=trackkaro_warm_editorial_v8">
 
 <style>
 /* Mode Switcher Floating Pill */
@@ -376,6 +376,9 @@ body.is-logged-in .btn-signin-header {
 
 body.is-logged-in .heyreach-unified-hero,
 body.is-logged-in .apple-bento-hero,
+body.is-logged-in .weekday-editorial-section,
+body.is-logged-in .live-pipeline-section,
+body.is-logged-in #audit-consultation-section,
 body.is-logged-in .btn-cta-audit {
   display: none !important;
 }
@@ -510,10 +513,10 @@ body.is-logged-in .public-access-banner {
 <!-- Dev/Preview Mode Switcher Bar -->
 <div class="mode-switcher-bar">
   <button id="btn-view-auth" class="mode-btn" onclick="handleLogout()">
-    <span>👤</span> Before Login (Auth View)
+    <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg> Public Landing View
   </button>
   <button id="btn-view-dash" class="mode-btn active" onclick="switchMainView('dashboard')">
-    <span>⚡</span> After Login (Jarvis OS)
+    <svg class="ui-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg> Operator Cockpit (Jarvis OS)
   </button>
 </div>
 
@@ -1116,7 +1119,7 @@ body.is-logged-in .public-access-banner {
         <div class="weekday-card-visual">
           <div class="sdr-persona-badge-wrap">
             <div class="sdr-node-icon-box">
-              <span class="sdr-node-icon">⚡</span>
+              <span class="sdr-node-icon"><svg class="ui-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg></span>
               <span class="sdr-live-dot" title="Autonomous AI SDR Engine Active"></span>
             </div>
             <div class="sdr-persona-info">
@@ -1126,18 +1129,18 @@ body.is-logged-in .public-access-banner {
             </div>
           </div>
 
-          <!-- Micro Metrics Strip -->
+          <!-- Micro Metrics Strip (Clean Vector Indicators) -->
           <div class="weekday-metrics-strip">
             <div class="w-metric-pill">
-              <span class="w-icon">🎯</span>
-              <span><strong>305</strong> Accounts Mapped</span>
+              <span class="w-icon-wrap emerald"><svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg></span>
+              <span><strong>305</strong> Accounts Indexed</span>
             </div>
             <div class="w-metric-pill">
-              <span class="w-icon">🛡️</span>
+              <span class="w-icon-wrap cobalt"><svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
               <span><strong>99.8%</strong> Zero-Bounce SLA</span>
             </div>
             <div class="w-metric-pill">
-              <span class="w-icon">📅</span>
+              <span class="w-icon-wrap amber"><svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg></span>
               <span><strong>3 Calls</strong> Booked This Week</span>
             </div>
           </div>
@@ -1188,10 +1191,10 @@ body.is-logged-in .public-access-banner {
             <!-- Multi-channel action bar with pointer -->
             <div class="dock-action-strip">
               <div class="dock-channels-pills">
-                <span class="chan-pill">✉️ Email</span>
-                <span class="chan-pill">💬 WhatsApp</span>
-                <span class="chan-pill">📞 Phone</span>
-                <span class="chan-pill-send">🚀 Dispatch</span>
+                <span class="chan-pill"><svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Email</span>
+                <span class="chan-pill"><svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> WhatsApp</span>
+                <span class="chan-pill"><svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Phone</span>
+                <span class="chan-pill-send"><svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Dispatch</span>
               </div>
               <!-- Floating Cursor pointer -->
               <div class="dock-pointer-cursor">
@@ -1283,7 +1286,7 @@ body.is-logged-in .public-access-banner {
             </td>
             <td>
               <span class="signal-tag coral">
-                <span class="tag-icon">🔥</span> Scaled Ads +140%
+                <span class="tag-icon"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span> Scaled Ads +140%
               </span>
             </td>
             <td>
@@ -1301,7 +1304,7 @@ body.is-logged-in .public-access-banner {
             </td>
             <td>
               <span class="pipeline-status-pill booked">
-                <span>📅</span> Meeting Confirmed (Thu 3 PM)
+                <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg> Meeting Confirmed (Thu 3 PM)
               </span>
             </td>
             <td style="text-align:right;">
@@ -1324,7 +1327,7 @@ body.is-logged-in .public-access-banner {
             </td>
             <td>
               <span class="signal-tag emerald">
-                <span class="tag-icon">🚀</span> 18 Eng Hires (SOC-2 Sprint)
+                <span class="tag-icon"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span> 18 Eng Hires (SOC-2 Sprint)
               </span>
             </td>
             <td>
@@ -1342,7 +1345,7 @@ body.is-logged-in .public-access-banner {
             </td>
             <td>
               <span class="pipeline-status-pill booked">
-                <span>📅</span> Meeting Confirmed (Tue 11 AM)
+                <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg> Meeting Confirmed (Tue 11 AM)
               </span>
             </td>
             <td style="text-align:right;">
@@ -1365,7 +1368,7 @@ body.is-logged-in .public-access-banner {
             </td>
             <td>
               <span class="signal-tag blue">
-                <span class="tag-icon">💼</span> AWS Modernization RFP
+                <span class="tag-icon"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg></span> AWS Modernization RFP
               </span>
             </td>
             <td>
@@ -1383,7 +1386,7 @@ body.is-logged-in .public-access-banner {
             </td>
             <td>
               <span class="pipeline-status-pill booked">
-                <span>📅</span> Meeting Confirmed (Wed 4 PM)
+                <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg> Meeting Confirmed (Wed 4 PM)
               </span>
             </td>
             <td style="text-align:right;">
@@ -1406,7 +1409,7 @@ body.is-logged-in .public-access-banner {
             </td>
             <td>
               <span class="signal-tag purple">
-                <span class="tag-icon">📈</span> Enterprise Tier Expansion
+                <span class="tag-icon"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span> Enterprise Tier Expansion
               </span>
             </td>
             <td>
@@ -1424,7 +1427,7 @@ body.is-logged-in .public-access-banner {
             </td>
             <td>
               <span class="pipeline-status-pill drafting">
-                <span>✍️</span> AI Drafting Bespoke Pitch
+                <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> AI Drafting Bespoke Pitch
               </span>
             </td>
             <td style="text-align:right;">
@@ -1498,11 +1501,11 @@ body.is-logged-in .public-access-banner {
           <button class="btn-irp-explore">Confirm Signals 📡</button>
         </div>
         <div class="irp-tags-grid">
-          <div class="irp-tag"><span class="t-icon">🔍</span> Google SERP Search Spikes</div>
-          <div class="irp-tag"><span class="t-icon">💼</span> Sales Team Hiring (&gt; 3 Roles)</div>
+          <div class="irp-tag"><span class="t-icon"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span> Google SERP Search Spikes</div>
+          <div class="irp-tag"><span class="t-icon"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span> Sales Team Hiring (&gt; 3 Roles)</div>
           <div class="irp-tag"><span class="t-icon">💸</span> Meta/Google Ad Spend ($10k+/mo)</div>
-          <div class="irp-tag"><span class="t-icon">⚡</span> Lead Response Decay (&gt; 15m)</div>
-          <div class="irp-tag"><span class="t-icon">🛠️</span> Tech Stack Web Gap</div>
+          <div class="irp-tag"><span class="t-icon"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span> Lead Response Decay (&gt; 15m)</div>
+          <div class="irp-tag"><span class="t-icon"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> Tech Stack Web Gap</div>
           <div class="irp-tag irp-more">+18 More Triggers Active</div>
         </div>
       </div>

@@ -5978,3 +5978,684 @@ body.is-logged-out .sim-timer-bar {
 
 
 
+
+
+/* ══════════════════════════════════════════════════════════════
+   WARM LIGHT EDITORIAL COCKPIT (AFTER LOGIN / JARVIS OS)
+   Attio / Stripe / Linear Light Grade Unified Operating System
+   ══════════════════════════════════════════════════════════════ */
+
+body.is-logged-in {
+  background-color: #FAF8F5 !important;
+  background-image: 
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(16, 185, 129, 0.07), transparent 70%),
+    radial-gradient(circle at 92% 25%, rgba(245, 158, 11, 0.05), transparent 45%),
+    linear-gradient(rgba(0, 0, 0, 0.024) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.024) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px !important;
+  color: #18181B !important;
+
+  --bg: #FAF8F5;
+  --panel: #FFFFFF;
+  --panel-raised: #F8FAFC;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.15);
+  --rule: #10B981;
+  --text: #18181B;
+  --text-2: #52525B;
+  --text-3: #71717A;
+
+  --s-good: #047857;
+  --s-good-bg: #ECFDF5;
+  --s-good-line: #A7F3D0;
+  --s-wait: #B45309;
+  --s-wait-bg: #FFFBEB;
+  --s-wait-line: #FDE68A;
+  --s-bad: #B91C1C;
+  --s-bad-bg: #FEF2F2;
+  --s-bad-line: #FECACA;
+  --s-active: #0369A1;
+  --s-active-bg: #F0F9FF;
+  --s-active-line: #BAE6FD;
+  --s-note: #6D28D9;
+  --s-note-bg: #F5F3FF;
+  --s-note-line: #DDD6FE;
+
+  color-scheme: light;
+}
+
+/* Header in Logged-In Warm Light Mode */
+body.is-logged-in header {
+  background: rgba(250, 248, 245, 0.94) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  backdrop-filter: blur(16px) !important;
+}
+body.is-logged-in .brand h1 { color: #18181B !important; }
+body.is-logged-in .brand-highlight {
+  background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+body.is-logged-in .tagline { color: #64748B !important; }
+body.is-logged-in .radar-orb {
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  background: rgba(16, 185, 129, 0.08) !important;
+}
+body.is-logged-in #header-status-badge {
+  background: rgba(16, 185, 129, 0.1) !important;
+  border-color: rgba(16, 185, 129, 0.25) !important;
+}
+body.is-logged-in #header-status-text { color: #047857 !important; }
+body.is-logged-in .btn-workspace-select {
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  color: #18181B !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+body.is-logged-in .btn-workspace-select:hover {
+  background: #F8FAFC !important;
+  border-color: #D1D5DB !important;
+}
+body.is-logged-in .ws-dropdown {
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 14px 34px -6px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  border-radius: 14px !important;
+}
+body.is-logged-in .ws-item {
+  color: #18181B !important;
+  border-bottom: 1px solid #F1F5F9 !important;
+}
+body.is-logged-in .ws-item:hover {
+  background: #F8FAFC !important;
+}
+body.is-logged-in .ws-title {
+  color: #18181B !important;
+  font-weight: 700 !important;
+}
+body.is-logged-in .ws-sub {
+  color: #64748B !important;
+}
+body.is-logged-in .btn-logout-header {
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  color: #71717A !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+body.is-logged-in .btn-logout-header:hover {
+  background: #FEF2F2 !important;
+  border-color: #FECACA !important;
+  color: #B91C1C !important;
+}
+body.is-logged-in .theme-btn,
+body.is-logged-in .refresh-btn,
+body.is-logged-in .icon-btn {
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  color: #475569 !important;
+}
+
+/* Dev Switcher Bar in Warm Light Mode */
+body.is-logged-in .mode-switcher-bar,
+body.is-logged-out .mode-switcher-bar {
+  background: rgba(245, 242, 236, 0.9) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05) !important;
+}
+body.is-logged-in .mode-btn {
+  color: #64748B !important;
+}
+body.is-logged-in .mode-btn.active {
+  background: #18181B !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Apple Dock Navigation (Warm Light Pill Bar) */
+body.is-logged-in .apple-dock-wrapper {
+  background: transparent !important;
+  padding: 8px 0 18px 0 !important;
+}
+body.is-logged-in .apple-dock {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 999px !important;
+  padding: 5px 8px !important;
+  box-shadow: 0 6px 24px -4px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+  backdrop-filter: blur(14px) !important;
+}
+body.is-logged-in .apple-dock button {
+  color: #64748B !important;
+  font-weight: 600 !important;
+  border-radius: 999px !important;
+  padding: 7px 16px !important;
+  font-size: 13px !important;
+  transition: all 0.2s ease !important;
+}
+body.is-logged-in .apple-dock button:hover {
+  color: #18181B !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+body.is-logged-in .apple-dock button.active {
+  background: #18181B !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+body.is-logged-in .apple-dock .nav-count {
+  background: #ECFDF5 !important;
+  color: #047857 !important;
+  border: 1px solid #A7F3D0 !important;
+  font-weight: 750 !important;
+  margin-left: 6px !important;
+  padding: 1px 6px !important;
+  border-radius: 999px !important;
+  font-size: 10px !important;
+}
+body.is-logged-in .apple-dock button.active .nav-count {
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+body.is-logged-in .apple-dock #nav-outbox.on {
+  background: #FEF2F2 !important;
+  color: #B91C1C !important;
+  border: 1px solid #FECACA !important;
+}
+body.is-logged-in .apple-dock button.active #nav-outbox.on {
+  background: #B91C1C !important;
+  color: #FFFFFF !important;
+  border-color: #B91C1C !important;
+}
+
+/* Mission Control Workspace Hero Banner */
+body.is-logged-in .workspace-command-hero {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 20px !important;
+  padding: 24px 28px !important;
+  box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+  margin-bottom: 24px !important;
+}
+body.is-logged-in .wch-pill {
+  background: #ECFDF5 !important;
+  border: 1px solid #A7F3D0 !important;
+  color: #047857 !important;
+  font-weight: 750 !important;
+  font-size: 11px !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  margin-bottom: 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+body.is-logged-in .wch-pill .pulse-dot.green {
+  background: #059669 !important;
+  box-shadow: 0 0 0 rgba(5, 150, 105, 0.4) !important;
+}
+body.is-logged-in .wch-title {
+  font-family: 'Fraunces', Georgia, serif !important;
+  color: #18181B !important;
+  font-size: 26px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 6px !important;
+}
+body.is-logged-in .wch-sub {
+  color: #64748B !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  max-width: 70ch !important;
+}
+body.is-logged-in .btn-wch-action {
+  background: #047857 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  padding: 10px 20px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(4, 120, 87, 0.25) !important;
+  transition: all 0.2s ease !important;
+}
+body.is-logged-in .btn-wch-action:hover {
+  background: #065F46 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px rgba(4, 120, 87, 0.35) !important;
+}
+body.is-logged-in .btn-wch-secondary {
+  background: #FFFFFF !important;
+  border: 1px solid #D1D5DB !important;
+  color: #18181B !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  padding: 10px 18px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.2s ease !important;
+}
+body.is-logged-in .btn-wch-secondary:hover {
+  background: #F8FAFC !important;
+  border-color: #9CA3AF !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Action Queue & Telemetry Section */
+body.is-logged-in .today-section-head h2,
+body.is-logged-in .section-head h2 {
+  font-family: 'Fraunces', Georgia, serif !important;
+  color: #18181B !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 4px !important;
+}
+body.is-logged-in .today-section-head p,
+body.is-logged-in .section-head p {
+  color: #64748B !important;
+  font-size: 13.5px !important;
+}
+
+/* Action Queue Alert Card */
+body.is-logged-in .queue-item-card {
+  background: #FFFFFF !important;
+  border: 1px solid #FECACA !important;
+  border-left: 4px solid #EF4444 !important;
+  box-shadow: 0 8px 24px -6px rgba(239, 68, 68, 0.08) !important;
+  border-radius: 16px !important;
+  padding: 16px 22px !important;
+}
+body.is-logged-in .qi-title {
+  color: #18181B !important;
+  font-weight: 750 !important;
+  font-size: 14.5px !important;
+}
+body.is-logged-in .qi-detail {
+  color: #64748B !important;
+  font-size: 12.5px !important;
+}
+body.is-logged-in .btn-qi-action {
+  background: #DC2626 !important;
+  color: #FFFFFF !important;
+  font-weight: 750 !important;
+  font-size: 12.5px !important;
+  padding: 9px 18px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25) !important;
+  border: none !important;
+  transition: all 0.2s ease !important;
+}
+body.is-logged-in .btn-qi-action:hover {
+  background: #B91C1C !important;
+  transform: scale(1.02) !important;
+  box-shadow: 0 6px 18px rgba(220, 38, 38, 0.35) !important;
+}
+
+/* Clear Action Queue State */
+body.is-logged-in .queue-clear-card {
+  background: #FFFFFF !important;
+  border: 1px solid #A7F3D0 !important;
+  border-left: 4px solid #047857 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 14px rgba(4, 120, 87, 0.06) !important;
+}
+body.is-logged-in .qc-title { color: #18181B !important; }
+body.is-logged-in .qc-sub { color: #64748B !important; }
+body.is-logged-in .qc-badge {
+  background: #ECFDF5 !important;
+  color: #047857 !important;
+  border: 1px solid #A7F3D0 !important;
+}
+
+/* Developer-Grade Telemetry Console Card (Framed Slate on Warm Ivory) */
+body.is-logged-in .telemetry-terminal-card {
+  background: #0F172A !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  box-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+}
+body.is-logged-in .telemetry-terminal-header {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+body.is-logged-in .terminal-title {
+  color: #94A3B8 !important;
+  font-size: 11px !important;
+}
+body.is-logged-in .terminal-status {
+  color: #34D399 !important;
+  font-size: 10px !important;
+}
+body.is-logged-in .telemetry-log-row {
+  color: #E2E8F0 !important;
+}
+body.is-logged-in .t-time {
+  color: #64748B !important;
+}
+body.is-logged-in .t-code {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #38BDF8 !important;
+}
+body.is-logged-in .telemetry-footer-bar {
+  background: rgba(0, 0, 0, 0.35) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+  color: #94A3B8 !important;
+}
+
+/* Intent Radar Cohort Card */
+body.is-logged-in .intent-radar-preview-card {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+  padding: 18px 22px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+body.is-logged-in .intent-radar-preview-card:hover {
+  border-color: #CBD5E1 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.08) !important;
+}
+body.is-logged-in .irp-badge.coral {
+  background: #FEF2F2 !important;
+  color: #B91C1C !important;
+  border: 1px solid #FECACA !important;
+  font-weight: 750 !important;
+}
+body.is-logged-in .irp-title {
+  color: #18181B !important;
+  font-size: 14.5px !important;
+  font-weight: 700 !important;
+}
+body.is-logged-in .btn-irp-explore {
+  background: #FFFFFF !important;
+  border: 1px solid #D1D5DB !important;
+  color: #18181B !important;
+  font-weight: 650 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  padding: 6px 12px !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+}
+body.is-logged-in .btn-irp-explore:hover {
+  background: #F8FAFC !important;
+}
+body.is-logged-in .irp-tags-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+body.is-logged-in .irp-tag {
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #334155 !important;
+  font-weight: 600 !important;
+  padding: 6px 12px !important;
+  border-radius: 8px !important;
+  font-size: 11.5px !important;
+}
+body.is-logged-in .irp-tag.irp-more {
+  background: #EFF6FF !important;
+  color: #1D4ED8 !important;
+  border: 1px solid #BFDBFE !important;
+  font-weight: 700 !important;
+}
+
+/* Right Rail: Ledger & SLA Panels */
+body.is-logged-in .today-rail .subhead {
+  color: #64748B !important;
+  font-size: 11px !important;
+  font-weight: 750 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  padding-bottom: 8px !important;
+  margin-bottom: 10px !important;
+}
+body.is-logged-in .figures-panel {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 16px !important;
+  padding: 14px 18px !important;
+  box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.04) !important;
+}
+body.is-logged-in .figure-row {
+  border-bottom: 1px solid #F1F5F9 !important;
+  padding: 8px 0 !important;
+}
+body.is-logged-in .fig-label {
+  color: #18181B !important;
+  font-size: 12px !important;
+  font-weight: 650 !important;
+}
+body.is-logged-in .fig-hint {
+  color: #64748B !important;
+  font-size: 10px !important;
+}
+body.is-logged-in .fig-val {
+  background: #F1F5F9 !important;
+  color: #64748B !important;
+  border: 1px solid #E2E8F0 !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+}
+body.is-logged-in .fig-val.active {
+  background: #ECFDF5 !important;
+  color: #047857 !important;
+  border: 1px solid #A7F3D0 !important;
+  font-weight: 750 !important;
+}
+body.is-logged-in #today-runs .figures {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 16px !important;
+  padding: 8px 16px !important;
+  box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.04) !important;
+}
+body.is-logged-in #today-runs .figure {
+  border-bottom: 1px solid #F1F5F9 !important;
+  padding: 9px 0 !important;
+}
+body.is-logged-in #today-runs .figure .k {
+  color: #18181B !important;
+  font-weight: 600 !important;
+}
+body.is-logged-in #today-runs .figure .muted {
+  color: #64748B !important;
+}
+body.is-logged-in #today-setup .engine-sla-list > div {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+}
+body.is-logged-in #today-setup .engine-sla-list span {
+  color: #18181B !important;
+}
+body.is-logged-in #today-setup .engine-sla-list span:first-child {
+  color: #64748B !important;
+}
+
+/* Institutional Tab Tables (Signals, Discover, Companies, Outbox, etc.) */
+body.is-logged-in .table-card,
+body.is-logged-in .card,
+body.is-logged-in .panel {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.03) !important;
+  border-radius: 16px !important;
+}
+body.is-logged-in table th {
+  background: #F8FAFC !important;
+  color: #475569 !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+  font-weight: 700 !important;
+}
+body.is-logged-in table td {
+  color: #1E293B !important;
+  border-bottom: 1px solid #F1F5F9 !important;
+}
+body.is-logged-in tbody tr:hover td {
+  background: #F8FAFC !important;
+}
+body.is-logged-in .sig-summary {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 14px !important;
+}
+body.is-logged-in .sig-stat {
+  border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+body.is-logged-in .sig-stat .n { color: #18181B !important; }
+body.is-logged-in .sig-stat.confirmed .n { color: #047857 !important; }
+body.is-logged-in .sig-stat.proposed .n { color: #B45309 !important; }
+body.is-logged-in .sig-stat .k { color: #64748B !important; }
+body.is-logged-in .sig-row { border-bottom: 1px solid #F1F5F9 !important; }
+body.is-logged-in .sig-label { color: #18181B !important; }
+body.is-logged-in .sig-desc { color: #52525B !important; }
+body.is-logged-in .sig-code { color: #64748B !important; }
+body.is-logged-in .cost-chip {
+  background: #F1F5F9 !important;
+  border-color: #E2E8F0 !important;
+  color: #475569 !important;
+}
+body.is-logged-in .cost-chip.free {
+  background: #ECFDF5 !important;
+  color: #047857 !important;
+  border-color: #A7F3D0 !important;
+}
+body.is-logged-in .cohort-pick {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #1E293B !important;
+}
+body.is-logged-in .cohort-pick:hover {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+}
+body.is-logged-in input[type="text"],
+body.is-logged-in input[type="search"],
+body.is-logged-in select,
+body.is-logged-in textarea {
+  background: #FFFFFF !important;
+  border: 1px solid #D1D5DB !important;
+  color: #18181B !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+body.is-logged-in input:focus,
+body.is-logged-in select:focus,
+body.is-logged-in textarea:focus {
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15) !important;
+}
+
+
+/* ── Workspace Dropdown & Header Polish in Warm Light Mode ── */
+body.is-logged-in .workspace-badge-jarvis {
+  background: #FFFFFF !important;
+  border: 1px solid #D1D5DB !important;
+  color: #18181B !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+body.is-logged-in .workspace-badge-jarvis:hover {
+  background: #F8FAFC !important;
+  border-color: #9CA3AF !important;
+}
+body.is-logged-in #current-workspace-name {
+  color: #18181B !important;
+  font-weight: 650 !important;
+}
+body.is-logged-in .workspace-dropdown-menu {
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 14px 34px -6px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+}
+body.is-logged-in .ws-menu-header {
+  color: #64748B !important;
+  border-bottom: 1px solid #F1F5F9 !important;
+}
+body.is-logged-in .ws-item {
+  color: #18181B !important;
+  border-bottom: 1px solid #F1F5F9 !important;
+}
+body.is-logged-in .ws-item:hover {
+  background: #F8FAFC !important;
+}
+body.is-logged-in .ws-title {
+  color: #18181B !important;
+}
+body.is-logged-in .ws-sub {
+  color: #64748B !important;
+}
+body.is-logged-in .ws-action-btn {
+  color: #047857 !important;
+  background: #ECFDF5 !important;
+  border-top: 1px solid #A7F3D0 !important;
+}
+
+/* Outbox & CRM Vault Card Styling in Warm Light Mode */
+body.is-logged-in .outbox-desk,
+body.is-logged-in .decision-card,
+body.is-logged-in #outbox-list .card,
+body.is-logged-in .crm-table-container,
+body.is-logged-in .data-table {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.04) !important;
+  border-radius: 14px !important;
+}
+body.is-logged-in kbd {
+  background: #F1F5F9 !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #1E293B !important;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08) !important;
+}
+
+
+/* ── Clean Vector Micro-Icons & Enterprise Metric Wraps ── */
+.ui-icon {
+  display: inline-block;
+  vertical-align: -2px;
+  flex-shrink: 0;
+}
+.w-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+.w-icon-wrap.emerald {
+  background: #ECFDF5;
+  color: #047857;
+  border: 1px solid #A7F3D0;
+}
+.w-icon-wrap.cobalt {
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+}
+.w-icon-wrap.amber {
+  background: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+.chan-pill .ui-icon {
+  margin-right: 4px;
+  color: #64748B;
+}
+.chan-pill-send .ui-icon {
+  margin-right: 4px;
+  color: #FFFFFF;
+}
+.tag-icon .ui-icon {
+  margin-right: 2px;
+}
