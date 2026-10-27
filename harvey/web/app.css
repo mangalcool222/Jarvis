@@ -5049,6 +5049,112 @@ body.is-logged-out .btn-table-inspect:hover {
   border-color: #18181B !important;
 }
 
+/* ══════════════════════════════════════════════════════════════
+   HIGH-VIBRANCY DEEP INK BADGES (RAZOR-SHARP CONTRAST ON LIGHT)
+   ══════════════════════════════════════════════════════════════ */
+body.is-logged-out .signal-tag {
+  font-weight: 750 !important;
+  letter-spacing: -0.01em !important;
+}
+
+body.is-logged-out .signal-tag.coral {
+  background: #FEF2F2 !important;
+  border: 1px solid #FECACA !important;
+  color: #B91C1C !important; /* Deep Vibrant Crimson */
+}
+
+body.is-logged-out .signal-tag.emerald {
+  background: #ECFDF5 !important;
+  border: 1px solid #A7F3D0 !important;
+  color: #047857 !important; /* Deep Vibrant Emerald */
+}
+
+body.is-logged-out .signal-tag.blue {
+  background: #EFF6FF !important;
+  border: 1px solid #BFDBFE !important;
+  color: #1D4ED8 !important; /* Deep Vibrant Cobalt */
+}
+
+body.is-logged-out .signal-tag.purple {
+  background: #F5F3FF !important;
+  border: 1px solid #DDD6FE !important;
+  color: #6D28D9 !important; /* Deep Vibrant Purple */
+}
+
+body.is-logged-out .signal-tag.amber {
+  background: #FFFBEB !important;
+  border: 1px solid #FDE68A !important;
+  color: #B45309 !important; /* Deep Vibrant Amber */
+}
+
+/* Deliverability SLA Badges */
+body.is-logged-out .sla-badge {
+  font-weight: 750 !important;
+}
+
+body.is-logged-out .sla-badge.green {
+  background: #ECFDF5 !important;
+  border: 1px solid #A7F3D0 !important;
+  color: #065F46 !important;
+}
+
+body.is-logged-out .sla-badge.green .sla-mx {
+  color: #047857 !important;
+  font-weight: 600 !important;
+  opacity: 0.9 !important;
+}
+
+body.is-logged-out .sla-badge.amber {
+  background: #FFFBEB !important;
+  border: 1px solid #FDE68A !important;
+  color: #92400E !important;
+}
+
+body.is-logged-out .sla-badge.amber .sla-mx {
+  color: #B45309 !important;
+  font-weight: 600 !important;
+  opacity: 0.9 !important;
+}
+
+/* Pipeline Status Pills */
+body.is-logged-out .pipeline-status-pill {
+  font-weight: 750 !important;
+}
+
+body.is-logged-out .pipeline-status-pill.booked {
+  background: #ECFDF5 !important;
+  border: 1px solid #A7F3D0 !important;
+  color: #065F46 !important;
+}
+
+body.is-logged-out .pipeline-status-pill.drafting {
+  background: #F5F3FF !important;
+  border: 1px solid #DDD6FE !important;
+  color: #6D28D9 !important;
+}
+
+body.is-logged-out .pipeline-status-pill.outbox {
+  background: #EFF6FF !important;
+  border: 1px solid #BFDBFE !important;
+  color: #1D4ED8 !important;
+}
+
+/* Header Live Stream Pills */
+body.is-logged-out .fps-pill {
+  background: #EFF6FF !important;
+  border: 1px solid #BFDBFE !important;
+  color: #1E40AF !important;
+  font-weight: 750 !important;
+}
+
+body.is-logged-out .signals-armed-pill {
+  background: #FEF3C7 !important;
+  border: 1px solid #FDE68A !important;
+  color: #92400E !important;
+  font-weight: 750 !important;
+}
+
+
 /* 2-Step Outbound Audit Form Card in Warm Light Mode */
 body.is-logged-out .audit-card-wrap {
   background: #FFFFFF !important;
