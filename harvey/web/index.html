@@ -2024,13 +2024,19 @@ body.is-logged-in .public-access-banner {
       <p style="margin:4px 0 0 0;color:var(--text-2);font-size:13px;">Direct, real-time lead pipeline running locally with zero external sheet/script breakage. Always in sync.</p>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;" id="crm-sheet-controls">
+      <a href="https://crm.trackkaroai.com" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:5px;border-color:rgba(59,130,246,0.4);color:#60a5fa;font-weight:600;">
+        📊 Open NocoDB CRM ↗
+      </a>
+      <button class="btn btn-primary btn-sm" id="crm-sync-btn" onclick="triggerCrmSync()" style="display:inline-flex;align-items:center;gap:5px;font-weight:600;">
+        🔄 Sync to NocoDB
+      </button>
       <a href="/api/crm/export.tsv" download="crm_vault.tsv" class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:5px;font-weight:600;">
         Export TSV / Excel
       </a>
       <a href="#" id="crm-sheet-link" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="display:none;align-items:center;gap:5px;border-color:rgba(34,197,94,0.4);color:#22c55e;">
         Google Sheets ↗
       </a>
-      <button class="btn btn-primary btn-sm" onclick="loadCrmSheet()">Refresh</button>
+      <button class="btn btn-secondary btn-sm" onclick="loadCrmSheet()">Refresh</button>
     </div>
   </div>
 
@@ -3505,6 +3511,30 @@ async function switchActiveWorkspace(wsKey) {
   }
   if (typeof loadCurrentTab === 'function') {
     loadCurrentTab();
+  }
+}
+
+async function triggerCrmSync() {
+  const btn = document.getElementById('crm-sync-btn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳ Syncing...</span>';
+  }
+  try {
+    const res = await fetch('/api/crm/sync-nocodb', { method: 'POST' });
+    const data = await res.json();
+    if (btn) btn.innerHTML = '<span>✅ Synced!</span>';
+    setTimeout(() => {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>🔄 Sync to NocoDB</span>';
+      }
+    }, 2500);
+  } catch (err) {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>❌ Sync Failed</span>';
+    }
   }
 }
 

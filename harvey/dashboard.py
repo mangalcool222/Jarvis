@@ -793,6 +793,12 @@ async def outbox_approve_all():
         n = await state.approve_outbox()
         # Immediately trigger background dispatch for due items
         asyncio.create_task(_drain_now())
+        # Automatically trigger background CRM sync to NocoDB
+        try:
+            from harvey.nocodb_sync import sync_entire_outbox_now
+            asyncio.create_task(sync_entire_outbox_now())
+        except Exception:
+            pass
         return {"success": True, "approved": n}
     except Exception as e:
         return JSONResponse({"success": False, "message": str(e)}, status_code=500)
@@ -889,9 +895,16 @@ async def outbox_approve(item_id: str):
     try:
         state = _state()
         await state.init_db()
+        it = await state.get_outbox_item(item_id)
         n = await state.approve_outbox(item_id)
         # Immediately trigger background dispatch for due items
         asyncio.create_task(_drain_now())
+        if it and it.get("to_email"):
+            try:
+                from harvey.nocodb_sync import sync_outbox_status
+                asyncio.create_task(sync_outbox_status(it["to_email"], "approved"))
+            except Exception:
+                pass
         return {"success": bool(n)}
     except Exception as e:
         return JSONResponse({"success": False, "message": str(e)}, status_code=500)
@@ -902,7 +915,14 @@ async def outbox_reject(item_id: str):
     try:
         state = _state()
         await state.init_db()
+        it = await state.get_outbox_item(item_id)
         await state.update_outbox_item(item_id, status="rejected")
+        if it and it.get("to_email"):
+            try:
+                from harvey.nocodb_sync import sync_outbox_status
+                asyncio.create_task(sync_outbox_status(it["to_email"], "rejected"))
+            except Exception:
+                pass
         return {"success": True}
     except Exception as e:
         return JSONResponse({"success": False, "message": str(e)}, status_code=500)
@@ -924,10 +944,25 @@ async def outbox_unapprove(item_id: str):
     try:
         state = _state()
         await state.init_db()
+        it = await state.get_outbox_item(item_id)
         await state.update_outbox_item(item_id, status="pending_review")
+        if it and it.get("to_email"):
+            try:
+                from harvey.nocodb_sync import sync_outbox_status
+                asyncio.create_task(sync_outbox_status(it["to_email"], "pending_review"))
+            except Exception:
+                pass
         return {"success": True}
     except Exception as e:
         return JSONResponse({"success": False, "message": str(e)}, status_code=500)
+
+
+@app.post("/api/crm/sync-nocodb")
+async def manual_crm_sync():
+    """Manual 1-click sync between Jarvis and NocoDB CRM."""
+    from harvey.nocodb_sync import sync_entire_outbox_now
+    res = await sync_entire_outbox_now()
+    return res
 
 
 @app.post("/api/outbox/{item_id}/retry")
