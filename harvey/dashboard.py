@@ -147,9 +147,10 @@ async def get_setup_status():
     checks = []
 
     # 1. Venv
+    import sys
     checks.append({
         "id": "venv", "label": "Python virtual environment",
-        "done": (PROJECT_ROOT / ".venv").is_dir(),
+        "done": (PROJECT_ROOT / ".venv").is_dir() or (sys.prefix != sys.base_prefix),
         "required": True,
         "help": "Run: python3 -m venv .venv && source .venv/bin/activate && pip install -e .",
     })
@@ -161,7 +162,7 @@ async def get_setup_status():
         "id": "env_file", "label": "Environment file (.env)",
         "done": env_exists,
         "required": True,
-        "help": "Go to the Settings tab to enter your API keys.",
+        "help": "Go to Settings & Ops to enter your credentials or create .env.",
     })
 
     # 3. Email provider configured (matches channels.email.provider)
@@ -189,14 +190,13 @@ async def get_setup_status():
         "help": provider_help,
     })
 
-    # 4. Email verification (needed for addresses to be sendable, not 'guess')
+    # 4. Email verification (optional / managed by platform MX Shield)
     verifier_set = _has("REOON_API_KEY") or _has("ZEROBOUNCE_API_KEY") or _has("HUNTER_API_KEY")
     checks.append({
         "id": "verifier", "label": "Email verification key",
         "done": verifier_set,
-        "required": True,
-        "help": "Add a Reoon (free 600/mo), ZeroBounce, or Hunter key in Settings — "
-                "without one, found emails stay 'guess' and are never sent.",
+        "required": False,
+        "help": "Add a Reoon (free 600/mo), ZeroBounce, or Hunter key in Settings (optional — built-in MX Shield active).",
     })
 
     # 5. Config valid
@@ -1808,7 +1808,7 @@ async def get_today():
                 "key": "setup", "tone": "warn",
                 "title": "Finish setting Jarvis up",
                 "detail": ", ".join(missing[:3]) or "Some required steps are incomplete.",
-                "action": "Open setup", "tab": "settings",
+                "action": "Open setup", "tab": "controls",
             })
 
         if proposed:
