@@ -3430,11 +3430,23 @@ async function switchActiveWorkspace(wsKey) {
     return;
   }
 
-  // If on local/LAN and switching between port 5555 and 5556, redirect immediately
-  if (targetPort && currentPort && currentPort !== targetPort) {
+  // If on local/LAN with multi-port daemon setup (5555 vs 5556), redirect between ports
+  const isLocalMultiPort = (currentPort === '5555' || currentPort === '5556');
+  if (isLocalMultiPort && targetPort && currentPort !== targetPort) {
     const targetUrl = `${window.location.protocol}//${window.location.hostname}:${targetPort}${currentPath}${currentHash}`;
     window.location.href = targetUrl;
     return;
+  }
+
+  // Single-domain / Production mode: switch active workspace dynamically in-process on server!
+  try {
+    await fetch('/api/switch-workspace', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ workspace: wsKey })
+    });
+  } catch (err) {
+    console.error('Failed to switch workspace in-process:', err);
   }
 
   // Update UI & close menu
@@ -3442,12 +3454,12 @@ async function switchActiveWorkspace(wsKey) {
   const menu = document.getElementById('workspace-menu');
   if (menu) menu.classList.remove('active');
 
-  // Refresh active tab in Jarvis
+  // Refresh active tab and workspace info in Jarvis
+  if (typeof loadWorkspaceInfo === 'function') {
+    await loadWorkspaceInfo();
+  }
   if (typeof loadCurrentTab === 'function') {
     loadCurrentTab();
-  }
-  if (typeof loadWorkspaceInfo === 'function') {
-    loadWorkspaceInfo();
   }
 }
 

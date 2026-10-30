@@ -1287,6 +1287,41 @@ async def get_workspace_info():
     }
 
 
+@app.post("/api/switch-workspace")
+async def switch_workspace_api(request: Request):
+    """Dynamically switch active workspace in-process (supports single domain / production)."""
+    from harvey.paths import PROJECT_ROOT, set_workspace_dir, get_workspace_dir, get_db_path
+    from harvey.state import StateManager
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    ws_key = body.get("workspace", "").strip().lower()
+    if ws_key in ("speed-to-lead", "trackkaro", "root", "dubai"):
+        set_workspace_dir(None)
+    elif ws_key in ("cold-email", "cold_email", "cold_email_outreach"):
+        set_workspace_dir(PROJECT_ROOT / "workspaces" / "cold_email_outreach")
+    else:
+        target = PROJECT_ROOT / "workspaces" / ws_key
+        if target.is_dir():
+            set_workspace_dir(target)
+    ws = get_workspace_dir()
+    is_root = (ws.resolve() == PROJECT_ROOT.resolve() or ws.name in ("trackkaro", ""))
+
+    try:
+        sm = StateManager(get_db_path(ws))
+        await sm.init_db()
+    except Exception as e:
+        logger.warning(f"Error ensuring DB on workspace switch: {e}")
+
+    return {
+        "success": True,
+        "workspace": ws.name if not is_root else "trackkaro",
+        "is_root": is_root,
+        "display_name": "Dubai & India Speed-to-Lead" if is_root else ws.name.replace("_", " ").title()
+    }
+
+
 @app.get("/api/workspace-config")
 async def get_workspace_config():
     """Fetch live workspace configuration (Offer & SMTP) from .env and harvey.yaml."""
