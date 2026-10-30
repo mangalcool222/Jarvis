@@ -2808,7 +2808,6 @@ function renderSchedulerDays() {
     <div class="sched-day-pill ${idx === _schedSelectedDayIdx ? 'active' : ''}" onclick="selectSchedulerDay(${idx})">
       <div class="s-day-name">${item.dayName}</div>
       <div class="s-day-num">${item.dayNum}</div>
-      <div class="s-day-avail">${item.monthName} • 8 slots</div>
     </div>
   `).join('');
 }
@@ -2936,7 +2935,7 @@ function resetNativeScheduler() {
   if (successEl) successEl.style.display = 'none';
   if (btn) {
     btn.disabled = false;
-    btn.innerHTML = '<span>Lock Calendar Slot &amp; Get Google Meet Link</span> <span>🚀</span>';
+    btn.innerHTML = '<span>Confirm 15-Min Meeting</span> <span>→</span>';
   }
   initNativeScheduler();
 }
