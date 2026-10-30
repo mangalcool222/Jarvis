@@ -1492,7 +1492,7 @@ async def get_workspace_config():
     offer_tagline = company.get("description") or ("High-ticket speed-to-lead nervous system (Sub-15s response)" if is_root else "$1,500 – $2,500/mo Autonomous AI SDR Retainer")
     target_titles = ", ".join(target.get("titles", [])) or "Founder, CEO, Managing Partner, Head of Growth, VP Sales"
     target_geo = ", ".join(target.get("locations", [])) or ("Dubai, UAE, India" if is_root else "United States, United Kingdom, Dubai, Canada")
-    booking_url = os.getenv("CALENDLY_URL", "https://calendly.com/trackkaroai/15min")
+    booking_url = os.getenv("CALENDLY_URL", "https://cal.com/mangal/15min")
 
     smtp_host = env_vars.get("SMTP_HOST") or os.getenv("SMTP_HOST", "smtp.gmail.com")
     smtp_port = env_vars.get("SMTP_PORT") or os.getenv("SMTP_PORT", "465")

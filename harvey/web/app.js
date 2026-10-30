@@ -2703,11 +2703,11 @@ async function handleAuditSubmit(e) {
   if (calIframe) {
     const encName = encodeURIComponent(name);
     const encEmail = encodeURIComponent(email);
-    calIframe.src = `https://calendly.com/trackkaroai/15min?name=${encName}&email=${encEmail}&hide_landing_page_details=1&hide_gdpr_banner=1&background_color=0d1117&text_color=f1f5f9&primary_color=22c55e`;
+    calIframe.src = `https://cal.com/mangal/15min?name=${encName}&email=${encEmail}&theme=dark`;
   }
   const calLink = document.getElementById('audit-calendar-direct-link');
   if (calLink) {
-    calLink.href = `https://calendly.com/trackkaroai/15min?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
+    calLink.href = `https://cal.com/mangal/15min?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
   }
 
   if (form) form.style.display = 'none';

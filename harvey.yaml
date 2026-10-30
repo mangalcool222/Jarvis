@@ -29,7 +29,7 @@ product:
     entry: "Test the live demo in 30 seconds here: https://trackkaroai.com"
     goal: "book_call"
     booking_method: "calendar_link"
-    booking_url: "https://calendly.com/trackkaroai/15min"
+    booking_url: "https://cal.com/mangal/15min"
     meeting_duration: "15 minutes"
     meeting_owner: "Mangal Soren"
 
