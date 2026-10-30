@@ -5,6 +5,7 @@ services:
     volumes:
       # Persist database across restarts
       - ./data:/app/data
+      - ./workspaces:/app/workspaces
       # Mount config for easy editing without rebuild
       - ./harvey.yaml:/app/harvey.yaml:ro
       - ./prompts:/app/prompts:ro
