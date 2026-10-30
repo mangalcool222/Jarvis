@@ -1342,14 +1342,24 @@ async function loadOutbox() {
       : '<button class="btn btn-secondary btn-sm" onclick="sendingToggle(\'pause\')">' +
         'Pause all sending</button>');
 
-  // The kill switch gets a banner only when it's actually on — a permanent
-  // bar for a thing that isn't happening is just noise.
-  banner.innerHTML = data.paused
-    ? '<div class="card" style="border-color:var(--red);margin-bottom:16px">' +
+  let bannerHtml = '';
+  if (data.paused) {
+    bannerHtml += '<div class="card" style="border-color:var(--red);margin-bottom:16px">' +
         '<h2 style="color:var(--red)">&#9888; Sending is paused</h2>' +
         '<p style="color:var(--text-2);font-size:13px">' + escHtml(data.paused) +
-        '. Approved mail stays queued until you resume.</p></div>'
-    : '';
+        '. Approved mail stays queued until you resume.</p></div>';
+  }
+  if (catchAllCount > 0) {
+    bannerHtml += '<div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.35);border-radius:8px;padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">' +
+      '<div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#f59e0b;">' +
+        '<span style="font-size:16px;">⚠️</span> <span><b>' + catchAllCount + ' of ' + pending.length + ' drafts</b> are on Catch-All or Invalid domains. Protect domain deliverability by archiving them to the LinkedIn backlog.</span>' +
+      '</div>' +
+      '<button id="archive-catchalls-btn" class="btn btn-secondary btn-sm" onclick="archiveCatchAlls()" style="color:#f59e0b;border-color:rgba(245,158,11,0.5);background:rgba(245,158,11,0.15);font-weight:700;display:inline-flex;align-items:center;gap:5px;cursor:pointer;padding:6px 14px;">' +
+        '<span>📦 Archive All ' + catchAllCount + ' Catch-Alls &amp; Invalid</span>' +
+      '</button>' +
+    '</div>';
+  }
+  banner.innerHTML = bannerHtml;
 
   desk.innerHTML = pending.length ? renderDesk(pending, _desk.i) :
     '<div class="card">' + emptyState('&#10003;', 'Nothing to review',
@@ -1793,6 +1803,8 @@ function renderDesk(items, i) {
           'Approve <kbd>A</kbd></button>' +
         '<button class="btn btn-secondary" onclick="outboxAct(\'' + cur.id + '\',\'reject\')">' +
           'Reject <kbd>R</kbd></button>' +
+        '<button class="btn btn-secondary" onclick="outboxAct(\'' + cur.id + '\',\'cancel\')" style="color:#f59e0b;border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.08);font-weight:600;" title="Archive to LinkedIn / Multi-channel Backlog">' +
+          '📦 Archive <kbd>X</kbd></button>' +
         '<button id="desk-edit-btn" class="btn btn-secondary" onclick="toggleEdit(\'' + cur.id + '\')">' +
           'Edit Mail</button>' +
         (targetUrl ? 
@@ -1942,12 +1954,19 @@ document.addEventListener('keydown', e => {
   else if (k === 'k') { e.preventDefault(); deskGo(_desk.i - 1); }
   else if (k === 'a' && cur) { e.preventDefault(); outboxAct(cur.id, 'approve'); }
   else if (k === 'r' && cur) { e.preventDefault(); outboxAct(cur.id, 'reject'); }
+  else if ((k === 'x' || k === 'c') && cur) { e.preventDefault(); outboxAct(cur.id, 'cancel'); }
 });
 
 async function outboxAct(id, action) {
   const data = await api('/api/outbox/' + encodeURIComponent(id) + '/' + action, {method: 'POST'});
-  if (data && data.success) showToast(action === 'approve' ? 'Approved — will send on schedule.' : 'Rejected.', 'success');
-  else showToast('Action failed.', 'error');
+  if (data && data.success) {
+    let msg = 'Rejected.';
+    if (action === 'approve') msg = 'Approved — will send on schedule.';
+    else if (action === 'cancel') msg = '📦 Archived to LinkedIn Backlog.';
+    showToast(msg, 'success');
+  } else {
+    showToast('Action failed.', 'error');
+  }
   loadOutbox();
 }
 
