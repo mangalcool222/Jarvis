@@ -288,9 +288,34 @@ async function loadToday() {
   const el = document.getElementById('today-queue');
   if (!data) { el.innerHTML = offlineState(); return; }
 
+  const pendingCount = (data.stats || {}).outbox_pending || 0;
   navCount('nav-today', (data.items || []).filter(i => i.tone !== 'good').length);
-  navCount('nav-outbox', (data.stats || {}).outbox_pending || 0);
+  navCount('nav-outbox', pendingCount);
+  updateOutboxQueueBadge(pendingCount);
   renderFigures(data.stats || {});
+
+function updateOutboxQueueBadge(pendingCount) {
+  const wchCountEl = document.getElementById('wch-outbox-count');
+  const wchLabelEl = document.getElementById('wch-outbox-label');
+  const wchIconEl = document.getElementById('wch-outbox-icon');
+  const wchBtn = document.getElementById('wch-outbox-btn');
+  if (wchCountEl) wchCountEl.textContent = pendingCount;
+  if (wchBtn && wchLabelEl && wchIconEl) {
+    if (pendingCount > 0) {
+      wchIconEl.textContent = '🚨';
+      wchLabelEl.textContent = 'Review Outbox Queue';
+      wchBtn.style.background = 'rgba(239, 68, 68, 0.15)';
+      wchBtn.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+      wchBtn.style.color = '#F87171';
+    } else {
+      wchIconEl.textContent = '✓';
+      wchLabelEl.textContent = 'Outbox Clear';
+      wchBtn.style.background = 'rgba(16, 185, 129, 0.12)';
+      wchBtn.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+      wchBtn.style.color = '#10B981';
+    }
+  }
+}
 
   const items = data.items || [];
   if (!items.length) {
@@ -1251,6 +1276,9 @@ async function loadOutbox() {
   _desk.items = pending;
   if (_desk.i >= pending.length) _desk.i = Math.max(0, pending.length - 1);
   navCount('nav-outbox', pending.length);
+  if (typeof updateOutboxQueueBadge === 'function') {
+    updateOutboxQueueBadge(pending.length);
+  }
 
   const approved = data.approved || [];
   const archived = data.archived || [];

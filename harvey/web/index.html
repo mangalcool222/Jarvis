@@ -639,8 +639,8 @@ body.is-logged-in .public-access-banner {
       </p>
     </div>
     <div class="wch-actions">
-      <button class="btn-wch-action" onclick="showTab('outbox')">
-        <span>🚨</span> Review Outbox Queue (<span id="wch-outbox-count">2</span>)
+      <button class="btn-wch-action" id="wch-outbox-btn" onclick="showTab('outbox')">
+        <span id="wch-outbox-icon">✓</span> <span id="wch-outbox-label">Outbox Clear</span> (<span id="wch-outbox-count">0</span>)
       </button>
       <a href="https://docs.google.com/spreadsheets/d/1b9xhW3LQLFCXSapKBBuGESZuUzBwdVWd6kXLqIqtMkQ/edit" target="_blank" class="btn-wch-secondary">
         <span>📊</span> Google Sheet CRM ↗
