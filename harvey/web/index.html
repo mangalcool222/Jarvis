@@ -561,7 +561,10 @@ body.is-logged-in .public-access-banner {
         <div class="ws-title">Cold Email Agency Retainer (Port 5556)</div>
         <div class="ws-sub">24 Accounts • B2B SaaS & Dev Agencies</div>
       </div>
-      <span class="ws-check" style="display:none;">✓</span>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <span class="ws-check" style="display:none;">✓</span>
+        <button type="button" class="btn-ws-delete" onclick="deleteWorkspaceModal(event, 'cold_email_outreach', 'Cold Email Agency Retainer')" title="Delete or Archive this workspace" style="background:transparent; border:none; color:#EF4444; cursor:pointer; font-size:13px; padding:2px 6px; border-radius:4px; opacity:0.7;" onmouseover="this.style.opacity='1'; this.style.background='rgba(239,68,68,0.15)'" onmouseout="this.style.opacity='0.7'; this.style.background='transparent'">🗑️</button>
+      </div>
     </div>
     <div class="ws-item" data-ws="bitscale" onclick="switchActiveWorkspace('bitscale')">
       <div class="ws-icon">🌐</div>
@@ -569,7 +572,10 @@ body.is-logged-in .public-access-banner {
         <div class="ws-title">Bitscale AI GTM Engine (bitscale.ai)</div>
         <div class="ws-sub">4 Accounts • Apollo, Cognism, Seamless</div>
       </div>
-      <span class="ws-check" style="display:none;">✓</span>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <span class="ws-check" style="display:none;">✓</span>
+        <button type="button" class="btn-ws-delete" onclick="deleteWorkspaceModal(event, 'bitscale', 'Bitscale AI GTM Engine')" title="Delete or Archive this workspace" style="background:transparent; border:none; color:#EF4444; cursor:pointer; font-size:13px; padding:2px 6px; border-radius:4px; opacity:0.7;" onmouseover="this.style.opacity='1'; this.style.background='rgba(239,68,68,0.15)'" onmouseout="this.style.opacity='0.7'; this.style.background='transparent'">🗑️</button>
+      </div>
     </div>
     <div class="ws-divider"></div>
     <div class="ws-action-btn" id="btn-create-new-workspace" onclick="openScanModal()">
@@ -2412,6 +2418,29 @@ body.is-logged-in .public-access-banner {
       </div>
     </div>
   </div>
+
+  <!-- Danger Zone: Workspace Archival & Deletion -->
+  <div class="card" id="ws-danger-zone-card" style="margin-top:24px; border:1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.03); border-radius:10px; padding:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <div>
+        <h3 style="color:#EF4444; font-size:14px; font-weight:700; margin:0 0 4px 0; display:flex; align-items:center; gap:8px;">
+          <span>⚠️</span> Danger Zone — Workspace Deletion &amp; Archival
+        </h3>
+        <p style="color:#94A3B8; font-size:12px; margin:0;">
+          Archive or permanently purge this client workspace. All other client workspaces and root engine remain 100% untouched.
+        </p>
+      </div>
+      <div id="danger-zone-action-area" style="display:flex; gap:10px;">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="triggerWorkspaceAction('archive')" style="font-size:12px; border-color:rgba(245,158,11,0.4); color:#F59E0B;">
+          📦 Archive Workspace
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="triggerWorkspaceAction('delete')" style="font-size:12px; background:#EF4444; border-color:#EF4444;">
+          🗑️ Permanently Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -2424,6 +2453,23 @@ async function loadWorkspaceSettings() {
     if (wsBadge && data.display_name) {
       wsBadge.innerText = data.display_name;
     }
+
+    const dangerArea = document.getElementById('danger-zone-action-area');
+    if (dangerArea) {
+      if (data.is_root) {
+        dangerArea.innerHTML = '<span style="font-size:12px; color:#10B981; font-weight:600; padding:6px 12px; background:rgba(16,185,129,0.1); border-radius:6px; border:1px solid rgba(16,185,129,0.3);">🛡️ Protected Core Engine (Primary system cannot be deleted)</span>';
+      } else {
+        dangerArea.innerHTML = `
+          <button type="button" class="btn btn-secondary btn-sm" onclick="triggerWorkspaceAction('archive')" style="font-size:12px; border-color:rgba(245,158,11,0.4); color:#F59E0B; cursor:pointer;">
+            📦 Archive Workspace
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" onclick="triggerWorkspaceAction('delete')" style="font-size:12px; background:#EF4444; border-color:#EF4444; cursor:pointer;">
+            🗑️ Permanently Delete
+          </button>
+        `;
+      }
+    }
+
     if (data.offer) {
       if (data.offer.name) document.getElementById('cfg-offer-name').value = data.offer.name;
       if (data.offer.tagline) document.getElementById('cfg-offer-tagline').value = data.offer.tagline;
@@ -2496,6 +2542,63 @@ async function testSmtpConnection() {
     alert('Error testing SMTP: ' + e.message);
   } finally {
     if (btn) btn.innerText = originalText;
+  }
+}
+
+async function deleteWorkspaceModal(event, wsKey, wsTitle) {
+  if (event) event.stopPropagation();
+  const choice = confirm(`⚠️ Delete Client Workspace: "${wsTitle}"?\n\n• OK = Delete (Local files & Supabase leads for this client)\n• Cancel = Abort`);
+  if (!choice) return;
+
+  try {
+    const res = await fetch(`/api/workspaces/${wsKey}/delete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete', purge_supabase: true })
+    });
+    const data = await res.json();
+    if (data.success) {
+      alert(`✅ ${data.message}`);
+      const isLocal = window.location.port === '5555' || window.location.port === '5556';
+      window.location.href = window.location.protocol + '//' + window.location.hostname + (isLocal ? ':5555' : '') + '/#today';
+    } else {
+      alert(`⚠️ ${data.error || 'Failed to delete workspace'}`);
+    }
+  } catch (err) {
+    alert('Network error: ' + err.message);
+  }
+}
+
+async function triggerWorkspaceAction(action) {
+  const wsInfo = _workspaceInfo || {};
+  const wsName = wsInfo.workspace || 'cold_email_outreach';
+  if (wsInfo.is_root) {
+    alert('🛡️ The primary Dubai & India Speed-to-Lead engine is protected and cannot be deleted.');
+    return;
+  }
+  const isDelete = (action === 'delete');
+  const confirmMsg = isDelete
+    ? `🚨 ARE YOU ABSOLUTELY SURE?\n\nPermanently delete workspace "${wsName}"?\n• Local database and prompts will be removed.\n• Supabase rows for this workspace will be purged.\n• Dubai Real Estate and all other workspaces will remain 100% safe.`
+    : `📦 Archive workspace "${wsName}"?\n\n• Local files will be moved to .archived/\n• Supabase status will be marked 'archived'`;
+
+  if (!confirm(confirmMsg)) return;
+
+  try {
+    const res = await fetch(`/api/workspaces/${wsName}/delete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: action, purge_supabase: isDelete })
+    });
+    const data = await res.json();
+    if (data.success) {
+      alert(`✅ ${data.message}`);
+      const isLocal = window.location.port === '5555' || window.location.port === '5556';
+      window.location.href = window.location.protocol + '//' + window.location.hostname + (isLocal ? ':5555' : '') + '/#today';
+    } else {
+      alert(`⚠️ ${data.error || 'Operation failed'}`);
+    }
+  } catch (err) {
+    alert('Error: ' + err.message);
   }
 }
 

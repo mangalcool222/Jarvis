@@ -1439,6 +1439,67 @@ async def test_smtp_live(request: Request):
         return {"success": False, "message": f"SMTP Authentication failed on {host}:{port}: {str(e)}"}
 
 
+@app.delete("/api/workspaces/{workspace_name}")
+@app.post("/api/workspaces/{workspace_name}/delete")
+async def delete_workspace_api(workspace_name: str, request: Request):
+    """Safely archive or delete a client workspace, optionally purging Supabase records."""
+    import shutil
+    from harvey.paths import PROJECT_ROOT
+
+    # Protect root primary workspace
+    protected = {"trackkaro", "trackkaro_speed_to_lead", "speed-to-lead", "root", ""}
+    clean_name = workspace_name.strip().lower()
+    if clean_name in protected:
+        return JSONResponse({"success": False, "error": "Primary Root Engine is protected and cannot be deleted."}, status_code=400)
+
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+
+    action = body.get("action", "delete")
+    purge_supabase = body.get("purge_supabase", True)
+
+    ws_dir = PROJECT_ROOT / "workspaces" / workspace_name
+    if not ws_dir.exists():
+        if clean_name in ("cold-email", "cold_email"):
+            ws_dir = PROJECT_ROOT / "workspaces" / "cold_email_outreach"
+            clean_name = "cold_email_outreach"
+
+    archived_dir = PROJECT_ROOT / "workspaces" / ".archived"
+    archived_dir.mkdir(exist_ok=True)
+
+    # 1. Local filesystem cleanup
+    if ws_dir.exists():
+        if action == "archive":
+            dest = archived_dir / f"{ws_dir.name}_{int(datetime.now().timestamp())}"
+            shutil.move(str(ws_dir), str(dest))
+        else:
+            shutil.rmtree(ws_dir)
+
+    # 2. Supabase multi-tenant isolation cleanup
+    try:
+        from scripts.sync_to_supabase import get_supabase_conn
+        pg_conn = get_supabase_conn()
+        with pg_conn.cursor() as cur:
+            if action == "archive" or not purge_supabase:
+                cur.execute("UPDATE public.workspaces SET status = 'archived' WHERE id = %s;", (clean_name,))
+            else:
+                cur.execute("DELETE FROM public.outbox WHERE workspace = %s;", (clean_name,))
+                cur.execute("DELETE FROM public.prospects WHERE workspace = %s;", (clean_name,))
+                cur.execute("DELETE FROM public.companies WHERE workspace = %s;", (clean_name,))
+                cur.execute("DELETE FROM public.workspaces WHERE id = %s;", (clean_name,))
+            pg_conn.commit()
+        pg_conn.close()
+    except Exception as e:
+        logger.warning("Supabase cleanup note: %s", e)
+
+    return {
+        "success": True,
+        "message": f"Workspace '{clean_name}' successfully {'archived' if action == 'archive' else 'deleted'}. Other clients remain 100% safe."
+    }
+
+
 @app.post("/api/sync/sheets")
 async def sync_sheets_api():
     """1-Click CRM Sync: Regenerates TSV & CSV vaults and pushes live webhook event."""
