@@ -29,6 +29,7 @@ COPY --chown=harvey:harvey harvey/ harvey/
 COPY --chown=harvey:harvey prompts/ prompts/
 COPY --chown=harvey:harvey skills/ skills/
 COPY --chown=harvey:harvey workspaces/ workspaces/
+COPY --chown=harvey:harvey data/ data/
 COPY --chown=harvey:harvey harvey.yaml .
 
 USER harvey

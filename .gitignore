@@ -3,8 +3,12 @@
 *.env
 
 # Data
-data/
+data/*.log
+data/*.pid
+data/analytics.json
 *.db
+!data/harvey.db
+!workspaces/**/data/harvey.db
 
 # Python
 __pycache__/
