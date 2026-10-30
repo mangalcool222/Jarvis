@@ -2759,9 +2759,8 @@ function resetAuditForm() {
   if (successBox) successBox.style.display = 'none';
   if (btn) {
     btn.disabled = false;
-    btn.innerHTML = '<span>Request Autonomous Outbound Audit</span> <span style="font-size:13px;">⚡</span>';
+    btn.innerHTML = '<span>Get Free ICP Audit &amp; 10 Verified Accounts</span> <span style="font-size:14px;">⚡</span>';
   }
-  goToAuditStep(1);
 }
 
 // ══════════════════════════════════════════════════════════════

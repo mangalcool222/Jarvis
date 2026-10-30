@@ -1732,24 +1732,8 @@ body.is-logged-in .public-access-banner {
 
       <!-- Tab 1: Form & Audit Ingestion View -->
       <div id="audit-form-view">
-        <!-- 2-Step Progress Indicator -->
-        <div class="audit-stepper-wrap">
-          <div class="audit-step-pill active" id="step-pill-1" onclick="goToAuditStep(1)">
-            <span class="step-num">01</span>
-            <span class="step-label">Contact &amp; Dispatch</span>
-          </div>
-          <div class="step-divider-line"></div>
-          <div class="audit-step-pill" id="step-pill-2" onclick="goToAuditStep(2)">
-            <span class="step-num">02</span>
-            <span class="step-label">Outbound Scope &amp; ICP</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Form Container -->
-      <form id="audit-inquiry-form" onsubmit="handleAuditSubmit(event)">
-        <!-- Step 1 Pane -->
-        <div class="audit-step-pane" id="audit-pane-1">
+        <!-- Form Container (Single Clean Step) -->
+        <form id="audit-inquiry-form" onsubmit="handleAuditSubmit(event)">
           <div class="audit-form-grid">
             <div class="audit-field">
               <label for="audit-name">Your Full Name <span class="req">*</span></label>
@@ -1757,8 +1741,8 @@ body.is-logged-in .public-access-banner {
             </div>
 
             <div class="audit-field">
-              <label for="audit-company">Company / Brand Name <span class="req">*</span></label>
-              <input type="text" id="audit-company" placeholder="e.g. Apex Growth Agency / Solaria Tech" required autocomplete="organization">
+              <label for="audit-company">Company / Website <span class="req">*</span></label>
+              <input type="text" id="audit-company" placeholder="e.g. apexscale.com" required autocomplete="organization">
             </div>
 
             <div class="audit-field">
@@ -1804,72 +1788,13 @@ body.is-logged-in .public-access-banner {
             </div>
           </div>
 
-          <div class="audit-action-row" style="justify-content:flex-end;">
-            <button type="button" class="btn btn-primary audit-btn-next" onclick="goToAuditStep(2)">
-              <span>Continue to Outbound Scope</span>
-              <span style="font-size:14px;">→</span>
+          <div class="audit-action-row" style="justify-content:center; margin-top:18px; padding-top:18px;">
+            <button type="submit" id="audit-submit-btn" class="btn btn-primary audit-btn-submit" style="width:100%; max-width:440px; justify-content:center; padding:12px 28px; font-size:13.5px; border-radius:10px;">
+              <span>Get Free ICP Audit &amp; 10 Verified Accounts</span>
+              <span style="font-size:14px;">⚡</span>
             </button>
           </div>
-        </div>
-
-        <!-- Step 2 Pane -->
-        <div class="audit-step-pane" id="audit-pane-2" style="display:none;">
-          <div class="audit-form-grid">
-            <div class="audit-field">
-              <label for="audit-industry">Primary Target ICP / Industry <span class="req">*</span></label>
-              <select id="audit-industry" class="audit-select">
-                <option value="B2B SaaS & Tech Startups">B2B SaaS &amp; Tech Startups</option>
-                <option value="Dev, Design & Growth Agencies">Dev, Design &amp; Growth Agencies</option>
-                <option value="Dubai Luxury Real Estate & Developers">Dubai Luxury Real Estate &amp; Developers</option>
-                <option value="Aesthetic Clinics, MedSpas & Healthcare">Aesthetic Clinics, MedSpas &amp; Healthcare</option>
-                <option value="Solar, Roofing & High-Ticket Home Services">Solar, Roofing &amp; High-Ticket Home Services</option>
-                <option value="High-Ticket B2B Consulting & Services">High-Ticket B2B Consulting &amp; Services</option>
-              </select>
-            </div>
-
-            <div class="audit-field">
-              <label for="audit-market">Target Outbound Geography <span class="req">*</span></label>
-              <select id="audit-market" class="audit-select">
-                <option value="US & North America">US &amp; North America</option>
-                <option value="Dubai & UAE (GCC)">Dubai &amp; UAE (GCC)</option>
-                <option value="UK & Europe">UK &amp; Europe</option>
-                <option value="India B2B">India B2B</option>
-                <option value="Global Multi-Region">Global Multi-Region</option>
-              </select>
-            </div>
-
-            <div class="audit-field">
-              <label for="audit-deal-size">Average Deal Size / Monthly Goal</label>
-              <select id="audit-deal-size" class="audit-select">
-                <option value="$1,500 – $3,000 / month">$1,500 – $3,000 / month</option>
-                <option value="$3,000 – $6,000 / month (High Growth)">$3,000 – $6,000 / month (High Growth)</option>
-                <option value="$6,000+ / enterprise scale">$6,000+ / enterprise scale</option>
-                <option value="< $1,500 / month (Early Stage)">&lt; $1,500 / month (Early Stage)</option>
-              </select>
-            </div>
-
-            <div class="audit-field">
-              <label for="audit-goal">Primary Outbound Objective</label>
-              <select id="audit-goal" class="audit-select">
-                <option value="Full DFY Outbound Setup (Book Qualified Calls on Calendar)">Full DFY Outbound Setup (Book Qualified Calls on Calendar)</option>
-                <option value="Personalized 1-to-1 Cold Outreach (Zero Generic Spam)">Personalized 1-to-1 Cold Outreach (Zero Generic Spam)</option>
-                <option value="Intent-Based Lead Sourcing (Hiring Spikes &amp; Ad Spends)">Intent-Based Lead Sourcing (Hiring Spikes &amp; Ad Spends)</option>
-                <option value="Complete Growth Engine (Outbound AI SDR + 15s Inbound Routing)">Complete Growth Engine (Outbound AI SDR + 15s Inbound Routing)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="audit-action-row" style="justify-content:space-between;">
-            <button type="button" class="btn btn-secondary audit-btn-back" onclick="goToAuditStep(1)">
-              <span>← Back</span>
-            </button>
-            <button type="submit" id="audit-submit-btn" class="btn btn-primary audit-btn-submit">
-              <span>Request Autonomous Outbound Audit</span>
-              <span style="font-size:13px;">⚡</span>
-            </button>
-          </div>
-        </div>
-      </form>
+        </form>
 
       <!-- Success Card (Hidden until submitted) -->
       <div id="audit-success-box" class="audit-success-card" style="display:none;">
