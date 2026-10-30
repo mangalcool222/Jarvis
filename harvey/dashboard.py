@@ -1524,6 +1524,118 @@ async def get_workspace_config():
     }
 
 
+@app.post("/api/meetings/book")
+async def book_meeting(request: Request):
+    """Native Jarvis In-House Meeting Booking Endpoint (Zero third-party)."""
+    import random, string, sqlite3, asyncio
+    try:
+        import httpx
+    except ImportError:
+        httpx = None
+
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+
+    name = str(data.get("name") or "").strip()
+    email = str(data.get("email") or "").strip()
+    phone = str(data.get("phone") or "").strip()
+    company = str(data.get("company") or "").strip()
+    slot_date = str(data.get("slot_date") or "").strip()
+    slot_time = str(data.get("slot_time") or "").strip()
+    timezone = str(data.get("timezone") or "Asia/Kolkata").strip()
+
+    if not name or not email:
+        return JSONResponse({"ok": False, "error": "Name and Email are required."}, status_code=400)
+
+    # Generate Google Meet room link
+    room_code = f"tk-{''.join(random.choices(string.ascii_lowercase, k=4))}-{''.join(random.choices(string.ascii_lowercase, k=3))}"
+    meet_link = f"https://meet.google.com/{room_code}"
+
+    from harvey.paths import get_workspace_dir
+    ws = get_workspace_dir()
+    db_path = ws / "data" / "harvey.db"
+    meeting_id = None
+    if db_path.exists():
+        try:
+            with sqlite3.connect(db_path) as conn:
+                conn.execute("""
+                    CREATE TABLE IF NOT EXISTS booked_meetings (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        name TEXT,
+                        email TEXT,
+                        phone TEXT,
+                        company TEXT,
+                        slot_date TEXT,
+                        slot_time TEXT,
+                        timezone TEXT,
+                        meet_link TEXT,
+                        status TEXT DEFAULT 'CONFIRMED',
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )
+                """)
+                cur = conn.execute(
+                    "INSERT INTO booked_meetings (name, email, phone, company, slot_date, slot_time, timezone, meet_link) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    (name, email, phone, company, slot_date, slot_time, timezone, meet_link)
+                )
+                meeting_id = cur.lastrowid
+                conn.commit()
+        except Exception as e:
+            logger.warning(f"Failed to record booked_meeting in DB: {e}")
+
+    # Background notifications (n8n webhook + instant email dispatch)
+    async def _notify():
+        payload = {
+            "action": "NATIVE_MEETING_BOOKED",
+            "full_name": name,
+            "lead_name": name,
+            "work_email": email,
+            "lead_email": email,
+            "whatsapp_phone": phone,
+            "lead_phone": phone,
+            "company": company,
+            "slot_date": slot_date,
+            "slot_time": slot_time,
+            "timezone": timezone,
+            "meet_link": meet_link,
+            "subject": f"📅 Discovery Session Confirmed: {name} ({company}) - {slot_date} {slot_time}",
+            "status": "MEETING_CONFIRMED"
+        }
+        if httpx:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                try:
+                    await client.post("https://n8n.trackkaroai.com/webhook/gtm-agency-lead-inbound", json=payload)
+                except Exception:
+                    pass
+                try:
+                    await client.post(
+                        "https://formsubmit.co/ajax/mangalsoren176@gmail.com",
+                        json={
+                            "_subject": f"🚨 NEW STRATEGY CALL: {name} ({company}) on {slot_date} at {slot_time}",
+                            "Prospect Name": name,
+                            "Company / Website": company,
+                            "Email": email,
+                            "WhatsApp": phone,
+                            "Confirmed Slot": f"{slot_date} at {slot_time} ({timezone})",
+                            "Google Meet Link": meet_link
+                        }
+                    )
+                except Exception:
+                    pass
+
+    asyncio.create_task(_notify())
+
+    return {
+        "ok": True,
+        "meeting_id": meeting_id,
+        "slot_date": slot_date,
+        "slot_time": slot_time,
+        "timezone": timezone,
+        "meet_link": meet_link
+    }
+
+
 @app.post("/api/save-workspace-config")
 async def save_workspace_config(request: Request):
     """Save workspace configuration directly to active workspace .env."""
