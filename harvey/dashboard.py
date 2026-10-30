@@ -1548,25 +1548,28 @@ async def list_workspaces_api():
             "icon": "🏢",
             "is_root": True,
             "active": is_active_root,
+        },
+        {
+            "key": "cold_email_outreach",
+            "name": "Cold Email Agency Retainer (Port 5556)",
+            "sub": "B2B SaaS & Dev Agencies",
+            "icon": "🚀",
+            "is_root": False,
+            "active": (not is_active_root and active_ws.name == "cold_email_outreach"),
         }
     ]
 
     ws_dir = PROJECT_ROOT / "workspaces"
     if ws_dir.is_dir():
         for d in sorted(ws_dir.iterdir()):
-            if not d.is_dir() or d.name.startswith(".") or d.name.startswith("_") or d.name in ("README.md", "trackkaro"):
+            if not d.is_dir() or d.name.startswith(".") or d.name.startswith("_") or d.name in ("README.md", "trackkaro", "cold_email_outreach"):
                 continue
 
             key = d.name
             is_active = (not is_active_root and active_ws.name == key)
-            if key == "cold_email_outreach":
-                title = "Cold Email Agency Retainer (Port 5556)"
-                sub = "B2B SaaS & Dev Agencies"
-                icon = "🚀"
-            else:
-                title = key.replace("_", " ").replace("-", " ").title()
-                sub = "Client ICP Engine"
-                icon = "⚡"
+            title = key.replace("_", " ").replace("-", " ").title()
+            sub = "Client ICP Engine"
+            icon = "⚡"
 
             yaml_path = d / "harvey.yaml"
             if yaml_path.is_file():
