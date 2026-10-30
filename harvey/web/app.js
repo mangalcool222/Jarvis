@@ -2699,15 +2699,9 @@ async function handleAuditSubmit(e) {
   const successBox = document.getElementById('audit-success-box');
   const stepper = document.querySelector('.audit-stepper-wrap');
 
-  const calIframe = document.getElementById('audit-calendly-iframe');
-  if (calIframe) {
-    const encName = encodeURIComponent(name);
-    const encEmail = encodeURIComponent(email);
-    calIframe.src = `https://cal.com/mangal/15min?name=${encName}&email=${encEmail}&theme=dark`;
-  }
-  const calLink = document.getElementById('audit-calendar-direct-link');
-  if (calLink) {
-    calLink.href = `https://cal.com/mangal/15min?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
+  const waLink = document.getElementById('audit-wa-dispatch-link');
+  if (waLink) {
+    waLink.href = `https://wa.me/917979816557?text=${encodeURIComponent(`Hi Mangal, I just submitted an Outbound Pipeline Audit for ${company || 'my company'} (${name}).`)}`;
   }
 
   if (form) form.style.display = 'none';
@@ -2717,7 +2711,7 @@ async function handleAuditSubmit(e) {
     successBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  showToast('Outbound audit scope received.', 'success');
+  showToast('Outbound audit scope received! Profiling 10 target accounts.', 'success');
 }
 
 function switchAuditMode(mode) {
