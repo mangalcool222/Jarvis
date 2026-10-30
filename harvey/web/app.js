@@ -2694,16 +2694,30 @@ async function handleAuditSubmit(e) {
     console.log('Ingestion settled with fallback:', err);
   }
 
-  // Show success card
+  // Show success card and prefill Calendly with lead details
   const form = document.getElementById('audit-inquiry-form');
   const successBox = document.getElementById('audit-success-box');
   const stepper = document.querySelector('.audit-stepper-wrap');
 
+  const calIframe = document.getElementById('audit-calendly-iframe');
+  if (calIframe) {
+    const encName = encodeURIComponent(name);
+    const encEmail = encodeURIComponent(email);
+    calIframe.src = `https://calendly.com/trackkaroai/15min?name=${encName}&email=${encEmail}&hide_landing_page_details=1&hide_gdpr_banner=1&background_color=0d1117&text_color=f1f5f9&primary_color=22c55e`;
+  }
+  const calLink = document.getElementById('audit-calendar-direct-link');
+  if (calLink) {
+    calLink.href = `https://calendly.com/trackkaroai/15min?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
+  }
+
   if (form) form.style.display = 'none';
   if (stepper) stepper.style.display = 'none';
-  if (successBox) successBox.style.display = 'block';
+  if (successBox) {
+    successBox.style.display = 'block';
+    successBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
-  showToast('Audit Request Ingested! Speed-to-Lead alert sent.', 'success');
+  showToast('Outbound audit scope received.', 'success');
 }
 
 function resetAuditForm() {
