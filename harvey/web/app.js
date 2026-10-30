@@ -155,7 +155,13 @@ function badge(status) {
 function formatDate(d) {
   if (!d) return '';
   try {
-    const dt = new Date(d);
+    let s = String(d).trim();
+    if (!s.endsWith('Z') && !s.includes('+') && !s.includes('-')) {
+      s = s.replace(' ', 'T') + 'Z';
+    } else if (s.includes(' ') && !s.includes('T')) {
+      s = s.replace(' ', 'T');
+    }
+    const dt = new Date(s);
     if (isNaN(dt)) return escHtml(d);
     return dt.toLocaleString('en-US', {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
   } catch { return escHtml(d); }
@@ -379,6 +385,7 @@ async function loadTodayActivity() {
         '<div class="terminal-dots"><span class="t-dot red"></span><span class="t-dot yellow"></span><span class="t-dot green"></span></div>' +
         '<span class="terminal-title">LIVE TELEMETRY STREAM &bull; AUTONOMOUS SDR</span>' +
         '<span class="terminal-status"><span class="pulse-dot green"></span> LIVE (' + data.length + ' EVENTS)</span>' +
+        '<button class="btn btn-primary btn-sm" id="pulse-btn" onclick="triggerAutonomousCycle()" style="font-size:11px;padding:3px 9px;margin-left:auto;display:inline-flex;align-items:center;gap:4px;cursor:pointer;">⚡ Run Cycle Now</button>' +
       '</div>' +
       '<div class="telemetry-log-feed">' +
         data.slice(0, 10).map(a =>
@@ -441,6 +448,31 @@ async function loadTodayActivity() {
       '<span>● System Load: 0.02 (Optimal)</span>' +
     '</div>' +
   '</div>';
+}
+
+async function triggerAutonomousCycle() {
+  const btn = document.getElementById('pulse-btn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳ Running Cycle...</span>';
+  }
+  try {
+    const res = await api('/api/harvey/run-cycle', { method: 'POST' });
+    if (btn) btn.innerHTML = '<span>✅ Cycle Done!</span>';
+    await loadTodayActivity();
+    await loadToday();
+    setTimeout(() => {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>⚡ Run Cycle Now</span>';
+      }
+    }, 2500);
+  } catch (err) {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>❌ Cycle Failed</span>';
+    }
+  }
 }
 
 function navCount(id, n) {
