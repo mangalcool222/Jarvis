@@ -61,6 +61,8 @@ harvey.local.yaml
 # Leads & Export Privacy
 *.csv
 *.tsv
+*.log
 TrackKaro_Leads/
 workspaces/*/data/
 workspaces/*/*.csv
+workspaces/*/*.log

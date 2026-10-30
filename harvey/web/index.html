@@ -2420,6 +2420,10 @@ async function loadWorkspaceSettings() {
   try {
     const res = await fetch('/api/workspace-config');
     const data = await res.json();
+    const wsBadge = document.getElementById('settings-current-ws-badge');
+    if (wsBadge && data.display_name) {
+      wsBadge.innerText = data.display_name;
+    }
     if (data.offer) {
       if (data.offer.name) document.getElementById('cfg-offer-name').value = data.offer.name;
       if (data.offer.tagline) document.getElementById('cfg-offer-tagline').value = data.offer.tagline;
@@ -2428,9 +2432,12 @@ async function loadWorkspaceSettings() {
       if (data.offer.booking_url) document.getElementById('cfg-booking-url').value = data.offer.booking_url;
     }
     if (data.smtp) {
+      if (data.smtp.host) document.getElementById('cfg-smtp-host').value = data.smtp.host;
+      if (data.smtp.port) document.getElementById('cfg-smtp-port').value = data.smtp.port;
       if (data.smtp.sender_email) document.getElementById('cfg-sender-email').value = data.smtp.sender_email;
       if (data.smtp.from_name) document.getElementById('cfg-sender-name').value = data.smtp.from_name;
       if (data.smtp.daily_limit) document.getElementById('cfg-daily-limit').value = data.smtp.daily_limit;
+      if (data.smtp.provider) document.getElementById('cfg-smtp-provider').value = data.smtp.provider;
       if (data.smtp.require_approval !== undefined) document.getElementById('cfg-require-approval').checked = data.smtp.require_approval;
     }
   } catch (err) {
@@ -2450,7 +2457,7 @@ async function saveWorkspaceSettings() {
     smtp: {
       provider: document.getElementById('cfg-smtp-provider').value,
       host: document.getElementById('cfg-smtp-host').value,
-      port: parseInt(document.getElementById('cfg-smtp-port').value || '587'),
+      port: parseInt(document.getElementById('cfg-smtp-port').value || '465'),
       sender_email: document.getElementById('cfg-sender-email').value,
       from_name: document.getElementById('cfg-sender-name').value,
       daily_limit: parseInt(document.getElementById('cfg-daily-limit').value || '25'),
@@ -2465,19 +2472,34 @@ async function saveWorkspaceSettings() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ config })
     });
-    alert('✅ Workspace Engine Configuration Saved & Applied to Jarvis!');
+    const result = await res.json();
+    alert('✅ ' + (result.message || 'Workspace Engine Configuration Saved & Applied!'));
+    loadWorkspaceSettings();
   } catch (err) {
-    alert('✅ Configuration saved locally in workspace.');
+    alert('⚠️ Error saving configuration: ' + err.message);
   }
 }
 
-function testSmtpConnection() {
-  const email = document.getElementById('cfg-sender-email').value;
-  alert(`⚡ SMTP Handshake Success!\n\nMailbox: ${email}\nStatus: Verified 200 OK\nDKIM / SPF: Validated\nSafe Pacing: Active (25/day cap)`);
+async function testSmtpConnection() {
+  const btn = event ? event.target : null;
+  const originalText = btn ? btn.innerText : '🔌 Test SMTP Ping';
+  if (btn) btn.innerText = '🔌 Testing Handshake...';
+  try {
+    const res = await fetch('/api/test-smtp-live', { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      alert(`⚡ SMTP Handshake Success!\n\n${data.message}`);
+    } else {
+      alert(`⚠️ SMTP Handshake Failed:\n\n${data.message}`);
+    }
+  } catch (e) {
+    alert('Error testing SMTP: ' + e.message);
+  } finally {
+    if (btn) btn.innerText = originalText;
+  }
 }
 
 // Auto-trigger load when opening controls
-const originalShowTab = typeof showTab === 'function' ? showTab : null;
 document.addEventListener('DOMContentLoaded', () => {
   loadWorkspaceSettings();
 });
@@ -3251,16 +3273,18 @@ function toggleWorkspaceDropdown(e) {
 }
 
 // Workspace Switching Engine
-async function switchActiveWorkspace(wsKey) {
+function syncWorkspaceUI(wsKey) {
+  const isColdEmail = (wsKey === 'cold-email' || wsKey === 'cold_email_outreach');
+  const isBitscale = (wsKey === 'bitscale');
 
   // Update Mission Control Bar texts
   const wchTitle = document.getElementById('wch-title');
   const wchSub = document.getElementById('wch-sub');
   if (wchTitle && wchSub) {
-    if (wsKey === 'cold-email') {
+    if (isColdEmail) {
       wchTitle.innerText = 'Cold Email Agency Retainer Operations';
       wchSub.innerText = 'Autonomous outbound pipeline prospecting B2B SaaS founders and Dev Agency leaders.';
-    } else if (wsKey === 'bitscale') {
+    } else if (isBitscale) {
       wchTitle.innerText = 'Bitscale AI GTM Engine Operations';
       wchSub.innerText = 'Targeting RevOps, Head of Growth & VP Sales at Cognism, Apollo, Seamless.AI, Instantly.';
     } else {
@@ -3269,34 +3293,54 @@ async function switchActiveWorkspace(wsKey) {
     }
   }
 
-  const menu = document.getElementById('workspace-menu');
-  if (menu) menu.classList.remove('active');
-
   document.querySelectorAll('.ws-item').forEach(item => {
     item.classList.remove('active');
     const chk = item.querySelector('.ws-check');
     if (chk) chk.style.display = 'none';
   });
 
-  const activeItem = document.querySelector(`.ws-item[data-ws="${wsKey}"]`);
+  const activeSelector = isColdEmail ? '.ws-item[data-ws="cold-email"]' : (isBitscale ? '.ws-item[data-ws="bitscale"]' : '.ws-item[data-ws="speed-to-lead"]');
+  const activeItem = document.querySelector(activeSelector);
   if (activeItem) {
     activeItem.classList.add('active');
     const chk = activeItem.querySelector('.ws-check');
     if (chk) chk.style.display = 'block';
-    const title = activeItem.querySelector('.ws-title').innerText;
-    document.getElementById('current-workspace-name').innerText = title;
+    const titleEl = activeItem.querySelector('.ws-title');
+    const badgeEl = document.getElementById('current-workspace-name');
+    if (titleEl && badgeEl) {
+      badgeEl.innerText = titleEl.innerText;
+    }
+  }
+}
+
+async function switchActiveWorkspace(wsKey) {
+  const currentPort = window.location.port;
+  const currentHash = window.location.hash || '#outbox';
+  const currentPath = window.location.pathname || '/';
+
+  let targetPort = null;
+  if (wsKey === 'speed-to-lead' || wsKey === 'trackkaro') {
+    targetPort = '5555';
+  } else if (wsKey === 'cold-email' || wsKey === 'cold_email_outreach') {
+    targetPort = '5556';
+  } else if (wsKey === 'bitscale') {
+    alert('Bitscale AI GTM Engine workspace is coming soon!');
+    const menu = document.getElementById('workspace-menu');
+    if (menu) menu.classList.remove('active');
+    return;
   }
 
-  // Notify Python Gateway Server
-  try {
-    await fetch('/api/switch-workspace', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ workspace: wsKey })
-    });
-  } catch (err) {
-    console.warn('Switch workspace network error:', err);
+  // If on local/LAN and switching between port 5555 and 5556, redirect immediately
+  if (targetPort && currentPort && currentPort !== targetPort) {
+    const targetUrl = `${window.location.protocol}//${window.location.hostname}:${targetPort}${currentPath}${currentHash}`;
+    window.location.href = targetUrl;
+    return;
   }
+
+  // Update UI & close menu
+  syncWorkspaceUI(wsKey);
+  const menu = document.getElementById('workspace-menu');
+  if (menu) menu.classList.remove('active');
 
   // Refresh active tab in Jarvis
   if (typeof loadCurrentTab === 'function') {

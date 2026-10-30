@@ -930,6 +930,17 @@ async def outbox_unapprove(item_id: str):
         return JSONResponse({"success": False, "message": str(e)}, status_code=500)
 
 
+@app.post("/api/outbox/{item_id}/retry")
+async def outbox_retry(item_id: str):
+    try:
+        state = _state()
+        await state.init_db()
+        await state.update_outbox_item(item_id, status="pending_review", error="")
+        return {"success": True}
+    except Exception as e:
+        return JSONResponse({"success": False, "message": str(e)}, status_code=500)
+
+
 @app.post("/api/outbox/{item_id}/edit")
 async def outbox_edit(item_id: str, request: Request):
     try:
@@ -1274,6 +1285,158 @@ async def get_workspace_info():
         "has_sheet": bool(sheet_url),
         "has_webhook": bool(webhook_url),
     }
+
+
+@app.get("/api/workspace-config")
+async def get_workspace_config():
+    """Fetch live workspace configuration (Offer & SMTP) from .env and harvey.yaml."""
+    from harvey.paths import PROJECT_ROOT, get_workspace_dir
+    ws = get_workspace_dir()
+    is_root = (ws.resolve() == PROJECT_ROOT.resolve() or ws.name in ("trackkaro", ""))
+
+    env_path = (ws / ".env") if (ws / ".env").is_file() else (PROJECT_ROOT / ".env")
+    env_vars = {}
+    if env_path.is_file():
+        for line in env_path.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, _, v = line.partition("=")
+                env_vars[k.strip()] = v.strip()
+
+    cfg_path = ws / "harvey.yaml"
+    cfg = {}
+    if cfg_path.is_file():
+        try:
+            cfg = yaml.safe_load(cfg_path.read_text()) or {}
+        except Exception:
+            cfg = {}
+
+    company = cfg.get("company", {})
+    campaign = cfg.get("campaign", {})
+    target = cfg.get("target", {})
+
+    offer_name = company.get("name") or ("Dubai & India Speed-to-Lead" if is_root else "Cold Email Agency Retainer")
+    offer_tagline = company.get("description") or ("High-ticket speed-to-lead nervous system (Sub-15s response)" if is_root else "$1,500 – $2,500/mo Autonomous AI SDR Retainer")
+    target_titles = ", ".join(target.get("titles", [])) or "Founder, CEO, Managing Partner, Head of Growth, VP Sales"
+    target_geo = ", ".join(target.get("locations", [])) or ("Dubai, UAE, India" if is_root else "United States, United Kingdom, Dubai, Canada")
+    booking_url = os.getenv("CALENDLY_URL", "https://calendly.com/trackkaroai/15min")
+
+    smtp_host = env_vars.get("SMTP_HOST") or os.getenv("SMTP_HOST", "smtp.gmail.com")
+    smtp_port = env_vars.get("SMTP_PORT") or os.getenv("SMTP_PORT", "465")
+    smtp_user = env_vars.get("SMTP_USERNAME") or os.getenv("SMTP_USERNAME", "mangal@trackkaroai.com")
+    from_name = env_vars.get("FROM_NAME") or "Mangal Soren • TrackKaro AI"
+    daily_cap = int(env_vars.get("DAILY_SEND_LIMIT", "25"))
+
+    return {
+        "workspace": ws.name if not is_root else "trackkaro",
+        "is_root": is_root,
+        "display_name": "Dubai & India Speed-to-Lead (Port 5555)" if is_root else "Cold Email Agency Retainer (Port 5556)",
+        "offer": {
+            "name": offer_name,
+            "tagline": offer_tagline,
+            "target_titles": target_titles,
+            "target_geo": target_geo,
+            "booking_url": booking_url
+        },
+        "smtp": {
+            "provider": "google" if "gmail.com" in smtp_host else "smtp",
+            "host": smtp_host,
+            "port": int(smtp_port) if str(smtp_port).isdigit() else 465,
+            "sender_email": smtp_user,
+            "from_name": from_name,
+            "daily_limit": daily_cap,
+            "require_approval": True
+        },
+        "brain": "gemini"
+    }
+
+
+@app.post("/api/save-workspace-config")
+async def save_workspace_config(request: Request):
+    """Save workspace configuration directly to active workspace .env."""
+    from harvey.paths import PROJECT_ROOT, get_workspace_dir
+    ws = get_workspace_dir()
+    is_root = (ws.resolve() == PROJECT_ROOT.resolve() or ws.name in ("trackkaro", ""))
+
+    try:
+        body = await request.json()
+        cfg_data = body.get("config", {})
+    except Exception as e:
+        return JSONResponse({"success": False, "error": str(e)}, status_code=400)
+
+    env_path = ws / ".env"
+    existing_env = {}
+    if env_path.is_file():
+        for line in env_path.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, _, v = line.partition("=")
+                existing_env[k.strip()] = v.strip()
+    elif not is_root:
+        root_env = PROJECT_ROOT / ".env"
+        if root_env.is_file():
+            for line in root_env.read_text().splitlines():
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, _, v = line.partition("=")
+                    existing_env[k.strip()] = v.strip()
+
+    smtp_data = cfg_data.get("smtp", {})
+    if smtp_data.get("host"):
+        existing_env["SMTP_HOST"] = str(smtp_data["host"]).strip()
+    if smtp_data.get("port"):
+        existing_env["SMTP_PORT"] = str(smtp_data["port"]).strip()
+    if smtp_data.get("sender_email"):
+        existing_env["SMTP_USERNAME"] = str(smtp_data["sender_email"]).strip()
+    if smtp_data.get("from_name"):
+        existing_env["FROM_NAME"] = str(smtp_data["from_name"]).strip()
+    if smtp_data.get("daily_limit"):
+        existing_env["DAILY_SEND_LIMIT"] = str(smtp_data["daily_limit"]).strip()
+
+    lines = [f"{k}={v}" for k, v in existing_env.items()]
+    env_path.write_text("\n".join(lines) + "\n")
+
+    return {"success": True, "message": f"Workspace '{ws.name}' configuration saved to {env_path.name}!"}
+
+
+@app.post("/api/test-smtp-live")
+async def test_smtp_live(request: Request):
+    """Execute a real socket/handshake ping to the configured SMTP server."""
+    from harvey.paths import PROJECT_ROOT, get_workspace_dir
+    ws = get_workspace_dir()
+    env_path = (ws / ".env") if (ws / ".env").is_file() else (PROJECT_ROOT / ".env")
+
+    env_vars = {}
+    if env_path.is_file():
+        for line in env_path.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, _, v = line.partition("=")
+                env_vars[k.strip()] = v.strip()
+
+    host = env_vars.get("SMTP_HOST") or os.getenv("SMTP_HOST", "")
+    port = int(env_vars.get("SMTP_PORT") or os.getenv("SMTP_PORT", 465))
+    user = env_vars.get("SMTP_USERNAME") or os.getenv("SMTP_USERNAME", "")
+    password = env_vars.get("SMTP_PASSWORD") or os.getenv("SMTP_PASSWORD", "")
+
+    if not host or not user or not password:
+        return {"success": False, "message": f"Missing SMTP credentials in {env_path.name} (Host: {host}, User: {user})"}
+
+    import smtplib
+    try:
+        if port == 465:
+            with smtplib.SMTP_SSL(host, port, timeout=10) as server:
+                server.login(user, password)
+        else:
+            with smtplib.SMTP(host, port, timeout=10) as server:
+                server.starttls()
+                server.login(user, password)
+        return {
+            "success": True,
+            "message": f"Verified Live 200 OK! Connected to {host}:{port} as {user}."
+        }
+    except Exception as e:
+        return {"success": False, "message": f"SMTP Authentication failed on {host}:{port}: {str(e)}"}
 
 
 @app.post("/api/sync/sheets")

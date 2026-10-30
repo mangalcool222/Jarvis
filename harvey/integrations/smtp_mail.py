@@ -182,14 +182,17 @@ class SmtpImapProvider(MailProvider):
             return False, "SMTP_HOST / SMTP_USERNAME / SMTP_PASSWORD missing from .env"
         # SMTP handshake
         try:
-            smtp = aiosmtplib.SMTP(
-                hostname=self.smtp_host, port=self.smtp_port,
-                start_tls=(self.smtp_port == 587),
-                use_tls=(self.smtp_port == 465), timeout=15,
-            )
-            await smtp.connect()
-            await smtp.login(self.smtp_user, self.smtp_pass)
-            await smtp.quit()
+            loop = asyncio.get_event_loop()
+            def _smtp_check():
+                import smtplib
+                if self.smtp_port == 465:
+                    with smtplib.SMTP_SSL(self.smtp_host, self.smtp_port, timeout=15) as s:
+                        s.login(self.smtp_user, self.smtp_pass)
+                else:
+                    with smtplib.SMTP(self.smtp_host, self.smtp_port, timeout=15) as s:
+                        s.starttls()
+                        s.login(self.smtp_user, self.smtp_pass)
+            await loop.run_in_executor(None, _smtp_check)
         except Exception as e:
             return False, f"SMTP login failed: {str(e)[:200]}"
         # IMAP handshake (only if IMAP is configured)

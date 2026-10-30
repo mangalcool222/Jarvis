@@ -15,6 +15,10 @@ async function loadWorkspaceInfo() {
       const wsTagline = document.getElementById('workspace-tagline');
       const isColdEmail = (info.workspace === 'cold_email_outreach');
 
+      if (typeof syncWorkspaceUI === 'function') {
+        syncWorkspaceUI(isColdEmail ? 'cold-email' : 'speed-to-lead');
+      }
+
       if (wsTagline) {
         wsTagline.textContent = isColdEmail
           ? 'Autonomous Outbound SDR • B2B SaaS & Dev Agencies • TrackKaro AI'
@@ -233,7 +237,9 @@ function showTab(id, btn) {
   if (btn) btn.classList.add('active');
   updateDockSlider(btn);
   try { history.replaceState(null, '', '#' + id); } catch(e) {}
-  window.scrollTo(0, 0);
+  if (id === 'controls' && typeof loadWorkspaceSettings === 'function') {
+    loadWorkspaceSettings();
+  }
   loadCurrentTab();
 }
 
@@ -1549,13 +1555,80 @@ async function loadOutbox() {
     renderApprovedTable(data.approved) +
     renderArchivedTable(data.archived) +
     table('Recently sent', data.sent, [
-      ['To', r => r.to_email], ['Step', r => r.step], ['Subject', r => r.subject],
+      ['To', r => r.to_email], ['Step', r => r.step], 
+      ['Subject', r => '<a href="javascript:void(0)" onclick="viewSentEmailModal(\'' + r.id + '\')" style="color:var(--accent-text);text-decoration:none;font-weight:600;">' + escHtml(r.subject || '(no subject)') + ' <span style="font-size:11px;opacity:0.7;">👁️ Preview</span></a>', false, true],
       ['Sent', r => formatDate(r.sent_at), true],
     ]) +
     table('Didn\'t send', data.failed, [
       ['To', r => r.to_email], ['Status', r => badge(r.status), false, true],
       ['Reason', r => r.error, true], ['Updated', r => formatDate(r.updated_at), true],
+      ['Action', r => '<button class="btn btn-sm btn-primary" onclick="retryFailedEmail(\'' + r.id + '\')" style="padding:3px 10px;font-size:11px;font-weight:600;">🔄 Retry</button>', false, true],
     ]);
+}
+
+async function retryFailedEmail(id) {
+  try {
+    const res = await api('/api/outbox/' + id + '/retry', { method: 'POST' });
+    if (res && res.success) {
+      showToast('Moved back to Outbox for review & send!', 'success');
+      await loadOutbox();
+    } else {
+      showToast((res && res.message) || 'Failed to retry', 'error');
+    }
+  } catch (e) {
+    showToast('Error retrying: ' + e, 'error');
+  }
+}
+
+async function viewSentEmailModal(id) {
+  try {
+    const data = await api('/api/outbox');
+    const sentList = (data && data.sent) || [];
+    const item = sentList.find(x => x.id === id);
+    if (!item) {
+      showToast('Email details not found', 'error');
+      return;
+    }
+    
+    // Check if modal container exists or create one
+    let modal = document.getElementById('sent-email-preview-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'sent-email-preview-modal';
+      modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px;';
+      document.body.appendChild(modal);
+    }
+    
+    const senderEmail = (item.provider === 'smtp' || !item.provider) ? 'mangal@trackkaroai.com' : (item.provider || 'mangal@trackkaroai.com');
+    
+    modal.innerHTML = `
+      <div style="background:#0f172a;border:1px solid #334155;border-radius:12px;max-width:680px;width:100%;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 25px 50px -12px rgba(0,0,0,0.8);overflow:hidden;animation:fadeIn 0.15s ease;">
+        <div style="padding:16px 20px;border-bottom:1px solid #1e293b;display:flex;justify-content:space-between;align-items:center;background:#1e293b;">
+          <div>
+            <span style="font-size:11px;font-weight:700;text-transform:uppercase;color:#10b981;letter-spacing:0.5px;">✓ Dispatched Outbound Email</span>
+            <h3 style="margin:4px 0 0;font-size:16px;color:#f8fafc;font-weight:600;">${escHtml(item.subject || '(no subject)')}</h3>
+          </div>
+          <button onclick="document.getElementById('sent-email-preview-modal').style.display='none'" style="background:transparent;border:none;color:#94a3b8;font-size:24px;cursor:pointer;padding:0 6px;line-height:1;">&times;</button>
+        </div>
+        <div style="padding:12px 20px;background:#090d16;border-bottom:1px solid #1e293b;font-size:12px;color:#94a3b8;display:flex;gap:20px;flex-wrap:wrap;">
+          <div><b>From:</b> <span style="color:#38bdf8;font-weight:600;">Mangal Soren &lt;${escHtml(senderEmail)}&gt;</span></div>
+          <div><b>To:</b> <span style="color:#f1f5f9;font-weight:600;">${escHtml(item.to_email || '')}</span></div>
+          <div><b>Step:</b> <span style="color:#f1f5f9;">Step ${escHtml(String(item.step || 1))}</span></div>
+          <div><b>Sent:</b> <span style="color:#cbd5e1;">${formatDate(item.sent_at)}</span></div>
+        </div>
+        <div style="padding:24px 20px;overflow-y:auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;line-height:1.7;color:#f8fafc;background:#020617;white-space:pre-wrap;border-bottom:1px solid #1e293b;">
+${escHtml(item.body || '(Empty body)')}
+        </div>
+        <div style="padding:14px 20px;background:#0f172a;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:11px;color:#64748b;">Delivered via Google Workspace SMTP • Verified Inbound Route</span>
+          <button class="btn btn-secondary" onclick="document.getElementById('sent-email-preview-modal').style.display='none'" style="padding:6px 16px;font-size:12px;font-weight:600;">Close</button>
+        </div>
+      </div>
+    `;
+    modal.style.display = 'flex';
+  } catch(e) {
+    showToast('Failed to load email preview: ' + e, 'error');
+  }
 }
 
 async function restoreArchivedDraft(id) {

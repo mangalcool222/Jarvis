@@ -183,6 +183,7 @@ def cmd_dashboard(args):
 
 def cmd_status(args):
     """Show current pipeline status."""
+    import subprocess
     from harvey.state import StateManager
 
     async def _status():
@@ -190,11 +191,21 @@ def cmd_status(args):
         await state.init_db()
         summary = await state.get_state_summary()
 
+        # Check if autonomous scraping daemon process is actually running
+        try:
+            res = subprocess.run(["pgrep", "-f", "harvey run"], capture_output=True, text=True)
+            pids = res.stdout.strip().split()
+            daemon_running = len(pids) > 0
+            daemon_text = f"🟢 ACTIVE (PID: {', '.join(pids)})" if daemon_running else "🔴 STOPPED (Run 'jarvis run' to start scraping)"
+        except Exception:
+            daemon_text = "UNKNOWN"
+
         print("\n  Harvey Pipeline Status")
         print("  " + "=" * 40)
+        print(f"  Scraper Daemon:       {daemon_text}")
         print(f"  Prospects:            {summary['prospects']}")
         print(f"  Draft campaigns:      {summary['draft_campaigns']}")
-        print(f"  Active campaigns:     {summary['active_campaigns']}")
+        print(f"  Active campaigns:     {summary['active_campaigns']} (templates in DB)")
         print(f"  Open conversations:   {summary['open_conversations']}")
         by_provider = summary.get("usage_today_by_provider", {})
         print(f"  Claude calls today:   {by_provider.get('claude', summary['usage_today'])}")
