@@ -2720,6 +2720,31 @@ async function handleAuditSubmit(e) {
   showToast('Outbound audit scope received.', 'success');
 }
 
+function switchAuditMode(mode) {
+  const formTab = document.getElementById('tab-mode-form');
+  const calTab = document.getElementById('tab-mode-calendar');
+  const formView = document.getElementById('audit-form-view');
+  const calView = document.getElementById('audit-calendar-view');
+
+  if (mode === 'calendar') {
+    if (formTab) formTab.classList.remove('active');
+    if (calTab) calTab.classList.add('active');
+    if (formView) formView.style.display = 'none';
+    if (calView) {
+      calView.style.display = 'block';
+      const iframe = document.getElementById('audit-direct-cal-iframe');
+      if (iframe && (!iframe.src || iframe.src.indexOf('cal.com') === -1)) {
+        iframe.src = 'https://cal.com/mangal/15min?theme=dark';
+      }
+    }
+  } else {
+    if (calTab) calTab.classList.remove('active');
+    if (formTab) formTab.classList.add('active');
+    if (calView) calView.style.display = 'none';
+    if (formView) formView.style.display = 'block';
+  }
+}
+
 function resetAuditForm() {
   const form = document.getElementById('audit-inquiry-form');
   const successBox = document.getElementById('audit-success-box');
