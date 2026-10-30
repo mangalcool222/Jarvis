@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/app.css?v=trackkaro_sleek_scheduler_v3">
+<link rel="stylesheet" href="/static/app.css?v=trackkaro_calendly_step_flow_v4">
 
 <style>
 /* Mode Switcher Floating Pill */
@@ -1838,28 +1838,28 @@ body.is-logged-in .public-access-banner {
       </div>
     </div> <!-- /#audit-form-view -->
 
-    <!-- Tab 2: Native Jarvis In-House Slot Scheduler (Linear/Cal.com Sleek Style) -->
+    <!-- Tab 2: Native Jarvis In-House Slot Scheduler (Calendly/Cal.com 2-Step Progressive Disclosure) -->
     <div id="audit-calendar-view" style="display:none; padding:4px 0 0 0;">
       <div class="native-sched-card">
         
         <!-- Top Bar: Host + Session + Timezone -->
         <div class="sched-top-header">
           <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-weight:800; font-size:11px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px rgba(16,185,129,0.35);">
+            <div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px rgba(16,185,129,0.35);">
               MS
             </div>
             <div>
-              <div style="font-size:12.5px; font-weight:700; color:#F8FAFC; display:flex; align-items:center; gap:6px;">
+              <div style="font-size:13px; font-weight:700; color:#F8FAFC; display:flex; align-items:center; gap:6px;">
                 <span>15-Min Strategy Session</span>
                 <span class="status-indicator-dot dot-green" style="width:6px; height:6px; margin:0;"></span>
               </div>
-              <div style="font-size:10.5px; color:#64748B;">Mangal Soren · 1-on-1 Google Meet</div>
+              <div style="font-size:11px; color:#64748B;">Mangal Soren · 1-on-1 Google Meet</div>
             </div>
           </div>
           
           <div style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:7px; padding:3px 8px;">
             <span style="font-size:11px;">🌐</span>
-            <select id="sched-timezone" onchange="handleSchedulerTimezoneChange()" style="background:transparent; border:none; color:#94A3B8; font-size:10.5px; font-weight:500; outline:none; cursor:pointer;">
+            <select id="sched-timezone" onchange="handleSchedulerTimezoneChange()" style="background:transparent; border:none; color:#94A3B8; font-size:11px; font-weight:500; outline:none; cursor:pointer;">
               <option value="Asia/Kolkata" selected>IST (India, UTC+5:30)</option>
               <option value="Asia/Dubai">GST (Dubai, UTC+4)</option>
               <option value="America/New_York">EST (US East, UTC-5)</option>
@@ -1869,96 +1869,135 @@ body.is-logged-in .public-access-banner {
           </div>
         </div>
 
-        <!-- 2-Column Split Body -->
-        <div id="native-sched-body" class="sched-grid-body">
-          
-          <!-- Left Column: Compact Date & Slot Selector -->
-          <div class="sched-left-col">
-            <div>
-              <!-- Day Header -->
-              <div class="sched-sec-label">
-                <span>Select Day (Next 5 Days)</span>
-              </div>
+        <!-- STEP 1: Date & Time Slot Picker (Calendly Style) -->
+        <div id="sched-step-slots" class="sched-pane-wrap">
+          <div class="sched-sec-label">
+            <span>1. Select Day (Next 5 Business Days)</span>
+          </div>
 
-              <!-- 5 Compact Day Pills in 1 Single Line -->
-              <div id="sched-days-row" style="display:grid; grid-template-columns:repeat(5, 1fr); gap:5px; margin-bottom:12px;">
-                <!-- Rendered dynamically -->
-              </div>
+          <!-- 5 Compact Day Pills -->
+          <div id="sched-days-row" style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-bottom:18px;">
+            <!-- Rendered dynamically -->
+          </div>
 
-              <!-- Time Slot Header -->
-              <div class="sched-sec-label">
-                <span>Select Time (<span id="sched-selected-date-label" style="color:#10B981;">Today</span>)</span>
-                <span style="color:#34D399; font-weight:600; text-transform:none; letter-spacing:0;">15-min call</span>
-              </div>
+          <!-- Time Slots -->
+          <div class="sched-sec-label">
+            <span>2. Select Time (<span id="sched-selected-date-label" style="color:#10B981;">Today</span>)</span>
+            <span style="color:#34D399; font-weight:600; text-transform:none;">15-min slot</span>
+          </div>
 
-              <!-- 8 Compact Time Pills (4x2 grid) -->
-              <div id="sched-slots-grid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:5px;">
-                <!-- Rendered dynamically -->
-              </div>
-            </div>
+          <!-- 8 Time Slot Chips (4x2 grid) -->
+          <div id="sched-slots-grid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:20px;">
+            <!-- Rendered dynamically -->
+          </div>
 
-            <div style="display:flex; align-items:center; gap:6px; font-size:10.5px; color:#64748B; padding-top:4px;">
-              <span class="status-indicator-dot dot-green" style="width:5px; height:5px; margin:0;"></span>
-              <span>Direct calendar lock · Zero pitch, pure architecture review</span>
+          <!-- Next Button -->
+          <button type="button" id="sched-next-btn" class="sched-btn-confirm" onclick="schedGoToStep2()">
+            <span>Next: Enter Details (<span id="sched-btn-slot-preview">Select a time</span>)</span>
+            <span>→</span>
+          </button>
+
+          <div style="display:flex; align-items:center; justify-content:center; gap:6px; font-size:11px; color:#64748B; margin-top:12px;">
+            <span class="status-indicator-dot dot-green" style="width:6px; height:6px; margin:0;"></span>
+            <span>Zero sales pitch · Pure architecture walkthrough with founder</span>
+          </div>
+        </div>
+
+        <!-- STEP 2: Attendee Details & Confirmation (Calendly Form with Smart Phone Input) -->
+        <div id="sched-step-details" class="sched-pane-wrap" style="display:none;">
+          <!-- Back button + Slot Summary -->
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.06);">
+            <button type="button" class="btn btn-secondary" onclick="schedBackToStep1()" style="font-size:11.5px; padding:5px 12px; gap:5px;">
+              <span>←</span> <span>Change Time</span>
+            </button>
+            <div style="text-align:right;">
+              <div style="font-size:10px; color:#10B981; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Selected Session</div>
+              <div id="sched-details-slot-summary" style="font-size:12.5px; font-weight:700; color:#FFFFFF; font-family:var(--mono);">
+                Mon, Nov 2 at 12:00 PM IST
+              </div>
             </div>
           </div>
 
-          <!-- Right Column: Live Session Confirmation Card -->
-          <div class="sched-right-col">
-            <div>
-              <!-- Active Slot Pill Preview -->
-              <div style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.2); border-radius:8px; padding:8px 11px; margin-bottom:10px;">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2px;">
-                  <span style="font-size:9px; text-transform:uppercase; letter-spacing:0.5px; color:#10B981; font-weight:750;">Confirmed Slot</span>
-                  <span style="font-size:10px; color:#34D399; font-weight:600;">⚡ Instant Invite</span>
+          <!-- Form Fields with Proper Smart Phone Input -->
+          <form onsubmit="handleNativeMeetingSubmit(event)" style="display:flex; flex-direction:column; gap:12px;">
+            <div class="audit-field">
+              <label for="sched-name" style="font-size:11.5px; font-weight:600; color:#94A3B8; margin-bottom:4px; display:block;">Your Full Name <span style="color:#EF4444;">*</span></label>
+              <input type="text" id="sched-name" class="sched-input" placeholder="e.g. Alexander Wright" required autocomplete="name">
+            </div>
+
+            <div class="audit-field">
+              <label for="sched-email" style="font-size:11.5px; font-weight:600; color:#94A3B8; margin-bottom:4px; display:block;">Work Email Address <span style="color:#EF4444;">*</span></label>
+              <input type="email" id="sched-email" class="sched-input" placeholder="e.g. alex@apexscale.com" required autocomplete="email">
+            </div>
+
+            <div class="audit-field">
+              <label for="sched-company" style="font-size:11.5px; font-weight:600; color:#94A3B8; margin-bottom:4px; display:block;">Company / Website <span style="color:#EF4444;">*</span></label>
+              <input type="text" id="sched-company" class="sched-input" placeholder="e.g. apexscale.com" required autocomplete="organization">
+            </div>
+
+            <!-- SMART PHONE INPUT WITH COUNTRY CODE + VALIDATION -->
+            <div class="audit-field audit-phone-field">
+              <label for="sched-phone" style="font-size:11.5px; font-weight:600; color:#94A3B8; margin-bottom:4px; display:block;">WhatsApp Phone Number <span style="color:#EF4444;">*</span></label>
+              <div class="smart-phone-input-wrap">
+                <div class="country-select-wrap">
+                  <select id="sched-country-code" class="audit-country-select" onchange="handleSchedCountryCodeChange()">
+                    <option value="+91" data-flag="🇮🇳" data-digits="10" data-placeholder="98765 43210" selected>🇮🇳 +91</option>
+                    <option value="+971" data-flag="🇦🇪" data-digits="9" data-placeholder="50 123 4567">🇦🇪 +971</option>
+                    <option value="+1" data-flag="🇺🇸" data-digits="10" data-placeholder="555 123 4567">🇺🇸 +1</option>
+                    <option value="+44" data-flag="🇬🇧" data-digits="10" data-placeholder="7911 123456">🇬🇧 +44</option>
+                    <option value="+966" data-flag="🇸🇦" data-digits="9" data-placeholder="50 123 4567">🇸🇦 +966</option>
+                    <option value="+65" data-flag="🇸🇬" data-digits="8" data-placeholder="8123 4567">🇸🇬 +65</option>
+                    <option value="+61" data-flag="🇦🇺" data-digits="9" data-placeholder="412 345 678">🇦🇺 +61</option>
+                    <option value="+49" data-flag="🇩🇪" data-digits="10" data-placeholder="1512 3456789">🇩🇪 +49</option>
+                    <option value="" data-flag="🌐" data-digits="15" data-placeholder="Phone with country code">🌐 Other</option>
+                  </select>
                 </div>
-                <div id="sched-selected-slot-summary" style="font-size:12px; font-weight:750; color:#FFFFFF; font-family:var(--mono);">
-                  Mon, Nov 2 at 4:30 PM IST
+                <div class="phone-number-wrap">
+                  <input 
+                    type="tel" 
+                    id="sched-phone" 
+                    class="audit-phone-input" 
+                    placeholder="98765 43210" 
+                    maxlength="12" 
+                    autocomplete="tel-national" 
+                    required
+                    oninput="handleSchedPhoneInput(this)"
+                  >
                 </div>
               </div>
-
-              <!-- 4 Sleek Fields -->
-              <div style="display:flex; flex-direction:column; gap:7px;">
-                <input type="text" id="sched-name" class="sched-input" placeholder="Your Name *" required>
-                <input type="email" id="sched-email" class="sched-input" placeholder="Work Email *" required>
-                <input type="text" id="sched-company" class="sched-input" placeholder="Company / Website *" required>
-                <input type="tel" id="sched-phone" class="sched-input" placeholder="WhatsApp Phone *" required>
+              <div class="phone-meta-row" style="margin-top:4px; display:flex; justify-content:space-between; font-size:10.5px;">
+                <span class="field-hint" style="color:#64748B;">Direct calendar &amp; Meet invite alert</span>
+                <span id="sched-phone-counter" style="color:#64748B;">0/10 digits</span>
               </div>
             </div>
 
-            <!-- Action Button -->
-            <div>
-              <button type="button" id="sched-confirm-btn" class="sched-btn-confirm" onclick="confirmNativeMeeting()">
+            <!-- Submit Button -->
+            <div style="margin-top:8px;">
+              <button type="submit" id="sched-confirm-btn" class="sched-btn-confirm">
                 <span>Confirm 15-Min Meeting</span>
-                <span>→</span>
+                <span>🚀</span>
               </button>
-              <div style="text-align:center; margin-top:8px;">
-                <a href="#" onclick="switchAuditMode('form'); return false;" style="font-size:10.5px; color:#64748B; text-decoration:none;">
-                  ← Prefer written form? Switch to Audit
-                </a>
-              </div>
             </div>
-          </div>
-
+          </form>
         </div>
 
         <!-- Success Screen (Shown after booking) -->
         <div id="native-sched-success" style="display:none; padding:32px 20px; text-align:center;">
-          <div style="width:44px; height:44px; border-radius:50%; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:20px;">
+          <div style="width:48px; height:48px; border-radius:50%; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:22px;">
             🎉
           </div>
           <h3 style="font-size:18px; font-weight:800; color:#FFFFFF; margin-bottom:6px;">Strategy Session Locked!</h3>
-          <p id="sched-confirmed-summary" style="font-size:13px; color:#10B981; font-weight:600; margin-bottom:10px; font-family:var(--mono);">
-            Mon, Nov 2 at 4:30 PM IST
+          <p id="sched-confirmed-summary" style="font-size:13.5px; color:#10B981; font-weight:600; margin-bottom:10px; font-family:var(--mono);">
+            Mon, Nov 2 at 12:00 PM IST
           </p>
           <p style="font-size:12px; color:#94A3B8; max-width:440px; margin:0 auto 18px; line-height:1.5;">
             We've logged this directly into our founder's dispatch schedule. A calendar invitation with Google Meet details has been dispatched to your email and WhatsApp.
           </p>
           <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-            <a id="sched-meet-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size:11.5px; font-weight:700; background:#25D366; border-color:#25D366; color:#032511;">
+            <a id="sched-meet-link-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size:12px; font-weight:700; background:#25D366; border-color:#25D366; color:#032511;">
               <span>Fast-Track on WhatsApp</span> ↗
             </a>
-            <button type="button" class="btn btn-secondary" onclick="resetNativeScheduler()" style="font-size:11.5px;">
+            <button type="button" class="btn btn-secondary" onclick="resetNativeScheduler()" style="font-size:12px;">
               Book Another Slot
             </button>
           </div>
@@ -2804,7 +2843,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </a>
 </div>
 
-<script src="/static/app.js?v=trackkaro_sleek_scheduler_v3"></script>
+<script src="/static/app.js?v=trackkaro_calendly_step_flow_v4"></script>
 
 </div>
 

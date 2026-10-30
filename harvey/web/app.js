@@ -2748,7 +2748,7 @@ function switchAuditMode(mode) {
 
 let _schedDays = [];
 let _schedSelectedDayIdx = 0;
-let _schedSelectedSlot = '4:30 PM';
+let _schedSelectedSlot = '12:00 PM';
 
 const DEFAULT_TIME_SLOTS = [
   '11:00 AM', '12:00 PM', '2:30 PM', '3:30 PM', 
@@ -2794,7 +2794,16 @@ function initNativeScheduler() {
   }
   if (origPhone && document.getElementById('sched-phone') && !document.getElementById('sched-phone').value) {
     document.getElementById('sched-phone').value = origPhone;
+    handleSchedPhoneInput(document.getElementById('sched-phone'));
   }
+
+  // Ensure Step 1 is visible
+  const step1 = document.getElementById('sched-step-slots');
+  const step2 = document.getElementById('sched-step-details');
+  const successEl = document.getElementById('native-sched-success');
+  if (step1) step1.style.display = 'block';
+  if (step2) step2.style.display = 'none';
+  if (successEl) successEl.style.display = 'none';
 
   renderSchedulerDays();
   selectSchedulerDay(_schedSelectedDayIdx);
@@ -2847,22 +2856,130 @@ function updateSchedulerSummary() {
   const curDay = _schedDays[_schedSelectedDayIdx];
   const tzSelect = document.getElementById('sched-timezone');
   const tzCode = tzSelect ? tzSelect.options[tzSelect.selectedIndex].text.split(' ')[0] : 'IST';
-  const summaryEl = document.getElementById('sched-selected-slot-summary');
-  if (summaryEl && curDay) {
-    summaryEl.textContent = `${curDay.dayName}, ${curDay.monthName} ${curDay.dayNum} at ${_schedSelectedSlot} ${tzCode}`;
+  
+  const slotText = curDay ? `${curDay.dayName}, ${curDay.monthName} ${curDay.dayNum} at ${_schedSelectedSlot}` : `${_schedSelectedSlot}`;
+  const fullText = curDay ? `${curDay.dayName}, ${curDay.monthName} ${curDay.dayNum} at ${_schedSelectedSlot} ${tzCode}` : `${_schedSelectedSlot} ${tzCode}`;
+
+  const btnPreview = document.getElementById('sched-btn-slot-preview');
+  if (btnPreview) btnPreview.textContent = slotText;
+
+  const detailsSummary = document.getElementById('sched-details-slot-summary');
+  if (detailsSummary) detailsSummary.textContent = fullText;
+}
+
+function schedGoToStep2() {
+  const step1 = document.getElementById('sched-step-slots');
+  const step2 = document.getElementById('sched-step-details');
+  if (step1) step1.style.display = 'none';
+  if (step2) {
+    step2.style.display = 'block';
+    updateSchedulerSummary();
+    const nameInput = document.getElementById('sched-name');
+    if (nameInput && !nameInput.value) setTimeout(() => nameInput.focus(), 150);
   }
+}
+
+function schedBackToStep1() {
+  const step1 = document.getElementById('sched-step-slots');
+  const step2 = document.getElementById('sched-step-details');
+  if (step2) step2.style.display = 'none';
+  if (step1) step1.style.display = 'block';
+}
+
+// ── Smart Phone Input for Scheduler ──
+function getSchedCountryConfig() {
+  const select = document.getElementById('sched-country-code');
+  if (!select) return { code: '+91', digits: 10, placeholder: '98765 43210' };
+  const opt = select.options[select.selectedIndex];
+  return {
+    code: opt.value,
+    digits: parseInt(opt.getAttribute('data-digits') || '10', 10),
+    placeholder: opt.getAttribute('data-placeholder') || '98765 43210'
+  };
+}
+
+function handleSchedCountryCodeChange() {
+  const config = getSchedCountryConfig();
+  const input = document.getElementById('sched-phone');
+  if (!input) return;
+  input.placeholder = config.placeholder;
+  input.maxLength = config.code ? config.digits + 3 : 18;
+  handleSchedPhoneInput(input);
+}
+
+function handleSchedPhoneInput(input) {
+  if (!input) return;
+  const config = getSchedCountryConfig();
+  const counter = document.getElementById('sched-phone-counter');
+  
+  let val = input.value;
+  let digits = val.replace(/[^0-9]/g, '');
+  if (config.code && digits.length > config.digits) {
+    digits = digits.slice(0, config.digits);
+  }
+  
+  let formatted = digits;
+  if (config.code === '+91' || config.digits === 10) {
+    if (digits.length > 5) {
+      formatted = digits.slice(0, 5) + ' ' + digits.slice(5);
+    }
+  } else if (config.code === '+971' || config.code === '+966') {
+    if (digits.length > 5) {
+      formatted = digits.slice(0, 2) + ' ' + digits.slice(2, 5) + ' ' + digits.slice(5);
+    } else if (digits.length > 2) {
+      formatted = digits.slice(0, 2) + ' ' + digits.slice(2);
+    }
+  } else if (config.code === '+1') {
+    if (digits.length > 6) {
+      formatted = digits.slice(0, 3) + ' ' + digits.slice(3, 6) + ' ' + digits.slice(6);
+    } else if (digits.length > 3) {
+      formatted = digits.slice(0, 3) + ' ' + digits.slice(3);
+    }
+  }
+  
+  input.value = formatted;
+  const currentCount = digits.length;
+  const targetCount = config.digits;
+  
+  if (counter) {
+    if (config.code) {
+      if (currentCount === targetCount) {
+        counter.innerHTML = '<span style="color:#10B981; font-weight:700;">✓ ' + currentCount + '/' + targetCount + ' digits (Valid)</span>';
+      } else {
+        counter.innerHTML = currentCount + '/' + targetCount + ' digits';
+        counter.style.color = currentCount > 0 ? '#D97706' : '#64748B';
+      }
+    } else {
+      counter.innerHTML = currentCount + ' digits entered';
+    }
+  }
+}
+
+function handleNativeMeetingSubmit(e) {
+  if (e) e.preventDefault();
+  confirmNativeMeeting();
 }
 
 async function confirmNativeMeeting() {
   const name = document.getElementById('sched-name')?.value.trim();
   const email = document.getElementById('sched-email')?.value.trim();
   const company = document.getElementById('sched-company')?.value.trim();
-  const phone = document.getElementById('sched-phone')?.value.trim();
+  const phoneRaw = document.getElementById('sched-phone')?.value.trim();
+  const countryCode = document.getElementById('sched-country-code')?.value || '+91';
 
   if (!name) { alert('Please enter your Full Name.'); document.getElementById('sched-name')?.focus(); return; }
   if (!email || !email.includes('@')) { alert('Please enter a valid Work Email.'); document.getElementById('sched-email')?.focus(); return; }
   if (!company) { alert('Please enter your Company or Website.'); document.getElementById('sched-company')?.focus(); return; }
-  if (!phone || phone.length < 8) { alert('Please enter a valid WhatsApp Phone Number.'); document.getElementById('sched-phone')?.focus(); return; }
+  
+  const config = getSchedCountryConfig();
+  const phoneDigits = phoneRaw.replace(/[^0-9]/g, '');
+  if (!phoneRaw || (config.code && phoneDigits.length < config.digits)) {
+    alert(`Please enter a valid ${config.digits}-digit WhatsApp Phone Number.`);
+    document.getElementById('sched-phone')?.focus();
+    return;
+  }
+
+  const fullPhone = `${countryCode} ${phoneRaw}`;
 
   const curDay = _schedDays[_schedSelectedDayIdx];
   const tzSelect = document.getElementById('sched-timezone');
@@ -2878,7 +2995,7 @@ async function confirmNativeMeeting() {
   const slotStr = `${curDay ? curDay.fullDateStr : 'Upcoming Business Day'} at ${_schedSelectedSlot} (${tzText.split(' ')[0]})`;
 
   const payload = {
-    name, email, phone, company,
+    name, email, phone: fullPhone, company,
     slot_date: curDay ? curDay.fullDateStr : '',
     slot_time: _schedSelectedSlot,
     timezone: tzVal,
@@ -2907,15 +3024,14 @@ async function confirmNativeMeeting() {
   }).catch(() => {});
 
   // Show Success Screen
-  const bodyEl = document.getElementById('native-sched-body');
+  const step2 = document.getElementById('sched-step-details');
   const successEl = document.getElementById('native-sched-success');
   const confirmedSummary = document.getElementById('sched-confirmed-summary');
   const meetBtn = document.getElementById('sched-meet-link-btn');
 
-  if (bodyEl) bodyEl.style.display = 'none';
+  if (step2) step2.style.display = 'none';
   if (confirmedSummary) confirmedSummary.textContent = slotStr;
   if (meetBtn) {
-    const cleanPhone = phone.replace(/[^0-9]/g, '');
     meetBtn.href = `https://wa.me/917979816557?text=${encodeURIComponent(`Hi Mangal, I just booked an Outbound Strategy Session for ${slotStr}. Name: ${name} (${company}).`)}`;
   }
   if (successEl) {
@@ -2927,15 +3043,17 @@ async function confirmNativeMeeting() {
 }
 
 function resetNativeScheduler() {
-  const bodyEl = document.getElementById('native-sched-body');
+  const step1 = document.getElementById('sched-step-slots');
+  const step2 = document.getElementById('sched-step-details');
   const successEl = document.getElementById('native-sched-success');
   const btn = document.getElementById('sched-confirm-btn');
 
-  if (bodyEl) bodyEl.style.display = 'block';
+  if (step1) step1.style.display = 'block';
+  if (step2) step2.style.display = 'none';
   if (successEl) successEl.style.display = 'none';
   if (btn) {
     btn.disabled = false;
-    btn.innerHTML = '<span>Confirm 15-Min Meeting</span> <span>→</span>';
+    btn.innerHTML = '<span>Confirm 15-Min Meeting</span> <span>🚀</span>';
   }
   initNativeScheduler();
 }
