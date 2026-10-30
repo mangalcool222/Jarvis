@@ -547,34 +547,25 @@ body.is-logged-in .public-access-banner {
   </div>
   <div id="workspace-menu" class="workspace-dropdown-menu">
     <div class="ws-menu-header">Active Client Workspaces</div>
-    <div class="ws-item active" data-ws="speed-to-lead" onclick="switchActiveWorkspace('speed-to-lead')">
-      <div class="ws-icon">🏢</div>
-      <div class="ws-info">
-        <div class="ws-title">Dubai & India Speed-to-Lead (Port 5555)</div>
-        <div class="ws-sub">30 Accounts • Real Estate & Clinics</div>
+    <div id="workspace-items-list">
+      <div class="ws-item active" data-ws="speed-to-lead" onclick="switchActiveWorkspace('speed-to-lead')">
+        <div class="ws-icon">🏢</div>
+        <div class="ws-info">
+          <div class="ws-title">Dubai & India Speed-to-Lead (Port 5555)</div>
+          <div class="ws-sub">30 Accounts • Real Estate & Clinics</div>
+        </div>
+        <span class="ws-check">✓</span>
       </div>
-      <span class="ws-check">✓</span>
-    </div>
-    <div class="ws-item" data-ws="cold-email" onclick="switchActiveWorkspace('cold-email')">
-      <div class="ws-icon">🚀</div>
-      <div class="ws-info">
-        <div class="ws-title">Cold Email Agency Retainer (Port 5556)</div>
-        <div class="ws-sub">24 Accounts • B2B SaaS & Dev Agencies</div>
-      </div>
-      <div style="display:flex; align-items:center; gap:6px;">
-        <span class="ws-check" style="display:none;">✓</span>
-        <button type="button" class="btn-ws-delete" onclick="deleteWorkspaceModal(event, 'cold_email_outreach', 'Cold Email Agency Retainer')" title="Delete or Archive this workspace" style="background:transparent; border:none; color:#EF4444; cursor:pointer; font-size:13px; padding:2px 6px; border-radius:4px; opacity:0.7;" onmouseover="this.style.opacity='1'; this.style.background='rgba(239,68,68,0.15)'" onmouseout="this.style.opacity='0.7'; this.style.background='transparent'">🗑️</button>
-      </div>
-    </div>
-    <div class="ws-item" data-ws="bitscale" onclick="switchActiveWorkspace('bitscale')">
-      <div class="ws-icon">🌐</div>
-      <div class="ws-info">
-        <div class="ws-title">Bitscale AI GTM Engine (bitscale.ai)</div>
-        <div class="ws-sub">4 Accounts • Apollo, Cognism, Seamless</div>
-      </div>
-      <div style="display:flex; align-items:center; gap:6px;">
-        <span class="ws-check" style="display:none;">✓</span>
-        <button type="button" class="btn-ws-delete" onclick="deleteWorkspaceModal(event, 'bitscale', 'Bitscale AI GTM Engine')" title="Delete or Archive this workspace" style="background:transparent; border:none; color:#EF4444; cursor:pointer; font-size:13px; padding:2px 6px; border-radius:4px; opacity:0.7;" onmouseover="this.style.opacity='1'; this.style.background='rgba(239,68,68,0.15)'" onmouseout="this.style.opacity='0.7'; this.style.background='transparent'">🗑️</button>
+      <div class="ws-item" data-ws="cold-email" onclick="switchActiveWorkspace('cold-email')">
+        <div class="ws-icon">🚀</div>
+        <div class="ws-info">
+          <div class="ws-title">Cold Email Agency Retainer (Port 5556)</div>
+          <div class="ws-sub">24 Accounts • B2B SaaS & Dev Agencies</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span class="ws-check" style="display:none;">✓</span>
+          <button type="button" class="btn-ws-delete" onclick="deleteWorkspaceModal(event, 'cold_email_outreach', 'Cold Email Agency Retainer')" title="Delete or Archive this workspace" style="background:transparent; border:none; color:#EF4444; cursor:pointer; font-size:13px; padding:2px 6px; border-radius:4px; opacity:0.7;" onmouseover="this.style.opacity='1'; this.style.background='rgba(239,68,68,0.15)'" onmouseout="this.style.opacity='0.7'; this.style.background='transparent'">🗑️</button>
+        </div>
       </div>
     </div>
     <div class="ws-divider"></div>
@@ -3366,16 +3357,53 @@ function switchMainView(view) {
 }
 
 // Workspace Dropdown Toggle
+async function loadWorkspaceList() {
+  try {
+    const res = await fetch('/api/workspaces/list');
+    if (!res.ok) return;
+    const data = await res.json();
+    const listEl = document.getElementById('workspace-items-list');
+    if (!listEl || !data.workspaces) return;
+
+    listEl.innerHTML = data.workspaces.map(ws => {
+      const isRoot = ws.is_root;
+      const wsKey = ws.key;
+      const deleteBtn = isRoot ? '' : `
+        <button type="button" class="btn-ws-delete" onclick="deleteWorkspaceModal(event, '${wsKey}', '${ws.name}')" title="Delete or Archive this workspace" style="background:transparent; border:none; color:#EF4444; cursor:pointer; font-size:13px; padding:2px 6px; border-radius:4px; opacity:0.7;" onmouseover="this.style.opacity='1'; this.style.background='rgba(239,68,68,0.15)'" onmouseout="this.style.opacity='0.7'; this.style.background='transparent'">🗑️</button>
+      `;
+      return `
+        <div class="ws-item ${ws.active ? 'active' : ''}" data-ws="${wsKey}" onclick="switchActiveWorkspace('${wsKey}')">
+          <div class="ws-icon">${ws.icon || '💼'}</div>
+          <div class="ws-info">
+            <div class="ws-title">${ws.name}</div>
+            <div class="ws-sub">${ws.sub || ''}</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span class="ws-check" style="${ws.active ? 'display:block;' : 'display:none;'}">✓</span>
+            ${deleteBtn}
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    console.warn('loadWorkspaceList error:', err);
+  }
+}
+
 function toggleWorkspaceDropdown(e) {
   e.stopPropagation();
   const menu = document.getElementById('workspace-menu');
-  if (menu) menu.classList.toggle('active');
+  if (menu) {
+    menu.classList.toggle('active');
+    if (menu.classList.contains('active')) {
+      loadWorkspaceList();
+    }
+  }
 }
 
 // Workspace Switching Engine
 function syncWorkspaceUI(wsKey) {
   const isColdEmail = (wsKey === 'cold-email' || wsKey === 'cold_email_outreach');
-  const isBitscale = (wsKey === 'bitscale');
 
   // Update Mission Control Bar texts
   const wchTitle = document.getElementById('wch-title');
@@ -3384,9 +3412,6 @@ function syncWorkspaceUI(wsKey) {
     if (isColdEmail) {
       wchTitle.innerText = 'Cold Email Agency Retainer Operations';
       wchSub.innerText = 'Autonomous outbound pipeline prospecting B2B SaaS founders and Dev Agency leaders.';
-    } else if (isBitscale) {
-      wchTitle.innerText = 'Bitscale AI GTM Engine Operations';
-      wchSub.innerText = 'Targeting RevOps, Head of Growth & VP Sales at Cognism, Apollo, Seamless.AI, Instantly.';
     } else {
       wchTitle.innerText = 'Dubai & India Speed-to-Lead Operations';
       wchSub.innerText = 'Live autonomous engine monitoring luxury real estate developers and aesthetic clinics. Sub-15s webhook router armed.';
@@ -3399,7 +3424,7 @@ function syncWorkspaceUI(wsKey) {
     if (chk) chk.style.display = 'none';
   });
 
-  const activeSelector = isColdEmail ? '.ws-item[data-ws="cold-email"]' : (isBitscale ? '.ws-item[data-ws="bitscale"]' : '.ws-item[data-ws="speed-to-lead"]');
+  const activeSelector = isColdEmail ? '.ws-item[data-ws="cold-email"], .ws-item[data-ws="cold_email_outreach"]' : '.ws-item[data-ws="speed-to-lead"]';
   const activeItem = document.querySelector(activeSelector);
   if (activeItem) {
     activeItem.classList.add('active');
@@ -3423,11 +3448,6 @@ async function switchActiveWorkspace(wsKey) {
     targetPort = '5555';
   } else if (wsKey === 'cold-email' || wsKey === 'cold_email_outreach') {
     targetPort = '5556';
-  } else if (wsKey === 'bitscale') {
-    alert('Bitscale AI GTM Engine workspace is coming soon!');
-    const menu = document.getElementById('workspace-menu');
-    if (menu) menu.classList.remove('active');
-    return;
   }
 
   // If on local/LAN with multi-port daemon setup (5555 vs 5556), redirect between ports

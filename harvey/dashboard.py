@@ -1533,6 +1533,64 @@ async def test_smtp_live(request: Request):
         return {"success": False, "message": f"SMTP Authentication failed on {host}:{port}: {str(e)}"}
 
 
+@app.get("/api/workspaces/list")
+async def list_workspaces_api():
+    """List all available client workspaces dynamically from the filesystem."""
+    from harvey.paths import PROJECT_ROOT, get_workspace_dir
+    active_ws = get_workspace_dir()
+    is_active_root = (active_ws.resolve() == PROJECT_ROOT.resolve() or active_ws.name in ("trackkaro", ""))
+
+    items = [
+        {
+            "key": "speed-to-lead",
+            "name": "Dubai & India Speed-to-Lead (Port 5555)",
+            "sub": "Real Estate & Clinics",
+            "icon": "🏢",
+            "is_root": True,
+            "active": is_active_root,
+        }
+    ]
+
+    ws_dir = PROJECT_ROOT / "workspaces"
+    if ws_dir.is_dir():
+        for d in sorted(ws_dir.iterdir()):
+            if not d.is_dir() or d.name.startswith(".") or d.name.startswith("_") or d.name in ("README.md", "trackkaro"):
+                continue
+
+            key = d.name
+            is_active = (not is_active_root and active_ws.name == key)
+            if key == "cold_email_outreach":
+                title = "Cold Email Agency Retainer (Port 5556)"
+                sub = "B2B SaaS & Dev Agencies"
+                icon = "🚀"
+            else:
+                title = key.replace("_", " ").replace("-", " ").title()
+                sub = "Client ICP Engine"
+                icon = "⚡"
+
+            yaml_path = d / "harvey.yaml"
+            if yaml_path.is_file():
+                try:
+                    cfg = yaml.safe_load(yaml_path.read_text()) or {}
+                    if "offer" in cfg and "name" in cfg["offer"]:
+                        title = cfg["offer"]["name"]
+                    if "offer" in cfg and "tagline" in cfg["offer"]:
+                        sub = cfg["offer"]["tagline"]
+                except Exception:
+                    pass
+
+            items.append({
+                "key": key,
+                "name": title,
+                "sub": sub,
+                "icon": icon,
+                "is_root": False,
+                "active": is_active,
+            })
+
+    return {"workspaces": items}
+
+
 @app.delete("/api/workspaces/{workspace_name}")
 @app.post("/api/workspaces/{workspace_name}/delete")
 async def delete_workspace_api(workspace_name: str, request: Request):
