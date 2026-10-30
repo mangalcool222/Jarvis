@@ -16,7 +16,7 @@ import yaml
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import (
-    HTMLResponse, JSONResponse, PlainTextResponse, Response,
+    HTMLResponse, JSONResponse, PlainTextResponse, Response, FileResponse,
 )
 
 logger = logging.getLogger("harvey.dashboard")
@@ -1320,6 +1320,65 @@ async def switch_workspace_api(request: Request):
         "is_root": is_root,
         "display_name": "Dubai & India Speed-to-Lead" if is_root else ws.name.replace("_", " ").title()
     }
+
+
+@app.post("/api/database/sync")
+async def sync_database(request: Request, workspace: str = "current"):
+    """Accepts raw sqlite db binary and writes it to the target workspace data directory."""
+    from harvey.paths import PROJECT_ROOT, get_workspace_dir
+    raw_data = await request.body()
+    if not raw_data or len(raw_data) < 100:
+        return JSONResponse({"error": "Empty or invalid database payload"}, status_code=400)
+
+    if not raw_data.startswith(b"SQLite format 3"):
+        return JSONResponse({"error": "File is not a valid SQLite database"}, status_code=400)
+
+    target_ws = get_workspace_dir()
+    ws_key = workspace.strip().lower()
+    if ws_key in ("speed-to-lead", "trackkaro", "root", "dubai"):
+        target_ws = PROJECT_ROOT
+    elif ws_key in ("cold-email", "cold_email", "cold_email_outreach"):
+        target_ws = PROJECT_ROOT / "workspaces" / "cold_email_outreach"
+    elif ws_key != "current":
+        cand = PROJECT_ROOT / "workspaces" / ws_key
+        if cand.is_dir():
+            target_ws = cand
+
+    db_dir = target_ws / "data"
+    db_dir.mkdir(parents=True, exist_ok=True)
+    target_db = db_dir / "harvey.db"
+
+    target_db.write_bytes(raw_data)
+    logger.info(f"Database synced for workspace {target_ws.name} ({len(raw_data)} bytes)")
+
+    return {
+        "success": True,
+        "workspace": target_ws.name,
+        "size_bytes": len(raw_data),
+        "message": f"Successfully synced database to {target_ws.name}!"
+    }
+
+
+@app.get("/api/database/download")
+async def download_database(workspace: str = "current"):
+    """Download the current workspace SQLite database file."""
+    from harvey.paths import PROJECT_ROOT, get_workspace_dir, get_db_path
+    ws = get_workspace_dir()
+    ws_key = workspace.strip().lower()
+    if ws_key in ("speed-to-lead", "trackkaro", "root", "dubai"):
+        target_db = PROJECT_ROOT / "data" / "harvey.db"
+    elif ws_key in ("cold-email", "cold_email", "cold_email_outreach"):
+        target_db = PROJECT_ROOT / "workspaces" / "cold_email_outreach" / "data" / "harvey.db"
+    else:
+        target_db = get_db_path(ws)
+
+    if not target_db.is_file():
+        return JSONResponse({"error": "Database not found"}, status_code=404)
+    return FileResponse(
+        path=str(target_db),
+        filename=f"harvey_{ws.name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.db",
+        media_type="application/x-sqlite3"
+    )
 
 
 @app.get("/api/workspace-config")
