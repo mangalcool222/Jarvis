@@ -18,8 +18,9 @@ def set_workspace_dir(ws: str | Path | None) -> Path:
     """Explicitly set the active workspace directory for this process."""
     global _ACTIVE_WORKSPACE_OVERRIDE
     if ws is None:
-        _ACTIVE_WORKSPACE_OVERRIDE = None
-        return get_workspace_dir()
+        _ACTIVE_WORKSPACE_OVERRIDE = PROJECT_ROOT
+        os.environ.pop("HARVEY_WORKSPACE", None)
+        return PROJECT_ROOT
 
     p = Path(ws)
     if not p.is_absolute():
@@ -31,6 +32,11 @@ def set_workspace_dir(ws: str | Path | None) -> Path:
             resolved = (PROJECT_ROOT / p).resolve()
     else:
         resolved = p.resolve()
+
+    if resolved == PROJECT_ROOT.resolve():
+        _ACTIVE_WORKSPACE_OVERRIDE = PROJECT_ROOT
+        os.environ.pop("HARVEY_WORKSPACE", None)
+        return PROJECT_ROOT
 
     _ACTIVE_WORKSPACE_OVERRIDE = resolved
     os.environ["HARVEY_WORKSPACE"] = str(resolved)

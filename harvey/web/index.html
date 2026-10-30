@@ -3445,6 +3445,19 @@ function syncWorkspaceUI(wsKey) {
       badgeEl.innerText = titleEl.innerText;
     }
   }
+
+  // Update URL pitch generator description & placeholder
+  const quickInput = document.getElementById('quick-url-input');
+  const quickSub = quickInput ? quickInput.closest('.card, [style*="border:1px solid"]')?.querySelector('div[style*="font-size:12px"]') : null;
+  if (quickInput) {
+    if (isColdEmail) {
+      if (quickSub) quickSub.innerText = 'Directly paste any website URL to instantly profile & draft a B2B Agency Retainer pitch in Outbox';
+      quickInput.placeholder = 'e.g. cognism.com, instantly.ai, or https://clay.com';
+    } else {
+      if (quickSub) quickSub.innerText = 'Directly paste any website URL to instantly profile & draft a Speed-to-Lead pitch in Outbox';
+      quickInput.placeholder = 'e.g. luxhabitat.ae or https://luxuryproperty.com';
+    }
+  }
 }
 
 async function switchActiveWorkspace(wsKey) {
@@ -3486,6 +3499,9 @@ async function switchActiveWorkspace(wsKey) {
   // Refresh active tab and workspace info in Jarvis
   if (typeof loadWorkspaceInfo === 'function') {
     await loadWorkspaceInfo();
+  }
+  if (typeof loadToday === 'function') {
+    await loadToday();
   }
   if (typeof loadCurrentTab === 'function') {
     loadCurrentTab();

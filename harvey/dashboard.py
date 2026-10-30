@@ -1297,8 +1297,8 @@ async def switch_workspace_api(request: Request):
     except Exception:
         body = {}
     ws_key = body.get("workspace", "").strip().lower()
-    if ws_key in ("speed-to-lead", "trackkaro", "root", "dubai"):
-        set_workspace_dir(None)
+    if ws_key in ("speed-to-lead", "trackkaro", "root", "dubai", "main", "default", ""):
+        set_workspace_dir(PROJECT_ROOT)
     elif ws_key in ("cold-email", "cold_email", "cold_email_outreach"):
         set_workspace_dir(PROJECT_ROOT / "workspaces" / "cold_email_outreach")
     else:
