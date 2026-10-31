@@ -2983,7 +2983,7 @@ async function confirmNativeMeeting() {
   const btn = document.getElementById('sched-confirm-btn');
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = '<span>Locking Calendar Slot...</span> ⚡';
+    btn.innerHTML = '<span>Locking Calendar Slot...</span>';
   }
 
   const slotStr = `${curDay ? curDay.fullDateStr : 'Upcoming Business Day'} at ${_schedSelectedSlot} (${tzText.split(' ')[0]})`;
@@ -3047,7 +3047,7 @@ function resetNativeScheduler() {
   if (successEl) successEl.style.display = 'none';
   if (btn) {
     btn.disabled = false;
-    btn.innerHTML = '<span>Confirm 15-Min Meeting</span> <span>🚀</span>';
+    btn.innerHTML = '<span>Confirm 15-Min Meeting</span> <span>→</span>';
   }
   initNativeScheduler();
 }
@@ -3066,7 +3066,7 @@ function resetAuditForm() {
   if (successBox) successBox.style.display = 'none';
   if (btn) {
     btn.disabled = false;
-    btn.innerHTML = '<span>Get Free ICP Audit &amp; 10 Verified Accounts</span> <span style="font-size:14px;">⚡</span>';
+    btn.innerHTML = '<span>Get Free ICP Audit &amp; 10 Verified Accounts</span> <span style="font-size:15px; font-weight:700;">→</span>';
   }
 }
 
